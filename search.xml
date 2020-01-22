@@ -26,6 +26,15 @@
       </tags>
   </entry>
   <entry>
+    <title>testci</title>
+    <url>/2020/01/22/testci/</url>
+    <content><![CDATA[<p>test ci</p>
+]]></content>
+      <tags>
+        <tag>ci</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>copy_file_range problem</title>
     <url>/2020/01/20/copy-file-range-problem/</url>
     <content><![CDATA[<h1 id="copy-file-range问题"><a href="#copy-file-range问题" class="headerlink" title="copy_file_range问题"></a>copy_file_range问题</h1><p>在使用3.10内核的过程中遇到一个关于copy_file_range的问题，<strong>拷贝后数据不对</strong>。有必要对这个系统调用分析一下。</p>
