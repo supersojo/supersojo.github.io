@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/2020/01/22/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>hexo hello</category>
+      </categories>
+      <tags>
+        <tag>hello</tag>
+        <tag>入门</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>copy_file_range problem</title>
+    <url>/2020/01/20/copy-file-range-problem/</url>
+    <content><![CDATA[<h1 id="copy-file-range问题"><a href="#copy-file-range问题" class="headerlink" title="copy_file_range问题"></a>copy_file_range问题</h1><p>在使用3.10内核的过程中遇到一个关于copy_file_range的问题，<strong>拷贝后数据不对</strong>。有必要对这个系统调用分析一下。</p>
+<h1 id="copy-file-range"><a href="#copy-file-range" class="headerlink" title="copy_file_range"></a>copy_file_range</h1><p><strong>copy_file_range</strong>是最近新增的[2]syscall，在不需要内核和用户态缓存间的拷贝就可以高效实现文件间的拷贝。传统的文件拷贝流程涉及内核page cache到用户缓存，然后由用户缓存再拷贝到内核page cache，中间涉及两次拷贝，效率不高。copy_file_range正是对拷贝的优化，内部实现是通过pipe buffer的结构，在读取源文件时把涉及到的page cache内存页，页内offset，长度信息，保存到pipe buffer中，在向目标文件拷贝时直接读取pipe buffer信息，执行后续写操作，这样仅需要一次拷贝就完成了。</p>
+<p>copy_file_range的流程图如下<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4.png" alt="copy_file_range flow chart"><br>可以看到最终调用pipe_to_file。下面看下该函数的实现。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe_to_file</span><span class="params">(struct pipe_inode_info *pipe, struct pipe_buffer *buf,</span></span></span><br><span class="line"><span class="function"><span class="params">struct splice_desc *sd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">file</span> = <span class="title">sd</span>-&gt;<span class="title">u</span>.<span class="title">file</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">address_space</span> *<span class="title">mapping</span> = <span class="title">file</span>-&gt;<span class="title">f_mapping</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> offset, this_len;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span>;</span></span><br><span class="line">	<span class="keyword">void</span> *fsdata;</span><br><span class="line">	<span class="keyword">int</span> ret;</span><br><span class="line"></span><br><span class="line">	offset = sd-&gt;pos &amp; ~PAGE_CACHE_MASK;</span><br><span class="line"></span><br><span class="line">	this_len = sd-&gt;len;</span><br><span class="line">	<span class="keyword">if</span> (this_len + offset &gt; PAGE_CACHE_SIZE)</span><br><span class="line">		this_len = PAGE_CACHE_SIZE - offset;</span><br><span class="line"></span><br><span class="line">	ret = pagecache_write_begin(file, mapping, sd-&gt;pos, this_len,</span><br><span class="line">	AOP_FLAG_UNINTERRUPTIBLE, &amp;page, &amp;fsdata);</span><br><span class="line">	<span class="keyword">if</span> (unlikely(ret))</span><br><span class="line">		<span class="keyword">goto</span> out;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (buf-&gt;page != page) &#123;</span><br><span class="line">		<span class="keyword">char</span> *src = buf-&gt;ops-&gt;<span class="built_in">map</span>(pipe, buf, <span class="number">1</span>);</span><br><span class="line">		<span class="keyword">char</span> *dst = kmap_atomic(page);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">memcpy</span>(dst + offset, src + buf-&gt;offset, this_len);</span><br><span class="line">		flush_dcache_page(page);</span><br><span class="line">		kunmap_atomic(dst);</span><br><span class="line">		buf-&gt;ops-&gt;unmap(pipe, buf, src);</span><br><span class="line">	&#125;</span><br><span class="line">	ret = pagecache_write_end(file, mapping, sd-&gt;pos, this_len, this_len,</span><br><span class="line">		page, fsdata);</span><br><span class="line">out:</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面第22行判断如果不是同一page时才会执行数据拷贝操作，如果是同一page，则不执行数据操作。这样copy_file_range就不适用同一文件中拷贝。如果执行copy_file_range测试指定的是同一文件，在源偏移和目标偏移很小，即小于一个page大小时，pipe_to_file就不执行数据操作，从而导致拷贝数据不一致。</p>
+<p>内核upstream上的处理流程如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4_latest.png" alt="cop_file_range"></p>
+<blockquote>
+<p>最新版的内核已经抛弃对pipe_to_file的调用，该函数也已经从内核移除。最终的实现调用的是iov_iter_copy_from_user_atomic负责完成数据操作。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">size_t iov_iter_copy_from_user_atomic(struct page *page,</span><br><span class="line">struct iov_iter *i, unsigned long offset, size_t bytes)</span><br><span class="line">&#123;</span><br><span class="line">	char *kaddr &#x3D; kmap_atomic(page), *p &#x3D; kaddr + offset;</span><br><span class="line">	if (unlikely(!page_copy_sane(page, offset, bytes))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	if (unlikely(iov_iter_is_pipe(i) || iov_iter_is_discard(i))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		WARN_ON(1);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	iterate_all_kinds(i, bytes, v,</span><br><span class="line">		copyin((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len),</span><br><span class="line">		memcpy_from_page((p +&#x3D; v.bv_len) - v.bv_len, v.bv_page,v.bv_offset, v.bv_len),</span><br><span class="line">		memcpy((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len)</span><br><span class="line">	)</span><br><span class="line">	kunmap_atomic(kaddr);</span><br><span class="line">	return bytes;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(iov_iter_copy_from_user_atomic);</span><br></pre></td></tr></table></figure>
+<p>iov_iter_copy_from_user_atomic的流程图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_iov_iter.png" alt="iov_iter_copy_from_user_atomic"></p>
+<blockquote>
+<p>iov_iter_copy_from_user_atomic函数并不关心源和目标page是否是同一page，他们之间是否会出现覆盖的情&gt;况，仅仅是执行数据操作。如果数据源和数据目标有覆盖则copy_file_range的结果是有问题的。</p>
+</blockquote>
+<p>数据覆盖的情况如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_overlap.png" alt="iov_iter_copy_from_user_atomic"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在使用copy_file_range时一定要注意针对同一文件执行copy_file_range，结果有可能发生覆盖，导致结果并不是我们预期的。这个和memcpy一样，在有覆盖时结果时不可预期的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://lwn.net/Articles/659523/" target="_blank" rel="noopener">copy_file_range()</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/read_write.c" target="_blank" rel="noopener">read_write.c</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>ext4</category>
+      </categories>
+      <tags>
+        <tag>fs</tag>
+        <tag>ext4</tag>
+        <tag>copy_file_range</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>about-dwarf</title>
+    <url>/2020/01/20/about-dwarf/</url>
+    <content><![CDATA[<h1 id="关于dwarf"><a href="#关于dwarf" class="headerlink" title="关于dwarf"></a>关于dwarf</h1><p>一种调试文件格式，用于支持源码级调试功能。它通过树结构描述一个程序，每个节点有子节点或兄弟节点。节点可以表示<strong>类型</strong>、<strong>变量</strong>、或<strong>函数</strong>。<br>dwarf使用一系列的DIE(debugging information entries)表示源程序。每个<strong>DIE</strong>包含一个tag标签标识和一系列属性。每个或多个DIE组成一组标识程序中某个实体，或是程序或者变量等等。</p>
+<h1 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h1><p>readelf –debug-dump=info vmlinux</p>
+<blockquote>
+<p>输出.debug_info段中调试信息</p>
+</blockquote>
+<p>下面举个例子。<br><code>readelf --debug-dump=info vmlinux | grep dentry_open</code></p>
+<p>通过上面的命令可以得到如下信息</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">89773762- &lt;1&gt;&lt;aa9c983&gt;: Abbrev Number: 57 (DW_TAG_subprogram)</span><br><span class="line">89773763-    &lt;aa9c984&gt;   DW_AT_external    : 1</span><br><span class="line">89773764-    &lt;aa9c984&gt;   DW_AT_declaration : 1</span><br><span class="line">89773765:    &lt;aa9c984&gt;   DW_AT_linkage_name: (indirect string, offset: 0x105b80): dentry_open</span><br><span class="line">89773766:    &lt;aa9c988&gt;   DW_AT_name        : (indirect string, offset: 0x105b80): dentry_open</span><br><span class="line">89773767-    &lt;aa9c98c&gt;   DW_AT_decl_file   : 55</span><br><span class="line">89773768-    &lt;aa9c98d&gt;   DW_AT_decl_line   : 2493</span><br><span class="line">89773769-    &lt;aa9c98f&gt;   DW_AT_decl_column : 22</span><br></pre></td></tr></table></figure>
+<p>dentry_open是一个函数，在2493行被声明的。<br>可以用readelf查看各种信息。<br>在后面的参考中，[2]有对dwarf的详细介绍。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://developer.ibm.com/technologies/systems/articles/au-dwarf-debug-format/" target="_blank" rel="noopener">Exploring the DWARF debug format information</a></li>
+<li><a href="http://people.redhat.com/jkratoch/DeveloperConference2011-debug.pdf" target="_blank" rel="noopener">Debugging Tools Intro DWARF,ELF,GDB,build-id</a></li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>nfs cache problem</title>
+    <url>/2020/01/20/nfs-cache-problem/</url>
+    <content><![CDATA[<h1 id="first-section"><a href="#first-section" class="headerlink" title="first section"></a>first section</h1><p>some content</p>
+<h2 id="subsection"><a href="#subsection" class="headerlink" title="subsection"></a>subsection</h2><h1 id="second-section"><a href="#second-section" class="headerlink" title="second section"></a>second section</h1><p>some content<br><em>emphasis</em> <em>emphasis</em><br><strong>emphasis <em>underscore</em></strong><br><del>scratch</del></p>
+<h1 id="lists"><a href="#lists" class="headerlink" title="lists"></a>lists</h1><ol>
+<li>first</li>
+<li>second<br>..* unordered sublist<br>..* unordered sublist</li>
+<li>another</li>
+<li>the other<br>…some indent here</li>
+</ol>
+<ul>
+<li>unordered list</li>
+</ul>
+<ul>
+<li>minus</li>
+</ul>
+<ul>
+<li>plus</li>
+</ul>
+<h1 id="links"><a href="#links" class="headerlink" title="links"></a>links</h1><p><a href="http://a.com" target="_blank" rel="noopener">link title</a><br><a href="http://b.com" target="_blank" rel="noopener">link title</a></p>
+<h1 id="images"><a href="#images" class="headerlink" title="images"></a>images</h1><p>inline:<br><img src="http://a.com/a.png" alt="some text"></p>
+<p>refer:<br><img src="http://a.com/a.png" alt="some text"></p>
+<h1 id="code-ang-highlighting"><a href="#code-ang-highlighting" class="headerlink" title="code ang highlighting"></a>code ang highlighting</h1><p>inline <code>code</code>.</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">some code</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">'hello'</span>)</span><br></pre></td></tr></table></figure>
+
+<h1 id="tables"><a href="#tables" class="headerlink" title="tables"></a>tables</h1><table>
+<thead>
+<tr>
+<th>table</th>
+<th align="left">area</th>
+<th align="center">cool</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>a</td>
+<td align="left">as</td>
+<td align="center">cool</td>
+</tr>
+<tr>
+<td>b</td>
+<td align="left">ad</td>
+<td align="center">hot</td>
+</tr>
+</tbody></table>
+<h1 id="blockquotes"><a href="#blockquotes" class="headerlink" title="blockquotes"></a>blockquotes</h1><blockquote>
+<p>some content<br>other content</p>
+</blockquote>
+<h1 id="horizontal-rule"><a href="#horizontal-rule" class="headerlink" title="horizontal rule"></a>horizontal rule</h1><p>maybe<br>…<br>maybe</p>
+<hr>
+<p>maybe</p>
+<hr>
+<hr>
+<h1 id="line-breaks"><a href="#line-breaks" class="headerlink" title="line breaks"></a>line breaks</h1>]]></content>
+      <tags>
+        <tag>nfs</tag>
+      </tags>
+  </entry>
+</search>

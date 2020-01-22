@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Linux&#39;s Notes</title>
+  
+  <subtitle>Say what you do and do what you say</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="https://supersojo.github.io/"/>
+  <updated>2020-01-22T09:01:16.812Z</updated>
+  <id>https://supersojo.github.io/</id>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="https://supersojo.github.io/2020/01/22/hello-world/"/>
+    <id>https://supersojo.github.io/2020/01/22/hello-world/</id>
+    <published>2020-01-22T09:01:16.812Z</published>
+    <updated>2020-01-22T09:01:16.812Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+      <category term="hexo hello" scheme="https://supersojo.github.io/categories/hexo-hello/"/>
+    
+    
+      <category term="hello" scheme="https://supersojo.github.io/tags/hello/"/>
+    
+      <category term="入门" scheme="https://supersojo.github.io/tags/%E5%85%A5%E9%97%A8/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>copy_file_range problem</title>
+    <link href="https://supersojo.github.io/2020/01/20/copy-file-range-problem/"/>
+    <id>https://supersojo.github.io/2020/01/20/copy-file-range-problem/</id>
+    <published>2020-01-20T23:18:10.000Z</published>
+    <updated>2020-01-22T09:01:16.812Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+      <category term="ext4" scheme="https://supersojo.github.io/categories/ext4/"/>
+    
+    
+      <category term="fs" scheme="https://supersojo.github.io/tags/fs/"/>
+    
+      <category term="ext4" scheme="https://supersojo.github.io/tags/ext4/"/>
+    
+      <category term="copy_file_range" scheme="https://supersojo.github.io/tags/copy-file-range/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>about-dwarf</title>
+    <link href="https://supersojo.github.io/2020/01/20/about-dwarf/"/>
+    <id>https://supersojo.github.io/2020/01/20/about-dwarf/</id>
+    <published>2020-01-20T22:33:52.000Z</published>
+    <updated>2020-01-22T09:01:16.812Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+  </entry>
+  
+  <entry>
+    <title>nfs cache problem</title>
+    <link href="https://supersojo.github.io/2020/01/20/nfs-cache-problem/"/>
+    <id>https://supersojo.github.io/2020/01/20/nfs-cache-problem/</id>
+    <published>2020-01-20T01:36:28.000Z</published>
+    <updated>2020-01-22T09:01:16.812Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="nfs" scheme="https://supersojo.github.io/tags/nfs/"/>
+    
+  </entry>
+  
+</feed>
