@@ -6,17 +6,17 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://supersojo.github.io/"/>
-  <updated>2020-01-22T09:21:05.276Z</updated>
+  <updated>2020-01-28T12:28:05.259Z</updated>
   <id>https://supersojo.github.io/</id>
   
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
     <title>Hello World</title>
-    <link href="https://supersojo.github.io/2020/01/22/hello-world/"/>
-    <id>https://supersojo.github.io/2020/01/22/hello-world/</id>
-    <published>2020-01-22T09:21:05.276Z</published>
-    <updated>2020-01-22T09:21:05.276Z</updated>
+    <link href="https://supersojo.github.io/2020/01/28/hello-world/"/>
+    <id>https://supersojo.github.io/2020/01/28/hello-world/</id>
+    <published>2020-01-28T12:28:05.259Z</published>
+    <updated>2020-01-28T12:28:05.259Z</updated>
     
     <summary type="html">
     
@@ -41,11 +41,36 @@
   </entry>
   
   <entry>
+    <title>handon</title>
+    <link href="https://supersojo.github.io/2020/01/28/handon/"/>
+    <id>https://supersojo.github.io/2020/01/28/handon/</id>
+    <published>2020-01-28T01:16:39.000Z</published>
+    <updated>2020-01-28T12:28:05.259Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+    
+      <category term="hand" scheme="https://supersojo.github.io/tags/hand/"/>
+    
+  </entry>
+  
+  <entry>
     <title>testci</title>
     <link href="https://supersojo.github.io/2020/01/22/testci/"/>
     <id>https://supersojo.github.io/2020/01/22/testci/</id>
     <published>2020-01-22T01:16:39.000Z</published>
-    <updated>2020-01-22T09:21:05.276Z</updated>
+    <updated>2020-01-28T12:28:05.263Z</updated>
     
     <summary type="html">
     
@@ -70,7 +95,7 @@
     <link href="https://supersojo.github.io/2020/01/20/copy-file-range-problem/"/>
     <id>https://supersojo.github.io/2020/01/20/copy-file-range-problem/</id>
     <published>2020-01-20T23:18:10.000Z</published>
-    <updated>2020-01-22T09:21:05.276Z</updated>
+    <updated>2020-01-28T12:28:05.259Z</updated>
     
     <summary type="html">
     
@@ -101,7 +126,7 @@
     <link href="https://supersojo.github.io/2020/01/20/about-dwarf/"/>
     <id>https://supersojo.github.io/2020/01/20/about-dwarf/</id>
     <published>2020-01-20T22:33:52.000Z</published>
-    <updated>2020-01-22T09:21:05.276Z</updated>
+    <updated>2020-01-28T12:28:05.259Z</updated>
     
     <summary type="html">
     
@@ -124,7 +149,7 @@
     <link href="https://supersojo.github.io/2020/01/20/nfs-cache-problem/"/>
     <id>https://supersojo.github.io/2020/01/20/nfs-cache-problem/</id>
     <published>2020-01-20T01:36:28.000Z</published>
-    <updated>2020-01-22T09:21:05.276Z</updated>
+    <updated>2020-01-28T12:28:05.259Z</updated>
     
     <summary type="html">
     
