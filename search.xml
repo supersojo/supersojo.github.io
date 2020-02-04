@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/2020/01/28/hello-world/</url>
+    <url>/2020/02/04/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 
@@ -151,6 +151,49 @@
 <h1 id="line-breaks"><a href="#line-breaks" class="headerlink" title="line breaks"></a>line breaks</h1>]]></content>
       <tags>
         <tag>nfs</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>udplite checksum problem</title>
+    <url>/2019/07/16/udplite-checksum-problem/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在linux 3.10.0上面，遇到一个udplite校验失败问题。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>udp报文格式:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MAC|IP|UDP|Payload</span><br></pre></td></tr></table></figure>
+
+<p>而如下的udplite报文被drop了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">MAC|IP|UDP|Payload</span><br><span class="line">14  20  8   61</span><br><span class="line"></span><br><span class="line">udplite_rcv</span><br><span class="line">-&gt;__udp4_lib_rcv</span><br><span class="line">-&gt;udp4_csum_init</span><br><span class="line">-&gt;udplite_checksum_init</span><br><span class="line">-&gt;skb_checksum_init_zero_check</span><br><span class="line">  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~    报bad checksum</span><br></pre></td></tr></table></figure>
+
+<p>在udplite_checksum_init的开始处:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">skb-&gt;len &#x3D; 61 + 8 &#x3D;69</span><br><span class="line">udphdr-&gt;len &#x3D; 64</span><br></pre></td></tr></table></figure>
+<p>UDPLITE协议中，udphdr中len表示对报文多少进行了校验。<br>即UDP_SKB_CB(skb)-&gt;partial_cov=1</p>
+]]></content>
+      <categories>
+        <category>network</category>
+      </categories>
+      <tags>
+        <tag>udplite</tag>
+        <tag>checksum</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>松散源路由发包失败问题</title>
+    <url>/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>近期遇到松散源路由报文通信失败，通过systemtap可以很快定位报文丢弃在何处。</p>
+<p>直接上探测脚本:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">probe begin()</span><br><span class="line">&#123;</span><br><span class="line">  print(&quot;Begin probe..\n&quot;)</span><br><span class="line">&#125;</span><br><span class="line">probe end()</span><br><span class="line">&#123;</span><br><span class="line">  print(&quot;End probe.\n&quot;)</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.function(&quot;icmp_echo&quot;)</span><br><span class="line">&#123;</span><br><span class="line">  print_backtrace()&#x2F;&#x2F;调用栈回溯</span><br><span class="line">  printf(&quot;%s\n&quot;,pp())&#x2F;&#x2F;调用点</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.statement(&quot;*@net&#x2F;ipv4&#x2F;ip_input.c:341&quot;)</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;%s\n&quot;,pp())</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.function(&quot;ip_options_compile&quot;).return</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;ip_options_compile return:%d\n&quot;,$return)</span><br><span class="line">&#125;</span><br><span class="line">probe timer.ms(10000)</span><br><span class="line">&#123;</span><br><span class="line">  exit()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在报文路径上增加探测点直接定位出丢包位置。</p>
+</blockquote>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这个具体问题是在函数static inline bool ip_rcv_options(struct sk_buff *skb)中如果源路由未打开则直接drop。</p>
+<p>打开内核中源路由选项，通信正常。</p>
+]]></content>
+      <categories>
+        <category>network</category>
+      </categories>
+      <tags>
+        <tag>松散源路由</tag>
+        <tag>source route</tag>
       </tags>
   </entry>
 </search>
