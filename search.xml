@@ -1,8 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>ubuntu清理磁盘空间</title>
+    <url>/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>虽然linux不像windows那样需要碎片整理，随着时间的流逝，硬盘空间会<br>越来越小，有必要对硬件空间清理。以ubuntu为例说明如何清理硬盘空间。</p>
+<h2 id="查看硬盘占用"><a href="#查看硬盘占用" class="headerlink" title="查看硬盘占用"></a>查看硬盘占用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">udev            934M     0  934M   0% &#x2F;dev</span><br><span class="line">tmpfs           193M  2.6M  191M   2% &#x2F;run</span><br><span class="line">&#x2F;dev&#x2F;sda1       8.8G  6.5G  1.9G  78% &#x2F;</span><br><span class="line">tmpfs           965M     0  965M   0% &#x2F;dev&#x2F;shm</span><br><span class="line">tmpfs           5.0M     0  5.0M   0% &#x2F;run&#x2F;lock</span><br><span class="line">tmpfs           965M     0  965M   0% &#x2F;sys&#x2F;fs&#x2F;cgroup</span><br><span class="line">tmpfs           193M     0  193M   0% &#x2F;run&#x2F;user&#x2F;0</span><br><span class="line">tmpfs           193M     0  193M   0% &#x2F;run&#x2F;user&#x2F;1000</span><br><span class="line">&#x2F;dev&#x2F;sdb1       127G  3.0G  125G   3% &#x2F;share</span><br></pre></td></tr></table></figure>
+<p>这里根分区可用空间不足，需要对根分区下目录空间占用进行分析。</p>
+<h2 id="查看根分区目录空间占用"><a href="#查看根分区目录空间占用" class="headerlink" title="查看根分区目录空间占用"></a>查看根分区目录空间占用</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ du -h --max-depth&#x3D;1 &#x2F;</span><br><span class="line">23M	&#x2F;opt</span><br><span class="line">0	&#x2F;dev</span><br><span class="line">236M	&#x2F;boot</span><br><span class="line">8.0K	&#x2F;snap</span><br><span class="line">5.8M	&#x2F;lib32</span><br><span class="line">3.1G	&#x2F;usr</span><br><span class="line">0	&#x2F;sys</span><br><span class="line">156M	&#x2F;root</span><br><span class="line">16K	&#x2F;lost+found</span><br><span class="line">0	&#x2F;proc</span><br><span class="line">12K	&#x2F;media</span><br><span class="line">4.0K	&#x2F;srv</span><br><span class="line">6.5M	&#x2F;libx32</span><br><span class="line">4.0K	&#x2F;lib64</span><br><span class="line">4.0K	&#x2F;mnt</span><br><span class="line">12M	&#x2F;etc</span><br><span class="line">1.1G	&#x2F;lib</span><br><span class="line">2.8G	&#x2F;share</span><br><span class="line">704M	&#x2F;var</span><br><span class="line">2.9M	&#x2F;run</span><br><span class="line">18M	&#x2F;bin</span><br><span class="line">1.1G	&#x2F;home</span><br><span class="line">19M	&#x2F;sbin</span><br><span class="line">48K	&#x2F;tmp</span><br><span class="line">4.0K	&#x2F;nextcloud</span><br><span class="line">9.2G	&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>随着时间的流逝，log目录会比较大，可以通过journalctl命令控制日志文件所占空<br>间的大小。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ journalctl --vaccum-size&#x3D;100M</span><br></pre></td></tr></table></figure>
+
+<h1 id="清空安装的软件包备份"><a href="#清空安装的软件包备份" class="headerlink" title="清空安装的软件包备份"></a>清空安装的软件包备份</h1><p>ubuntu把安装的软件包缓存在如下目录:</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ ls &#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives&#x2F;</span><br><span class="line">lock partial</span><br></pre></td></tr></table></figure>
+
+<p>然后通过下面的命令删除缓存的安装包。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ apt clean</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过以上步骤，硬盘空间大了许多。</p>
+]]></content>
+      <categories>
+        <category>ubuntu</category>
+      </categories>
+      <tags>
+        <tag>ubuntu</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
-    <url>/2020/02/04/hello-world/</url>
+    <url>/2020/02/25/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 

@@ -6,17 +6,44 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://supersojo.github.io/"/>
-  <updated>2020-02-04T10:39:13.688Z</updated>
+  <updated>2020-02-25T08:38:51.016Z</updated>
   <id>https://supersojo.github.io/</id>
   
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>ubuntu清理磁盘空间</title>
+    <link href="https://supersojo.github.io/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/"/>
+    <id>https://supersojo.github.io/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/</id>
+    <published>2020-02-25T21:10:10.000Z</published>
+    <updated>2020-02-25T08:38:51.016Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+      <category term="ubuntu" scheme="https://supersojo.github.io/categories/ubuntu/"/>
+    
+    
+      <category term="ubuntu" scheme="https://supersojo.github.io/tags/ubuntu/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Hello World</title>
-    <link href="https://supersojo.github.io/2020/02/04/hello-world/"/>
-    <id>https://supersojo.github.io/2020/02/04/hello-world/</id>
-    <published>2020-02-04T10:39:13.688Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <link href="https://supersojo.github.io/2020/02/25/hello-world/"/>
+    <id>https://supersojo.github.io/2020/02/25/hello-world/</id>
+    <published>2020-02-25T08:38:51.016Z</published>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -45,7 +72,7 @@
     <link href="https://supersojo.github.io/2020/01/28/handon/"/>
     <id>https://supersojo.github.io/2020/01/28/handon/</id>
     <published>2020-01-28T01:16:39.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -70,7 +97,7 @@
     <link href="https://supersojo.github.io/2020/01/22/testci/"/>
     <id>https://supersojo.github.io/2020/01/22/testci/</id>
     <published>2020-01-22T01:16:39.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -95,7 +122,7 @@
     <link href="https://supersojo.github.io/2020/01/20/copy-file-range-problem/"/>
     <id>https://supersojo.github.io/2020/01/20/copy-file-range-problem/</id>
     <published>2020-01-20T23:18:10.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -126,7 +153,7 @@
     <link href="https://supersojo.github.io/2020/01/20/about-dwarf/"/>
     <id>https://supersojo.github.io/2020/01/20/about-dwarf/</id>
     <published>2020-01-20T22:33:52.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -149,7 +176,7 @@
     <link href="https://supersojo.github.io/2020/01/20/nfs-cache-problem/"/>
     <id>https://supersojo.github.io/2020/01/20/nfs-cache-problem/</id>
     <published>2020-01-20T01:36:28.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -174,7 +201,7 @@
     <link href="https://supersojo.github.io/2019/07/16/udplite-checksum-problem/"/>
     <id>https://supersojo.github.io/2019/07/16/udplite-checksum-problem/</id>
     <published>2019-07-16T22:18:10.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
@@ -203,7 +230,7 @@
     <link href="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"/>
     <id>https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</id>
     <published>2019-06-20T20:10:10.000Z</published>
-    <updated>2020-02-04T10:39:13.688Z</updated>
+    <updated>2020-02-25T08:38:51.016Z</updated>
     
     <summary type="html">
     
