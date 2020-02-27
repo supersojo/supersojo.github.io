@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hello World</title>
+    <url>/2020/02/27/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>hexo hello</category>
+      </categories>
+      <tags>
+        <tag>hello</tag>
+        <tag>入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>ubuntu清理磁盘空间</title>
     <url>/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/</url>
     <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>虽然linux不像windows那样需要碎片整理，随着时间的流逝，硬盘空间会<br>越来越小，有必要对硬件空间清理。以ubuntu为例说明如何清理硬盘空间。</p>
@@ -27,28 +52,64 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World</title>
-    <url>/2020/02/25/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+    <title>分析一下目前linux内核栈的实现</title>
+    <url>/2020/02/21/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在看内核一个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/sunrpc/auth_gss/gss_krb5_seqnum.c?h=v5.6-rc3&id=e7afe6c1d486b516ed586dcc10b3e7e3e85a9c2b" target="_blank" rel="noopener">patch</a>的修改，这个patch的commit描述<br>如下:</p>
+<blockquote>
+<p>While trying to reproduce a reported kernel panic on arm64, I discovered<br>that AUTH_GSS basically doesn’t work at all with older enctypes on arm64<br>systems with CONFIG_VMAP_STACK enabled.  It turns out there still a few<br>places using stack memory with scatterlists, causing krb5_encrypt() and<br>krb5_decrypt() to produce incorrect results (or a BUG if CONFIG_DEBUG_SG<br>is enabled).<br>描述里边提到CONFIG_VMAP_STACK内核宏和scatterlist。下面对它们分析。</p>
+</blockquote>
+<h2 id="CONFIG-VMAP-STACK"><a href="#CONFIG-VMAP-STACK" class="headerlink" title="CONFIG_VMAP_STACK"></a>CONFIG_VMAP_STACK</h2><h3 id="CONFIG-VMAP-STACK的功能"><a href="#CONFIG-VMAP-STACK的功能" class="headerlink" title="CONFIG_VMAP_STACK的功能"></a>CONFIG_VMAP_STACK的功能</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">root@ubuntu:&#x2F;share&#x2F;linux# find . -name Kconfig | xargs grep -rsn VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:821:config HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:841:config VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:844:     depends on HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;arm64&#x2F;Kconfig:135:       select HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;s390&#x2F;Kconfig:133:        select HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;s390&#x2F;Kconfig:714:        depends on !VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;x86&#x2F;Kconfig:152: select HAVE_ARCH_VMAP_STACK             if X86_64</span><br></pre></td></tr></table></figure>
+<p>从搜索结果看，这个功能是和架构相关的。<br>再来看下该配置宏的具体描述：</p>
+<blockquote>
+<p>config VMAP_STACK<br>       default y<br>       bool “Use a virtually-mapped stack”<br>       depends on HAVE_ARCH_VMAP_STACK<br>       depends on !KASAN || KASAN_VMALLOC<br>       —help—<br>         Enable this if you want the use virtually-mapped kernel stacks<br>         with guard pages.  This causes kernel stack overflows to be<br>         caught immediately rather than causing difficult-to-diagnose<br>         corruption.</p>
+<pre><code>To use this with KASAN, the architecture must support backing
+virtual mappings with real shadow memory, and KASAN_VMALLOC must
+ be enabled.</code></pre><p>如果内核开启CONFIG_VMAP_STACK，内核可以快速检测内核栈overflow异常，比之前在内核栈溢出<br>访问时出问题难以诊断，内核栈溢出肯定访问垃圾数据，其结果不可预测的，难以排查，在有个guardpage后<br>只要内核栈溢出访问，内核可以快速捕获到。</p>
+</blockquote>
+<p>内核栈的申请通过alloc_thread_stack_node实现。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)</span><br><span class="line">&#123;</span><br><span class="line">#ifdef CONFIG_VMAP_STACK</span><br><span class="line">        void *stack;</span><br><span class="line">        int i;</span><br><span class="line"></span><br><span class="line">        for (i &#x3D; 0; i &lt; NR_CACHED_STACKS; i++) &#123;</span><br><span class="line">                struct vm_struct *s;</span><br><span class="line"></span><br><span class="line">                s &#x3D; this_cpu_xchg(cached_stacks[i], NULL);</span><br><span class="line"></span><br><span class="line">                if (!s)</span><br><span class="line">                        continue;</span><br><span class="line"></span><br><span class="line">                &#x2F;* Clear the KASAN shadow of the stack. *&#x2F;</span><br><span class="line">                kasan_unpoison_shadow(s-&gt;addr, THREAD_SIZE);</span><br><span class="line"></span><br><span class="line">                &#x2F;* Clear stale pointers from reused stack. *&#x2F;</span><br><span class="line">                memset(s-&gt;addr, 0, THREAD_SIZE);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                tsk-&gt;stack_vm_area &#x3D; s;</span><br><span class="line">                tsk-&gt;stack &#x3D; s-&gt;addr;</span><br><span class="line">                return s-&gt;addr;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;*</span><br><span class="line">         * Allocated stacks are cached and later reused by new threads,</span><br><span class="line">         * so memcg accounting is performed manually on assigning&#x2F;releasing</span><br><span class="line">         * stacks to tasks. Drop __GFP_ACCOUNT.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        stack &#x3D; __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,</span><br><span class="line">                                     VMALLOC_START, VMALLOC_END,</span><br><span class="line">                                     THREADINFO_GFP &amp; ~__GFP_ACCOUNT,</span><br><span class="line">                                     PAGE_KERNEL,</span><br><span class="line">                                     0, node, __builtin_return_address(0));</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * We can&#39;t call find_vm_area() in interrupt context, and</span><br><span class="line">         * free_thread_stack() can be called in interrupt context,</span><br><span class="line">         * so cache the vm_struct.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        if (stack) &#123;</span><br><span class="line">                tsk-&gt;stack_vm_area &#x3D; find_vm_area(stack);</span><br><span class="line">                tsk-&gt;stack &#x3D; stack;</span><br><span class="line">        &#125;</span><br><span class="line">        return stack;</span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line">        struct page *page &#x3D; alloc_pages_node(node, THREADINFO_GFP,</span><br><span class="line">                                             THREAD_SIZE_ORDER);</span><br><span class="line"></span><br><span class="line">        if (likely(page)) &#123;</span><br><span class="line">                tsk-&gt;stack &#x3D; page_address(page);</span><br><span class="line">                return tsk-&gt;stack;</span><br><span class="line">        &#125;</span><br><span class="line">        return NULL;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>为了避免vmalloc的频繁调用，内核使用cached_stacks本地缓存数组，保存进程退出时的内核栈指针。在<br>创建进程时可以直接从cached_stacks本地缓存数组获取可用的内核栈。</p>
+<p>如果cached_stacks本地缓存数组不可用，则通过vmalloc接口申请内核栈。vmalloc申请的空间并不保证是<br>物理连续的页。</p>
+<p>vmalloc申请的空间在使用上要注意：</p>
+<ol>
+<li>不能用于DMA操作<blockquote>
+<p>DMA硬件没有页面映射，需要物理上连续的空间。</p>
+</blockquote>
+</li>
+<li>不能用于scatterlist<blockquote>
+<p>后面分析</p>
+</blockquote>
+</li>
+</ol>
+<p>在不启用CONFIG_VMAP_STACK时，内核使用alloc_pages_node申请内核栈空间。这个接口申请连续的物理页<br>作为内核栈。</p>
+<h3 id="内核栈大小"><a href="#内核栈大小" class="headerlink" title="内核栈大小"></a>内核栈大小</h3><p>前面分析了内核栈的分配，那么内核栈占多少空间呢？</p>
+<blockquote>
+<p>THREAD_SIZE宏定义了内核栈的大小。</p>
+</blockquote>
+<p>THREAD_SIZE是架构相关的，在x86上定义为2个page的大小。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#define THREAD_SIZE_ORDER       1</span><br><span class="line">#define THREAD_SIZE             (PAGE_SIZE &lt;&lt; THREAD_SIZE_ORDER)</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>在x86_64上定义为如下大小，开启KASAN，则分配8个page的大小，不开启KSASAN则定义为4个page的大小。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#ifdef CONFIG_KASAN</span><br><span class="line">#define KASAN_STACK_ORDER 1</span><br><span class="line">#else</span><br><span class="line">#define KASAN_STACK_ORDER 0</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#define THREAD_SIZE_ORDER       (2 + KASAN_STACK_ORDER)</span><br><span class="line">#define THREAD_SIZE  (PAGE_SIZE &lt;&lt; THREAD_SIZE_ORDER)</span><br></pre></td></tr></table></figure>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
+<p>这里提高了KASAN功能，这个是什么功能呢？</p>
+<blockquote>
+<p>Kasan 是 Kernel Address Sanitizer 的缩写，它是一个动态检测内存错误的工具，主要功能是<br>检查内存越界访问和使用已释放的内存等问题。Kasan 集成在 Linux 内核中，随 Linux 内核<br>代码一起发布，并由内核社区维护和发展。</p>
+</blockquote>
+<p>这里不对KASAN功能进行分析，更多的可以参考下面的文档。<br>KASAN扩展阅读</p>
+<ol>
+<li><a href="https://www.kernel.org/doc/html/v4.14/dev-tools/kasan.html" target="_blank" rel="noopener">KASAN内核文档</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1608_tengr_kasan/index.html" target="_blank" rel="noopener">KASAN简单介绍</a></li>
+</ol>
+<h3 id="内核栈的布局"><a href="#内核栈的布局" class="headerlink" title="内核栈的布局"></a>内核栈的布局</h3><h2 id="scatterlist"><a href="#scatterlist" class="headerlink" title="scatterlist"></a>scatterlist</h2>]]></content>
       <categories>
-        <category>hexo hello</category>
+        <category>kernel</category>
       </categories>
       <tags>
-        <tag>hello</tag>
-        <tag>入门</tag>
+        <tag>内核栈</tag>
+        <tag>CONFIG_VMAP_STACK</tag>
+        <tag>scatterlist</tag>
       </tags>
   </entry>
   <entry>
