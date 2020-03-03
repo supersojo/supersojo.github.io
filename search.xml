@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hello World</title>
+    <url>/2020/03/03/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+]]></content>
+      <categories>
+        <category>hexo hello</category>
+      </categories>
+      <tags>
+        <tag>hello</tag>
+        <tag>入门</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>分析一下目前linux内核栈的实现</title>
     <url>/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/</url>
     <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在看内核一个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/sunrpc/auth_gss/gss_krb5_seqnum.c?h=v5.6-rc3&id=e7afe6c1d486b516ed586dcc10b3e7e3e85a9c2b" target="_blank" rel="noopener">patch</a>的修改，这个patch的commit描述<br>如下:</p>
@@ -74,31 +99,6 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
         <tag>内核栈</tag>
         <tag>CONFIG_VMAP_STACK</tag>
         <tag>scatterlist</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2020/02/27/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-]]></content>
-      <categories>
-        <category>hexo hello</category>
-      </categories>
-      <tags>
-        <tag>hello</tag>
-        <tag>入门</tag>
       </tags>
   </entry>
   <entry>
@@ -296,6 +296,34 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <tags>
         <tag>松散源路由</tag>
         <tag>source route</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>x86_64 calling conventions</title>
+    <url>/2019/06/10/x86_64%20calling%20conversion/</url>
+    <content><![CDATA[<p>在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。</p>
+<h2 id="通过函数的汇编语句分析调用约定"><a href="#通过函数的汇编语句分析调用约定" class="headerlink" title="通过函数的汇编语句分析调用约定"></a>通过函数的汇编语句分析调用约定</h2><h3 id="栈帧布局"><a href="#栈帧布局" class="headerlink" title="栈帧布局"></a>栈帧布局</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.text</span><br><span class="line"> foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp]</span><br><span class="line">                  ^</span><br><span class="line">                  |</span><br><span class="line">                rbp&#x2F;rsp</span><br><span class="line"> 8(%rbp): return address</span><br><span class="line"> 0(%rbp): old %rbp</span><br></pre></td></tr></table></figure>
+
+<p>上面是foo函数的汇编语句，在函数入口处，%rsp指向返回地址，重新设置%rbp指向当前栈帧。</p>
+<h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">high addr         ^           ^ low addr</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br></pre></td></tr></table></figure>
+
+<p>如果在栈上分配局部变量，通过%rbp访问。-8(%rbp)访问第一个局部变量，依次类推访问其它局部变量。</p>
+<h3 id="返回地址"><a href="#返回地址" class="headerlink" title="返回地址"></a>返回地址</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     …</span><br><span class="line">     add $16,%rsp # balance stack</span><br><span class="line">     pop %rbp  # restore stack frame pointer</span><br><span class="line">     ret # return to caller</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">                  ^           ^</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">在使用完局部变量需要把对应栈空间释放，平衡堆栈，最后ret返回caller处。</span><br><span class="line"></span><br><span class="line">### 参数传递</span><br></pre></td></tr></table></figure>
+<p>call conventions:<br> void foo(int a,int b,int c,int d,int e,int f,int g);<br>   40053c:       6a 07                   pushq  $0x7      # seventh use stack<br>   40053e:       41 b9 06 00 00 00       mov    $0x6,%r9d # sixth<br>   400544:       41 b8 05 00 00 00       mov    $0x5,%r8d # fifth<br>   40054a:       b9 04 00 00 00          mov    $0x4,%ecx # fouth<br>   40054f:       ba 03 00 00 00          mov    $0x3,%edx # third<br>   400554:       be 02 00 00 00          mov    $0x2,%esi # second para<br>   400559:       bf 01 00 00 00          mov    $0x1,%edi # first para<br> %rdi -&gt;a<br> %rsi -&gt;b<br> %rdx -&gt;c<br> %rcx -&gt;d<br> %r8  -&gt;e<br> %r9  -&gt;f<br> [parameters][retaddr][old rbp]<br>                              ^<br>                              |<br>                             rbp/rsp<br> 8(%rbp): return address<br> 16(%rbp): the seventh parameter<br> 24(%rbp): the eighth parameter</p>
+<pre><code>
+前6个参数使用寄存器传递，如果还有额外参数则通过堆栈传递。
+
+## 参考资料
+
+1. [X86_calling_conventions](https://en.wikipedia.org/wiki/X86_calling_conventions)
+2. [The 64 bit x86 C Calling Convention](https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf)
+</code></pre>]]></content>
+      <categories>
+        <category>调用约定</category>
+      </categories>
+      <tags>
+        <tag>x86_64</tag>
+        <tag>调用约定</tag>
       </tags>
   </entry>
 </search>

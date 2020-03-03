@@ -46,22 +46,20 @@
   };
 </script>
 
-  <meta name="description" content="first sectionsome content subsectionsecond sectionsome contentemphasis emphasisemphasis underscorescratch lists first second..* unordered sublist..* unordered sublist another the other…some indent her">
+  <meta name="description" content="在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。 通过函数的汇编语句分析调用约定栈帧布局1234567891011.text foo:     push %rbp     mov %rsp,%rbp     … [retaddr][old rbp]                  ^                  |                rbp&#x2F;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="nfs cache problem">
-<meta property="og:url" content="https://supersojo.github.io/2020/01/20/nfs-cache-problem/index.html">
+<meta property="og:title" content="x86_64 calling conventions">
+<meta property="og:url" content="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/index.html">
 <meta property="og:site_name" content="Linux&#39;s Notes">
-<meta property="og:description" content="first sectionsome content subsectionsecond sectionsome contentemphasis emphasisemphasis underscorescratch lists first second..* unordered sublist..* unordered sublist another the other…some indent her">
+<meta property="og:description" content="在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。 通过函数的汇编语句分析调用约定栈帧布局1234567891011.text foo:     push %rbp     mov %rsp,%rbp     … [retaddr][old rbp]                  ^                  |                rbp&#x2F;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://a.com/a.png">
-<meta property="og:image" content="http://a.com/a.png">
-<meta property="article:published_time" content="2020-01-20T01:36:28.000Z">
+<meta property="article:published_time" content="2019-06-10T21:10:10.000Z">
 <meta property="article:modified_time" content="2020-03-03T13:09:53.720Z">
-<meta property="article:tag" content="nfs">
+<meta property="article:tag" content="x86_64">
+<meta property="article:tag" content="调用约定">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://a.com/a.png">
 
-<link rel="canonical" href="https://supersojo.github.io/2020/01/20/nfs-cache-problem/">
+<link rel="canonical" href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/">
 
 
 <script id="page-configurations">
@@ -73,7 +71,7 @@
   };
 </script>
 
-  <title>nfs cache problem | Linux's Notes</title>
+  <title>x86_64 calling conventions | Linux's Notes</title>
   
 
 
@@ -216,7 +214,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/20/nfs-cache-problem/">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -229,7 +227,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          nfs cache problem
+          x86_64 calling conventions
         </h1>
 
         <div class="post-meta">
@@ -239,7 +237,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2020-01-20 01:36:28" itemprop="dateCreated datePublished" datetime="2020-01-20T01:36:28+00:00">2020-01-20</time>
+              <time title="创建时间：2019-06-10 21:10:10" itemprop="dateCreated datePublished" datetime="2019-06-10T21:10:10+00:00">2019-06-10</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -248,6 +246,17 @@
                 <span class="post-meta-item-text">更新于</span>
                 <time title="修改时间：2020-03-03 13:09:53" itemprop="dateModified" datetime="2020-03-03T13:09:53+00:00">2020-03-03</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/" itemprop="url" rel="index">
+                    <span itemprop="name">调用约定</span>
+                  </a>
+                </span>
+            </span>
 
           
 
@@ -260,58 +269,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="first-section"><a href="#first-section" class="headerlink" title="first section"></a>first section</h1><p>some content</p>
-<h2 id="subsection"><a href="#subsection" class="headerlink" title="subsection"></a>subsection</h2><h1 id="second-section"><a href="#second-section" class="headerlink" title="second section"></a>second section</h1><p>some content<br><em>emphasis</em> <em>emphasis</em><br><strong>emphasis <em>underscore</em></strong><br><del>scratch</del></p>
-<h1 id="lists"><a href="#lists" class="headerlink" title="lists"></a>lists</h1><ol>
-<li>first</li>
-<li>second<br>..* unordered sublist<br>..* unordered sublist</li>
-<li>another</li>
-<li>the other<br>…some indent here</li>
-</ol>
-<ul>
-<li>unordered list</li>
-</ul>
-<ul>
-<li>minus</li>
-</ul>
-<ul>
-<li>plus</li>
-</ul>
-<h1 id="links"><a href="#links" class="headerlink" title="links"></a>links</h1><p><a href="http://a.com" target="_blank" rel="noopener">link title</a><br><a href="http://b.com" target="_blank" rel="noopener">link title</a></p>
-<h1 id="images"><a href="#images" class="headerlink" title="images"></a>images</h1><p>inline:<br><img src="http://a.com/a.png" alt="some text"></p>
-<p>refer:<br><img src="http://a.com/a.png" alt="some text"></p>
-<h1 id="code-ang-highlighting"><a href="#code-ang-highlighting" class="headerlink" title="code ang highlighting"></a>code ang highlighting</h1><p>inline <code>code</code>.</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">some code</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">print(<span class="string">'hello'</span>)</span><br></pre></td></tr></table></figure>
+        <p>在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。</p>
+<h2 id="通过函数的汇编语句分析调用约定"><a href="#通过函数的汇编语句分析调用约定" class="headerlink" title="通过函数的汇编语句分析调用约定"></a>通过函数的汇编语句分析调用约定</h2><h3 id="栈帧布局"><a href="#栈帧布局" class="headerlink" title="栈帧布局"></a>栈帧布局</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line"> foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp]</span><br><span class="line">                  ^</span><br><span class="line">                  |</span><br><span class="line">                rbp&#x2F;rsp</span><br><span class="line"> 8(%rbp): return address</span><br><span class="line"> 0(%rbp): old %rbp</span><br></pre></td></tr></table></figure>
 
-<h1 id="tables"><a href="#tables" class="headerlink" title="tables"></a>tables</h1><table>
-<thead>
-<tr>
-<th>table</th>
-<th align="left">area</th>
-<th align="center">cool</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>a</td>
-<td align="left">as</td>
-<td align="center">cool</td>
-</tr>
-<tr>
-<td>b</td>
-<td align="left">ad</td>
-<td align="center">hot</td>
-</tr>
-</tbody></table>
-<h1 id="blockquotes"><a href="#blockquotes" class="headerlink" title="blockquotes"></a>blockquotes</h1><blockquote>
-<p>some content<br>other content</p>
-</blockquote>
-<h1 id="horizontal-rule"><a href="#horizontal-rule" class="headerlink" title="horizontal rule"></a>horizontal rule</h1><p>maybe<br>…<br>maybe</p>
-<hr>
-<p>maybe</p>
-<hr>
-<hr>
-<h1 id="line-breaks"><a href="#line-breaks" class="headerlink" title="line breaks"></a>line breaks</h1>
+<p>上面是foo函数的汇编语句，在函数入口处，%rsp指向返回地址，重新设置%rbp指向当前栈帧。</p>
+<h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">high addr         ^           ^ low addr</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br></pre></td></tr></table></figure>
+
+<p>如果在栈上分配局部变量，通过%rbp访问。-8(%rbp)访问第一个局部变量，依次类推访问其它局部变量。</p>
+<h3 id="返回地址"><a href="#返回地址" class="headerlink" title="返回地址"></a>返回地址</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     …</span><br><span class="line">     add $16,%rsp # balance stack</span><br><span class="line">     pop %rbp  # restore stack frame pointer</span><br><span class="line">     ret # return to caller</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">                  ^           ^</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br><span class="line">&#96;&#96;&#96; </span><br><span class="line"></span><br><span class="line">在使用完局部变量需要把对应栈空间释放，平衡堆栈，最后ret返回caller处。</span><br><span class="line"></span><br><span class="line">### 参数传递</span><br></pre></td></tr></table></figure>
+<p>call conventions:<br> void foo(int a,int b,int c,int d,int e,int f,int g);<br>   40053c:       6a 07                   pushq  $0x7      # seventh use stack<br>   40053e:       41 b9 06 00 00 00       mov    $0x6,%r9d # sixth<br>   400544:       41 b8 05 00 00 00       mov    $0x5,%r8d # fifth<br>   40054a:       b9 04 00 00 00          mov    $0x4,%ecx # fouth<br>   40054f:       ba 03 00 00 00          mov    $0x3,%edx # third<br>   400554:       be 02 00 00 00          mov    $0x2,%esi # second para<br>   400559:       bf 01 00 00 00          mov    $0x1,%edi # first para<br> %rdi -&gt;a<br> %rsi -&gt;b<br> %rdx -&gt;c<br> %rcx -&gt;d<br> %r8  -&gt;e<br> %r9  -&gt;f<br> [parameters][retaddr][old rbp]<br>                              ^<br>                              |<br>                             rbp/rsp<br> 8(%rbp): return address<br> 16(%rbp): the seventh parameter<br> 24(%rbp): the eighth parameter</p>
+<pre><code>
+前6个参数使用寄存器传递，如果还有额外参数则通过堆栈传递。
+
+## 参考资料
+
+1. [X86_calling_conventions](https://en.wikipedia.org/wiki/X86_calling_conventions)
+2. [The 64 bit x86 C Calling Convention](https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf)
+</code></pre>
     </div>
 
     
@@ -326,7 +300,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://supersojo.github.io/2020/01/20/nfs-cache-problem/" title="nfs cache problem">https://supersojo.github.io/2020/01/20/nfs-cache-problem/</a>
+    <a href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/" title="x86_64 calling conventions">https://supersojo.github.io/2019/06/10/x86_64 calling conversion/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -337,7 +311,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/nfs/" rel="tag"># nfs</a>
+              <a href="/tags/x86-64/" rel="tag"># x86_64</a>
+              <a href="/tags/%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/" rel="tag"># 调用约定</a>
           </div>
 
         
@@ -345,13 +320,10 @@
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2019/07/16/udplite-checksum-problem/" rel="prev" title="udplite checksum problem">
-      <i class="fa fa-chevron-left"></i> udplite checksum problem
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/01/20/about-dwarf/" rel="next" title="about-dwarf">
-      about-dwarf <i class="fa fa-chevron-right"></i>
+    <a href="/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" rel="next" title="松散源路由发包失败问题">
+      松散源路由发包失败问题 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -412,7 +384,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#first-section"><span class="nav-number">1.</span> <span class="nav-text">first section</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#subsection"><span class="nav-number">1.1.</span> <span class="nav-text">subsection</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#second-section"><span class="nav-number">2.</span> <span class="nav-text">second section</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#lists"><span class="nav-number">3.</span> <span class="nav-text">lists</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#links"><span class="nav-number">4.</span> <span class="nav-text">links</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#images"><span class="nav-number">5.</span> <span class="nav-text">images</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#code-ang-highlighting"><span class="nav-number">6.</span> <span class="nav-text">code ang highlighting</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tables"><span class="nav-number">7.</span> <span class="nav-text">tables</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#blockquotes"><span class="nav-number">8.</span> <span class="nav-text">blockquotes</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#horizontal-rule"><span class="nav-number">9.</span> <span class="nav-text">horizontal rule</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#line-breaks"><span class="nav-number">10.</span> <span class="nav-text">line breaks</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过函数的汇编语句分析调用约定"><span class="nav-number">1.</span> <span class="nav-text">通过函数的汇编语句分析调用约定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#栈帧布局"><span class="nav-number">1.1.</span> <span class="nav-text">栈帧布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局部变量"><span class="nav-number">1.2.</span> <span class="nav-text">局部变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#返回地址"><span class="nav-number">1.3.</span> <span class="nav-text">返回地址</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
