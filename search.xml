@@ -402,17 +402,56 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
 <p>符号表如何管理取决于所属语言的程序结构，常见的实现方式是在内存设定一定长度的<br>符号表区，并建立适当的索引机制，访问相应的符号表。</p>
 <p>如下图所示：<br><img src="/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/sym-1.png" alt=" symbol table "></p>
 <h2 id="符号表的结构设计"><a href="#符号表的结构设计" class="headerlink" title="符号表的结构设计"></a>符号表的结构设计</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">int foo(int a,int b)</span><br><span class="line">&#123;</span><br><span class="line">	int x,y;</span><br><span class="line">	const pi&#x3D;3.14;</span><br><span class="line">	x &#x3D; a*a;  y &#x3D; b*b;</span><br><span class="line">	retrun pixy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>需要填入符号表的标识符：<br>|标识符|语义属性|<br>|—–|:——-|<br>| foo | 函数，附加信息：类型，参数情况和入口地址|<br>| a   | 形参 |<br>| b   | 形参 |<br>| x   | 变量 |<br>| y   | 变量 |<br>| pi  | 常量 |</p>
+<p>需要填入符号表的标识符：</p>
+<table>
+<thead>
+<tr>
+<th>标识符</th>
+<th align="left">语义属性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>foo</td>
+<td align="left">函数，附加信息：类型，参数情况和入口地址</td>
+</tr>
+<tr>
+<td>a</td>
+<td align="left">形参</td>
+</tr>
+<tr>
+<td>b</td>
+<td align="left">形参</td>
+</tr>
+<tr>
+<td>x</td>
+<td align="left">变量</td>
+</tr>
+<tr>
+<td>y</td>
+<td align="left">变量</td>
+</tr>
+<tr>
+<td>pi</td>
+<td align="left">常量</td>
+</tr>
+</tbody></table>
 <p>由于标识符种类不同，导致语义属性不尽相同</p>
 <h2 id="如何组织符号表？"><a href="#如何组织符号表？" class="headerlink" title="如何组织符号表？"></a>如何组织符号表？</h2><p>下面是“龙书”中提到的一种符号表的体系结构：<br><img src="/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/sym-2.png" alt=" symbol table "></p>
-<p>说明：<br>|—–|——————-|<br>|NAME |    标识符源码，内部码|<br>|TYPE | 指针，指向类型表的表项|<br>|CAT  | 种类编码：函数f，变量v，类型t，常量c，传值形参vf，传地址形参vn|<br>|ADDR | 指针，根据标识符种类不同，指向函数表，常量表等|</p>
+<p>说明：</p>
+<p>|—–|——————-|<br>|NAME |    标识符源码，内部码|<br>|TYPE | 指针，指向类型表的表项|<br>|CAT  | 种类编码：函数f，变量v，类型t，常量c，传值形参vf，传地址形参vn|<br>|ADDR | 指针，根据标识符种类不同，指向函数表，常量表等|</p>
 <ul>
-<li><p>类型表<br>|——|—-|<br>|TVAL  |类型编码：整型，浮点型，字符型，布尔型，数组型，结构型|<br>|TPOINT|指针，根据类型编码的不同，指向不同的信息表项 基本类型：空 数组类型：指向数组表项 结构类型：指向结构表项|</p>
-</li>
-<li><p>数组表<br>|—-|——-|<br>|LOW|    数组下届|<br>|UP    |数组上届|<br>|CTP|    成员类型指针，指向类型表中表项|<br>|CTLEN|    成员类型长度，成员类型所占值单元长度|</p>
-</li>
-<li><p>函数表<br>|—-|—————-|<br>|OFF|函数的值单元地址|<br>|DAT|指针，指向函数的数据区|<br>|FN|参数个数|<br>|PAR|指针，指向形参表|<br>|ENT|函数运行首地址，运行时填写|</p>
-</li>
+<li>类型表</li>
+</ul>
+<p>|——|—-|<br>|TVAL  |类型编码：整型，浮点型，字符型，布尔型，数组型，结构型|<br>|TPOINT|指针，根据类型编码的不同，指向不同的信息表项 基本类型：空 数组类型：指向数组表项 结构类型：指向结构表项|</p>
+<ul>
+<li>数组表</li>
+</ul>
+<p>|—-|——-|<br>|LOW|    数组下届|<br>|UP    |数组上届|<br>|CTP|    成员类型指针，指向类型表中表项|<br>|CTLEN|    成员类型长度，成员类型所占值单元长度|</p>
+<ul>
+<li>函数表</li>
+</ul>
+<p>|—-|—————-|<br>|OFF|函数的值单元地址|<br>|DAT|指针，指向函数的数据区|<br>|FN|参数个数|<br>|PAR|指针，指向形参表|<br>|ENT|函数运行首地址，运行时填写|</p>
+<ul>
 <li><p>其它表</p>
 <ul>
 <li>常量表存放常量的初值</li>
