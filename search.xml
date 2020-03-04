@@ -562,6 +562,55 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </tags>
   </entry>
   <entry>
+    <title>BIOS和UEFI</title>
+    <url>/2019/05/01/BIOS%E5%92%8CUEFI/</url>
+    <content><![CDATA[<p>最近在某发行版遇到问题，大体情况是修改/etc/default/grub的定制脚本，<br>在BIOS和UEFI主板的机器上结果不同，后调查发现在UEFI机器上，grub的配置文件<br>位于Efi System Paition分区，而不是BIOS机器上的/boot/grub2下。</p>
+<p>这里分析下BIOS和UEFI启动。</p>
+<h2 id="bios"><a href="#bios" class="headerlink" title="bios"></a>bios</h2><p><img src="/2019/05/01/BIOS%E5%92%8CUEFI/bios.png" alt=" bios "></p>
+<ol>
+<li><p>上电，bios firmware开始执行，加载MBR（第一扇区）到指定位置(0x7c00)开始执行第一阶段启动代码(bootcode)</p>
+<blockquote>
+<p>第一阶段启动代码非常小，不超过1个扇区大小（扇区:512字节）</p>
+</blockquote>
+</li>
+<li><p>stage 1代码负责加载并执行stage 2的代码</p>
+<blockquote>
+<p>stage 2代码(grub)功能强大，加载操作系统</p>
+</blockquote>
+</li>
+<li><p>stage 2加载操作系统，操作系统启动</p>
+</li>
+</ol>
+<h2 id="uefi"><a href="#uefi" class="headerlink" title="uefi"></a>uefi</h2><p><img src="/2019/05/01/BIOS%E5%92%8CUEFI/uefi.png" alt=" uefi "></p>
+<ol>
+<li><p>上电，uefi firmware开始执行，加载ESP分区的efi文件执行(解释执行efi byte code)</p>
+<blockquote>
+<p>efi文件中是efi字节码，uefi固件内置efi解释器，用于执行这些代码</p>
+</blockquote>
+</li>
+<li><p>efi bootcode加载引导程序(grub)并执行引导程序</p>
+<blockquote>
+<p>stage 2代码(grub)功能强大，加载操作系统</p>
+</blockquote>
+</li>
+<li><p>stage 2加载操作系统，操作系统启动</p>
+</li>
+</ol>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>在系统启动上，除了1和2差别很大，后边系统启动完全一样了。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.partitionwizard.com/partitionmagic/uefi-vs-bios.html" target="_blank" rel="noopener">uefi vs bios</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface" target="_blank" rel="noopener">Unified_Extensible_Firmware_Interface</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>pc</category>
+      </categories>
+      <tags>
+        <tag>bios</tag>
+        <tag>uefi</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>编写python扩展模块</title>
     <url>/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<p>一直以来更多的是使用c语言，看到python语言在云计算时代广泛运用，<br>想着如何用c编写模块供python调用。python的官方实现就是c语言实现的，<br>即cpython。python提供了运行时接口供我们编写c扩展模块。</p>
