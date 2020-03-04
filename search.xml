@@ -473,4 +473,20 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
         <tag>compiler</tag>
       </tags>
   </entry>
+  <entry>
+    <title>编写python扩展模块</title>
+    <url>/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/</url>
+    <content><![CDATA[<p>一直以来更多的是使用c语言，看到python语言在云计算时代广泛运用，<br>想着如何用c编写模块供python调用。python的官方实现就是c语言实现的，<br>即cpython。python提供了运行时接口供我们编写c扩展模块。</p>
+<p>linux发行版通常把头文件和库文件打包成xxxx-dev的包形式。我们需要<br>安装python-dev来编写python扩展。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &lt;python.h&gt; &#x2F;* Python API to python runtime system *&#x2F;</span><br><span class="line">static PyObject *SpamError;</span><br><span class="line">&#x2F;*</span><br><span class="line">spam.system(string)</span><br><span class="line">*&#x2F;</span><br><span class="line">static PyObject * spam_system(PyObject *self, PyObject *args)</span><br><span class="line">&#123;</span><br><span class="line">        const char *command;</span><br><span class="line">        int sts;</span><br><span class="line">        if (!PyArg_ParseTuple(args,&quot;s&quot;,&amp;command))</span><br><span class="line">                return NULL;</span><br><span class="line">        &#x2F;*</span><br><span class="line">         run the command in another process until it runs done     </span><br><span class="line">        *&#x2F;</span><br><span class="line">        sts &#x3D; system(command);     </span><br><span class="line">        if (sts &lt; 0) &#123;                                         </span><br><span class="line">		PyErr_SetString(SpamError,&quot;System command failed&quot;);     </span><br><span class="line">        &#125;                </span><br><span class="line">        return PyLong_FromLong(sts);</span><br><span class="line">&#125;</span><br><span class="line">static PyMethodDef SpamMethods[] &#x3D; &#123;</span><br><span class="line">        &#123;&quot;system&quot;,spam_system,METH_VARARGS,&quot;Execute a shell command.&quot;&#125;,</span><br><span class="line">        &#123;NULL,NULL,0,NULL&#125;</span><br><span class="line">&#125;;</span><br><span class="line">PyMODINIT_FUNC</span><br><span class="line">initspam(void)</span><br><span class="line">&#123;</span><br><span class="line">        PyObject *m;</span><br><span class="line">        m &#x3D; Py_InitModule(&quot;spam&quot;,SpamMethods);</span><br><span class="line">        if (!m)</span><br><span class="line">                return ;</span><br><span class="line">        SpamError &#x3D; PyErr_NewException(&quot;spam.error&quot;,NULL,NULL);</span><br><span class="line">        Py_INCREF(SpamError);</span><br><span class="line">        PyModule_AddObject(m,&quot;error&quot;,SpamError);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果模块名为xxx则必须提供xxxinit的函数。在python解释器加载模块的时候会寻找<br>模块动态库文件中导出的xxxinit函数。</p>
+]]></content>
+      <categories>
+        <category>python</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+      </tags>
+  </entry>
 </search>
