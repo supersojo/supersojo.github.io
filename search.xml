@@ -326,7 +326,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </tags>
   </entry>
   <entry>
-    <title>copy_file_range problem</title>
+    <title>从内核代码看openwrt的macvlan多拨</title>
     <url>/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/</url>
     <content><![CDATA[<p>OpenWrt是一个嵌入式的 Linux 发行版， 拥有强大的网络组件和扩展性，<br>常常被用于工控设备、电话、小型机器人、智能家居、路由器以及VOIP设备中。</p>
 <p>很多采用openwrt的软路由的人更多的是使用openwrt的多拨实现带宽叠加。<br>其实openwrt多拨是基于内核的macvlan模块。</p>
