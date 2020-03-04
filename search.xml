@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/2020/03/03/hello-world/</url>
+    <url>/2020/03/04/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 
@@ -323,6 +323,30 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </categories>
       <tags>
         <tag>sctp</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>copy_file_range problem</title>
+    <url>/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/</url>
+    <content><![CDATA[<p>OpenWrt是一个嵌入式的 Linux 发行版， 拥有强大的网络组件和扩展性，<br>常常被用于工控设备、电话、小型机器人、智能家居、路由器以及VOIP设备中。</p>
+<p>很多采用openwrt的软路由的人更多的是使用openwrt的多拨实现带宽叠加。<br>其实openwrt多拨是基于内核的macvlan模块。</p>
+<h2 id="macvlan是什么？"><a href="#macvlan是什么？" class="headerlink" title="macvlan是什么？"></a>macvlan是什么？</h2><p>在macvlan之前，我们只能为一个物理网络接口添加多个ip地址，却不能添<br>加多个mac地址。macvlan可以在一个物理网络接口上虚拟出多个虚拟网络<br>接口，每个虚拟接口可以独立配置mac和ip地址。这样物理网络接口相当于<br>实现了一个交换机，记录了mac和虚拟接口的对应关系。</p>
+<h3 id="macvlan收包处理流程"><a href="#macvlan收包处理流程" class="headerlink" title="macvlan收包处理流程"></a>macvlan收包处理流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-1.png" alt="macvlan收包"></p>
+<p>上图为内核的收包处理流程。内核为设置了macvlan的物理网络接口设置rx_handler函数，<br>在使用NAPI机制收到报文上送协议栈之前先执行macvlan_handle_frame。</p>
+<p>macvlan_handle_frame函数根据二层头的目的mac地址判断是发给物理网络接口还是先发<br>给虚拟网络接口。设置skb-&gt;dev为macvlan设备，然后报文进入ip协议栈处理流程。</p>
+<h3 id="maclavn发包流程"><a href="#maclavn发包流程" class="headerlink" title="maclavn发包流程"></a>maclavn发包流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-2.png" alt="macvlan发包"></p>
+<p>macvlan_queue_xmit是macvlan设备的发包函数，判断如果是桥模式则根据目的mac查找是否<br>是本机macvlan设备，如果是则直接发给本机macvlan设备执行netif_rx_internal。否则报文<br>通过底层设备发送出去。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有个macvlan，我们就可以基于虚拟网络接口进行pppoe拨号，从而获取多个wan连接，实现多拨。</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ol>
+<li><a href="https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/" target="_blank" rel="noopener">macvlan and ipvlan</a></li>
+<li><a href="http://hicu.be/bridge-vs-macvlan" target="_blank" rel="noopener">bridge vs macvlan</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>network</category>
+      </categories>
+      <tags>
+        <tag>macvlan</tag>
       </tags>
   </entry>
 </search>
