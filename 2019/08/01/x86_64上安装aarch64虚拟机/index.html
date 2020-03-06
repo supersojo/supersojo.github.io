@@ -46,20 +46,19 @@
   };
 </script>
 
-  <meta name="description" content="在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。 通过函数的汇编语句分析调用约定栈帧布局1234567891011.text foo:     push %rbp     mov %rsp,%rbp     … [retaddr][old rbp]                  ^                  |                rbp&#x2F;">
+  <meta name="description" content="host上编译安装qemu host: centos 8.0 x86_64  下载qemu-4.0.0.tar.gzhttps:&#x2F;&#x2F;download.qemu.org&#x2F;  编译qemu   123.&#x2F;configure --target-list&#x3D;aarch64-softmmumakemake install   在编译qemu需要安装glibc和glib2的等开发包，请安装相">
 <meta property="og:type" content="article">
-<meta property="og:title" content="x86_64 calling conventions">
-<meta property="og:url" content="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/index.html">
+<meta property="og:title" content="x86_64上安装aarch64架构的centos发行版">
+<meta property="og:url" content="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/index.html">
 <meta property="og:site_name" content="Linux&#39;s Notes">
-<meta property="og:description" content="在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。 通过函数的汇编语句分析调用约定栈帧布局1234567891011.text foo:     push %rbp     mov %rsp,%rbp     … [retaddr][old rbp]                  ^                  |                rbp&#x2F;">
+<meta property="og:description" content="host上编译安装qemu host: centos 8.0 x86_64  下载qemu-4.0.0.tar.gzhttps:&#x2F;&#x2F;download.qemu.org&#x2F;  编译qemu   123.&#x2F;configure --target-list&#x3D;aarch64-softmmumakemake install   在编译qemu需要安装glibc和glib2的等开发包，请安装相">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-06-10T21:10:10.000Z">
+<meta property="article:published_time" content="2019-08-01T21:18:10.000Z">
 <meta property="article:modified_time" content="2020-03-06T01:48:09.709Z">
-<meta property="article:tag" content="x86_64">
-<meta property="article:tag" content="调用约定">
+<meta property="article:tag" content="aarch64">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/">
+<link rel="canonical" href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/">
 
 
 <script id="page-configurations">
@@ -71,7 +70,7 @@
   };
 </script>
 
-  <title>x86_64 calling conventions | Linux's Notes</title>
+  <title>x86_64上安装aarch64架构的centos发行版 | Linux's Notes</title>
   
 
 
@@ -214,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -227,7 +226,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          x86_64 calling conventions
+          x86_64上安装aarch64架构的centos发行版
         </h1>
 
         <div class="post-meta">
@@ -237,7 +236,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-06-10 21:10:10" itemprop="dateCreated datePublished" datetime="2019-06-10T21:10:10+00:00">2019-06-10</time>
+              <time title="创建时间：2019-08-01 21:18:10" itemprop="dateCreated datePublished" datetime="2019-08-01T21:18:10+00:00">2019-08-01</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -252,8 +251,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/" itemprop="url" rel="index">
-                    <span itemprop="name">调用约定</span>
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
                   </a>
                 </span>
             </span>
@@ -269,22 +268,67 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。</p>
-<h2 id="通过函数的汇编语句分析调用约定"><a href="#通过函数的汇编语句分析调用约定" class="headerlink" title="通过函数的汇编语句分析调用约定"></a>通过函数的汇编语句分析调用约定</h2><h3 id="栈帧布局"><a href="#栈帧布局" class="headerlink" title="栈帧布局"></a>栈帧布局</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line"> foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp]</span><br><span class="line">                  ^</span><br><span class="line">                  |</span><br><span class="line">                rbp&#x2F;rsp</span><br><span class="line"> 8(%rbp): return address</span><br><span class="line"> 0(%rbp): old %rbp</span><br></pre></td></tr></table></figure>
+        <h2 id="host上编译安装qemu"><a href="#host上编译安装qemu" class="headerlink" title="host上编译安装qemu"></a>host上编译安装qemu</h2><ul>
+<li><p>host: centos 8.0 x86_64</p>
+</li>
+<li><p>下载qemu-4.0.0.tar.gz<br><a href="https://download.qemu.org/" target="_blank" rel="noopener">https://download.qemu.org/</a></p>
+</li>
+<li><p>编译qemu</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --target-list&#x3D;aarch64-softmmu</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
 
-<p>上面是foo函数的汇编语句，在函数入口处，%rsp指向返回地址，重新设置%rbp指向当前栈帧。</p>
-<h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">high addr         ^           ^ low addr</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>在编译qemu需要安装glibc和glib2的等开发包，请安装相应的开发包。</p>
+</blockquote>
+<h2 id="下载-UEFI-firmware"><a href="#下载-UEFI-firmware" class="headerlink" title="下载 UEFI firmware"></a>下载 UEFI firmware</h2><ul>
+<li>uefi地址<br><a href="http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm" target="_blank" rel="noopener">http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm</a></li>
+</ul>
+<blockquote>
+<p>我们需要支持aarch64的UEFI固件，上面的rpm在x86_64上无法直接安装，可以通过下面的命令获取UEFI固件。</p>
+</blockquote>
+<ul>
+<li>解压uefi固件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ rpm2cpio edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm | cpio -div </span><br><span class="line">$ tree usr</span><br><span class="line">usr</span><br><span class="line">└── share</span><br><span class="line">    ├── AAVMF</span><br><span class="line">    │   ├── AAVMF_CODE.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │   ├── AAVMF_CODE.verbose.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-pflash.raw</span><br><span class="line">    │   └── AAVMF_VARS.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;vars-template-pflash.raw</span><br><span class="line">    ├── edk2</span><br><span class="line">    │   └── aarch64</span><br><span class="line">    │       ├── QEMU_EFI.fd</span><br><span class="line">    │       ├── QEMU_EFI-pflash.raw</span><br><span class="line">    │       ├── QEMU_EFI.silent.fd</span><br><span class="line">    │       ├── QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │       ├── QEMU_VARS.fd</span><br><span class="line">    │       └── vars-template-pflash.raw</span><br><span class="line">    ├── licenses</span><br><span class="line">    │   └── edk2-aarch64</span><br><span class="line">    │       ├── License.edk2.txt</span><br><span class="line">    │       ├── LICENSE.openssl</span><br><span class="line">    │       └── License.txt</span><br><span class="line">    └── qemu</span><br><span class="line">        └── firmware</span><br><span class="line">            ├── 60-edk2-aarch64.json</span><br><span class="line">            └── 70-edk2-aarch64-verbose.json</span><br><span class="line"></span><br><span class="line">8 directories, 14 files</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用上面解压出来的UEFI固件:QEMU_EFI.fd</p>
+</blockquote>
+<h2 id="运行虚拟机-安装centos发行版"><a href="#运行虚拟机-安装centos发行版" class="headerlink" title="运行虚拟机 安装centos发行版"></a>运行虚拟机 安装centos发行版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 2 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0</span><br></pre></td></tr></table></figure>
 
-<p>如果在栈上分配局部变量，通过%rbp访问。-8(%rbp)访问第一个局部变量，依次类推访问其它局部变量。</p>
-<h3 id="返回地址"><a href="#返回地址" class="headerlink" title="返回地址"></a>返回地址</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     ...</span><br><span class="line">     add $16,%rsp # balance stack</span><br><span class="line">     pop %rbp  # restore stack frame pointer</span><br><span class="line">     ret # return to caller</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">                  ^           ^</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上面的命令没有给VM配置网络接口，仅仅用来安装操作系统！！</li>
+<li>centos的安装完全是基于命令行界面的，按照提示安装就可以了</li>
+</ul>
+<h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><p>网络参照<a href="https://wzt.ac.cn/2019/09/10/QEMU-networking/" target="_blank" rel="noopener">这个文档</a>，配置tap接口给aarch64虚拟机使用。</p>
+<ul>
+<li>配置接口<br>如果由brctl命令则使用brctl命令。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
 
-<p>在使用完局部变量需要把对应栈空间释放，平衡堆栈，最后ret返回caller处。</p>
-<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">call conventions:</span><br><span class="line"> void foo(int a,int b,int c,int d,int e,int f,int g);</span><br><span class="line">   40053c:       6a 07                   pushq  $0x7      # seventh use stack</span><br><span class="line">   40053e:       41 b9 06 00 00 00       mov    $0x6,%r9d # sixth</span><br><span class="line">   400544:       41 b8 05 00 00 00       mov    $0x5,%r8d # fifth</span><br><span class="line">   40054a:       b9 04 00 00 00          mov    $0x4,%ecx # fouth</span><br><span class="line">   40054f:       ba 03 00 00 00          mov    $0x3,%edx # third</span><br><span class="line">   400554:       be 02 00 00 00          mov    $0x2,%esi # second para</span><br><span class="line">   400559:       bf 01 00 00 00          mov    $0x1,%edi # first para</span><br><span class="line"> %rdi -&gt;a</span><br><span class="line"> %rsi -&gt;b</span><br><span class="line"> %rdx -&gt;c</span><br><span class="line"> %rcx -&gt;d</span><br><span class="line"> %r8  -&gt;e</span><br><span class="line"> %r9  -&gt;f</span><br><span class="line"> [parameters][retaddr][old rbp]</span><br><span class="line">                              ^</span><br><span class="line">                              |</span><br><span class="line">                             rbp&#x2F;rsp    </span><br><span class="line"> 8(%rbp): return address</span><br><span class="line"> 16(%rbp): the seventh parameter</span><br><span class="line"> 24(%rbp): the eighth parameter</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>如果没有brctl命令，可以使用ip命令代替。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
 
-<p>前6个参数使用寄存器传递，如果还有额外参数则通过堆栈传递。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="https://en.wikipedia.org/wiki/X86_calling_conventions" target="_blank" rel="noopener">X86_calling_conventions</a></li>
-<li><a href="https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf" target="_blank" rel="noopener">The 64 bit x86 C Calling Convention</a></li>
+<ul>
+<li>VM使用网络接口<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+使用上面的参数让qemu使用tap接口作为vm的网络接口。</li>
+</ul>
+<p>完整的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>-boot c参数指定硬盘启动无效，原因不明，规避方法是启动中按esc进入UEFI的bootmgr选择硬盘启动。</p>
+</blockquote>
+<h2 id="配置ssh访问"><a href="#配置ssh访问" class="headerlink" title="配置ssh访问"></a>配置ssh访问</h2><p>登录aarch64 centos后，设置网络接口。这里VM使用的tap接口时桥接到外部网络的，配置地址后就可以访问。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>安装aarch64的centos后，登录发现虚拟机效率很低。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;proc&#x2F;cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">BogoMIPS        : 125.00</span><br><span class="line">Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid</span><br><span class="line">CPU implementer : 0x41</span><br><span class="line">CPU architecture: 8</span><br><span class="line">CPU variant     : 0x1</span><br><span class="line">CPU part        : 0xd07</span><br><span class="line">CPU revision    : 0</span><br></pre></td></tr></table></figure>
+
+<p>这里可见模拟cpu的BogoMIPS为125，即每秒125M指令，实际CPU的主频在250M左右。<br>host上cpu主频在2.2G，执行效率仅为<strong>10%</strong>，有着<strong>90%</strong>的性能损失。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><p><a href="https://marcin.juszkiewicz.com.pl/2015/04/17/running-vms-on-fedoraaarch64/" target="_blank" rel="noopener">Running VMs on Fedora/AArch64</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/linuxxl/p/11658387.html" target="_blank" rel="noopener">x86 平台安装arm虚拟机</a></p>
+</li>
 </ol>
 
     </div>
@@ -301,7 +345,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/" title="x86_64 calling conventions">https://supersojo.github.io/2019/06/10/x86_64 calling conversion/</a>
+    <a href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" title="x86_64上安装aarch64架构的centos发行版">https://supersojo.github.io/2019/08/01/x86_64上安装aarch64虚拟机/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -312,8 +356,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/x86-64/" rel="tag"># x86_64</a>
-              <a href="/tags/%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/" rel="tag"># 调用约定</a>
+              <a href="/tags/aarch64/" rel="tag"># aarch64</a>
           </div>
 
         
@@ -322,12 +365,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/06/04/sctp%E4%B8%AD%E4%B8%80%E4%B8%AAbug%E7%9A%84%E5%88%86%E6%9E%90/" rel="prev" title="sctp中一个bug">
-      <i class="fa fa-chevron-left"></i> sctp中一个bug
+    <a href="/2019/07/16/udplite-checksum-problem/" rel="prev" title="udplite checksum problem">
+      <i class="fa fa-chevron-left"></i> udplite checksum problem
     </a></div>
       <div class="post-nav-item">
-    <a href="/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" rel="next" title="松散源路由发包失败问题">
-      松散源路由发包失败问题 <i class="fa fa-chevron-right"></i>
+    <a href="/2020/01/20/nfs-cache-problem/" rel="next" title="nfs cache problem">
+      nfs cache problem <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -388,7 +431,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#通过函数的汇编语句分析调用约定"><span class="nav-number">1.</span> <span class="nav-text">通过函数的汇编语句分析调用约定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#栈帧布局"><span class="nav-number">1.1.</span> <span class="nav-text">栈帧布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#局部变量"><span class="nav-number">1.2.</span> <span class="nav-text">局部变量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#返回地址"><span class="nav-number">1.3.</span> <span class="nav-text">返回地址</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数传递"><span class="nav-number">1.4.</span> <span class="nav-text">参数传递</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考资料"><span class="nav-number">2.</span> <span class="nav-text">参考资料</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#host上编译安装qemu"><span class="nav-number">1.</span> <span class="nav-text">host上编译安装qemu</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载-UEFI-firmware"><span class="nav-number">2.</span> <span class="nav-text">下载 UEFI firmware</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#运行虚拟机-安装centos发行版"><span class="nav-number">3.</span> <span class="nav-text">运行虚拟机 安装centos发行版</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置网络"><span class="nav-number">4.</span> <span class="nav-text">配置网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置ssh访问"><span class="nav-number">5.</span> <span class="nav-text">配置ssh访问</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>Hello World</title>
-    <url>/2020/03/04/hello-world/</url>
+    <url>/2020/03/06/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
 <h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
 
@@ -235,6 +235,79 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
 <h1 id="line-breaks"><a href="#line-breaks" class="headerlink" title="line breaks"></a>line breaks</h1>]]></content>
       <tags>
         <tag>nfs</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>x86_64上安装aarch64架构的centos发行版</title>
+    <url>/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
+    <content><![CDATA[<h2 id="host上编译安装qemu"><a href="#host上编译安装qemu" class="headerlink" title="host上编译安装qemu"></a>host上编译安装qemu</h2><ul>
+<li><p>host: centos 8.0 x86_64</p>
+</li>
+<li><p>下载qemu-4.0.0.tar.gz<br><a href="https://download.qemu.org/" target="_blank" rel="noopener">https://download.qemu.org/</a></p>
+</li>
+<li><p>编译qemu</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">.&#x2F;configure --target-list&#x3D;aarch64-softmmu</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在编译qemu需要安装glibc和glib2的等开发包，请安装相应的开发包。</p>
+</blockquote>
+<h2 id="下载-UEFI-firmware"><a href="#下载-UEFI-firmware" class="headerlink" title="下载 UEFI firmware"></a>下载 UEFI firmware</h2><ul>
+<li>uefi地址<br><a href="http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm" target="_blank" rel="noopener">http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm</a></li>
+</ul>
+<blockquote>
+<p>我们需要支持aarch64的UEFI固件，上面的rpm在x86_64上无法直接安装，可以通过下面的命令获取UEFI固件。</p>
+</blockquote>
+<ul>
+<li>解压uefi固件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ rpm2cpio edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm | cpio -div </span><br><span class="line">$ tree usr</span><br><span class="line">usr</span><br><span class="line">└── share</span><br><span class="line">    ├── AAVMF</span><br><span class="line">    │   ├── AAVMF_CODE.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │   ├── AAVMF_CODE.verbose.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-pflash.raw</span><br><span class="line">    │   └── AAVMF_VARS.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;vars-template-pflash.raw</span><br><span class="line">    ├── edk2</span><br><span class="line">    │   └── aarch64</span><br><span class="line">    │       ├── QEMU_EFI.fd</span><br><span class="line">    │       ├── QEMU_EFI-pflash.raw</span><br><span class="line">    │       ├── QEMU_EFI.silent.fd</span><br><span class="line">    │       ├── QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │       ├── QEMU_VARS.fd</span><br><span class="line">    │       └── vars-template-pflash.raw</span><br><span class="line">    ├── licenses</span><br><span class="line">    │   └── edk2-aarch64</span><br><span class="line">    │       ├── License.edk2.txt</span><br><span class="line">    │       ├── LICENSE.openssl</span><br><span class="line">    │       └── License.txt</span><br><span class="line">    └── qemu</span><br><span class="line">        └── firmware</span><br><span class="line">            ├── 60-edk2-aarch64.json</span><br><span class="line">            └── 70-edk2-aarch64-verbose.json</span><br><span class="line"></span><br><span class="line">8 directories, 14 files</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用上面解压出来的UEFI固件:QEMU_EFI.fd</p>
+</blockquote>
+<h2 id="运行虚拟机-安装centos发行版"><a href="#运行虚拟机-安装centos发行版" class="headerlink" title="运行虚拟机 安装centos发行版"></a>运行虚拟机 安装centos发行版</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 2 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>上面的命令没有给VM配置网络接口，仅仅用来安装操作系统！！</li>
+<li>centos的安装完全是基于命令行界面的，按照提示安装就可以了</li>
+</ul>
+<h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><p>网络参照<a href="https://wzt.ac.cn/2019/09/10/QEMU-networking/" target="_blank" rel="noopener">这个文档</a>，配置tap接口给aarch64虚拟机使用。</p>
+<ul>
+<li>配置接口<br>如果由brctl命令则使用brctl命令。<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>如果没有brctl命令，可以使用ip命令代替。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>VM使用网络接口<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+使用上面的参数让qemu使用tap接口作为vm的网络接口。</li>
+</ul>
+<p>完整的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>-boot c参数指定硬盘启动无效，原因不明，规避方法是启动中按esc进入UEFI的bootmgr选择硬盘启动。</p>
+</blockquote>
+<h2 id="配置ssh访问"><a href="#配置ssh访问" class="headerlink" title="配置ssh访问"></a>配置ssh访问</h2><p>登录aarch64 centos后，设置网络接口。这里VM使用的tap接口时桥接到外部网络的，配置地址后就可以访问。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>安装aarch64的centos后，登录发现虚拟机效率很低。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">$ cat &#x2F;proc&#x2F;cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">BogoMIPS        : 125.00</span><br><span class="line">Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid</span><br><span class="line">CPU implementer : 0x41</span><br><span class="line">CPU architecture: 8</span><br><span class="line">CPU variant     : 0x1</span><br><span class="line">CPU part        : 0xd07</span><br><span class="line">CPU revision    : 0</span><br></pre></td></tr></table></figure>
+
+<p>这里可见模拟cpu的BogoMIPS为125，即每秒125M指令，实际CPU的主频在250M左右。<br>host上cpu主频在2.2G，执行效率仅为<strong>10%</strong>，有着<strong>90%</strong>的性能损失。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><p><a href="https://marcin.juszkiewicz.com.pl/2015/04/17/running-vms-on-fedoraaarch64/" target="_blank" rel="noopener">Running VMs on Fedora/AArch64</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/linuxxl/p/11658387.html" target="_blank" rel="noopener">x86 平台安装arm虚拟机</a></p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>aarch64</tag>
       </tags>
   </entry>
   <entry>
