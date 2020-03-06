@@ -54,7 +54,7 @@
 <meta property="og:description" content="host上编译安装qemu host: centos 8.0 x86_64  下载qemu-4.0.0.tar.gzhttps:&#x2F;&#x2F;download.qemu.org&#x2F;  编译qemu   123.&#x2F;configure --target-list&#x3D;aarch64-softmmumakemake install   在编译qemu需要安装glibc和glib2的等开发包，请安装相">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2019-08-01T21:18:10.000Z">
-<meta property="article:modified_time" content="2020-03-06T01:49:17.785Z">
+<meta property="article:modified_time" content="2020-03-06T02:22:12.117Z">
 <meta property="article:tag" content="aarch64">
 <meta name="twitter:card" content="summary">
 
@@ -243,7 +243,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-06 01:49:17" itemprop="dateModified" datetime="2020-03-06T01:49:17+00:00">2020-03-06</time>
+                <time title="修改时间：2020-03-06 02:22:12" itemprop="dateModified" datetime="2020-03-06T02:22:12+00:00">2020-03-06</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -302,20 +302,18 @@
 </ul>
 <h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><p>网络参照<a href="https://wzt.ac.cn/2019/09/10/QEMU-networking/" target="_blank" rel="noopener">这个文档</a>，配置tap接口给aarch64虚拟机使用。</p>
 <ul>
-<li>配置接口<br>如果由brctl命令则使用brctl命令。<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
+<li><p>配置接口<br>如果由brctl命令则使用brctl命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
+<p>如果没有brctl命令，可以使用ip命令代替。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>VM使用网络接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+<p>使用上面的参数让qemu使用tap接口作为vm的网络接口。<br>完整的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
 
 </li>
 </ul>
-<p>如果没有brctl命令，可以使用ip命令代替。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>VM使用网络接口<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
-使用上面的参数让qemu使用tap接口作为vm的网络接口。</li>
-</ul>
-<p>完整的命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
-
 <blockquote>
 <p>-boot c参数指定硬盘启动无效，原因不明，规避方法是启动中按esc进入UEFI的bootmgr选择硬盘启动。</p>
 </blockquote>
