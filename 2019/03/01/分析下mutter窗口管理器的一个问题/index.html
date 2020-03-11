@@ -46,26 +46,32 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Linux&#39;s Notes">
-<meta property="og:url" content="https://supersojo.github.io/page/2/index.html">
+  <meta name="description" content="mutter problemgnome hangup after 49.7 days. mutter?mutter是GNOME3的窗口管理器，用来取代Metacity。  https:&#x2F;&#x2F;zh.wikipedia.org&#x2F;wiki&#x2F;Mutter  patch info?[backends&#x2F;x11: Fix time-comparison bug causing hang]https:&#x2F;&#x2F;gitla">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分析下mutter窗口管理器的一个问题">
+<meta property="og:url" content="https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="Linux&#39;s Notes">
+<meta property="og:description" content="mutter problemgnome hangup after 49.7 days. mutter?mutter是GNOME3的窗口管理器，用来取代Metacity。  https:&#x2F;&#x2F;zh.wikipedia.org&#x2F;wiki&#x2F;Mutter  patch info?[backends&#x2F;x11: Fix time-comparison bug causing hang]https:&#x2F;&#x2F;gitla">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-03-01T23:01:20.000Z">
+<meta property="article:modified_time" content="2020-03-11T09:29:16.319Z">
+<meta property="article:tag" content="mutter">
+<meta property="article:tag" content="x11">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://supersojo.github.io/page/2/">
+<link rel="canonical" href="https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome: true,
-    isPost: false
+    isHome: false,
+    isPost: true
   };
 </script>
 
-  <title>Linux's Notes</title>
+  <title>分析下mutter窗口管理器的一个问题 | Linux's Notes</title>
   
 
 
@@ -204,566 +210,10 @@
             
 
   <div class="posts-expand">
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/" class="post-title-link" itemprop="url">从内核代码看openwrt的macvlan多拨</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-13 21:18:10" itemprop="dateCreated datePublished" datetime="2019-05-13T21:18:10+00:00">2019-05-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-11 09:29:16" itemprop="dateModified" datetime="2020-03-11T09:29:16+00:00">2020-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
       
-          <p>OpenWrt是一个嵌入式的 Linux 发行版， 拥有强大的网络组件和扩展性，<br>常常被用于工控设备、电话、小型机器人、智能家居、路由器以及VOIP设备中。</p>
-<p>很多采用openwrt的软路由的人更多的是使用openwrt的多拨实现带宽叠加。<br>其实openwrt多拨是基于内核的macvlan模块。</p>
-<h2 id="macvlan是什么？"><a href="#macvlan是什么？" class="headerlink" title="macvlan是什么？"></a>macvlan是什么？</h2><p>在macvlan之前，我们只能为一个物理网络接口添加多个ip地址，却不能添<br>加多个mac地址。macvlan可以在一个物理网络接口上虚拟出多个虚拟网络<br>接口，每个虚拟接口可以独立配置mac和ip地址。这样物理网络接口相当于<br>实现了一个交换机，记录了mac和虚拟接口的对应关系。</p>
-<h3 id="macvlan收包处理流程"><a href="#macvlan收包处理流程" class="headerlink" title="macvlan收包处理流程"></a>macvlan收包处理流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-1.png" alt="macvlan收包"></p>
-<p>上图为内核的收包处理流程。内核为设置了macvlan的物理网络接口设置rx_handler函数，<br>在使用NAPI机制收到报文上送协议栈之前先执行macvlan_handle_frame。</p>
-<p>macvlan_handle_frame函数根据二层头的目的mac地址判断是发给物理网络接口还是先发<br>给虚拟网络接口。设置skb-&gt;dev为macvlan设备，然后报文进入ip协议栈处理流程。</p>
-<h3 id="maclavn发包流程"><a href="#maclavn发包流程" class="headerlink" title="maclavn发包流程"></a>maclavn发包流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-2.png" alt="macvlan发包"></p>
-<p>macvlan_queue_xmit是macvlan设备的发包函数，判断如果是桥模式则根据目的mac查找是否<br>是本机macvlan设备，如果是则直接发给本机macvlan设备执行netif_rx_internal。否则报文<br>通过底层设备发送出去。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有个macvlan，我们就可以基于虚拟网络接口进行pppoe拨号，从而获取多个wan连接，实现多拨。</p>
-<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ol>
-<li><a href="https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/" target="_blank" rel="noopener">macvlan and ipvlan</a></li>
-<li><a href="http://hicu.be/bridge-vs-macvlan" target="_blank" rel="noopener">bridge vs macvlan</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
   
   
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/" class="post-title-link" itemprop="url">编译器中的符号表</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-08 21:18:10" itemprop="dateCreated datePublished" datetime="2019-05-08T21:18:10+00:00">2019-05-08</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-11 09:29:16" itemprop="dateModified" datetime="2020-03-11T09:29:16+00:00">2020-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/compiler/" itemprop="url" rel="index">
-                    <span itemprop="name">compiler</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>看完编译器领域的”龙书”，有必要对某些关键点做下总结。符号表穿插在整个编译的过程，<br>无意是最重要的组成部分。</p>
-<h2 id="符号表？"><a href="#符号表？" class="headerlink" title="符号表？"></a>符号表？</h2><p>标识符的动态语义词典，贯穿编译的整个阶段，在编译的过程中不断更新。<br>类似人口大普查一样，把每个人信息都录入某个系统中，在需要时再查询。</p>
-<h2 id="符号表内容"><a href="#符号表内容" class="headerlink" title="符号表内容"></a>符号表内容</h2><ol>
-<li><p>名字 </p>
-<blockquote>
-<p>标识符，用作查询关键字</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int a;</span><br><span class="line">int foo(int a,int b)</span><br><span class="line">&#123;</span><br><span class="line"> int c &#x3D; a+b;</span><br><span class="line"> return c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>类型 </p>
-<blockquote>
-<p>该标识符的数据类型及其相关信息</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int a;</span><br><span class="line">int foo(int a,int b)</span><br><span class="line">&#123;</span><br><span class="line"> int c &#x3D; a+b;</span><br><span class="line"> return c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>a，b，c是整数类型，foo是函数类型。</p>
-</li>
-<li><p>种类 </p>
-<blockquote>
-<p>该标识符在源程序的语义角色</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">int a;(1)</span><br><span class="line">int foo(int a,int b)(2)</span><br><span class="line">&#123;</span><br><span class="line"> int c &#x3D; a+b;(3)</span><br><span class="line"> return c;(4)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>(1)中a是变量<br>(2)中foo是函数，a和b是形参<br>(3)中c是变量</p>
-</li>
-<li><p>地址</p>
-<blockquote>
-<p>与值单元相关的一些信息</p>
-</blockquote>
-</li>
-</ol>
-<h2 id="符号表作用"><a href="#符号表作用" class="headerlink" title="符号表作用"></a>符号表作用</h2><ul>
-<li>变量定义和重定义检查</li>
-<li>类型匹配检查</li>
-<li>数据越界和溢出检查</li>
-<li>值单元存储分配信息</li>
-<li>函数参数传递和校验</li>
-</ul>
-<h2 id="符号表组织和管理"><a href="#符号表组织和管理" class="headerlink" title="符号表组织和管理"></a>符号表组织和管理</h2><ul>
-<li>遇到说明性标识符则插入符号表并把语义信息插入表项中，使其指向相应表项</li>
-<li>遇到应用性标识符则查询符号表，使其指向相应表项</li>
-</ul>
-<h2 id="符号表查询和访问方式"><a href="#符号表查询和访问方式" class="headerlink" title="符号表查询和访问方式"></a>符号表查询和访问方式</h2><ul>
-<li>线性表  </li>
-<li>顺序表 </li>
-<li>索引表 </li>
-<li>散列表</li>
-</ul>
-<h2 id="符号表的管理和维护"><a href="#符号表的管理和维护" class="headerlink" title="符号表的管理和维护"></a>符号表的管理和维护</h2><p>一个源文件有若干函数组成，通常每个函数对应一个符号表，此外还有一个公共符号表。</p>
-<p>符号表如何管理取决于所属语言的程序结构，常见的实现方式是在内存设定一定长度的<br>符号表区，并建立适当的索引机制，访问相应的符号表。</p>
-<p>如下图所示：<br><img src="/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/sym-1.png" alt=" symbol table "></p>
-<h2 id="符号表的结构设计"><a href="#符号表的结构设计" class="headerlink" title="符号表的结构设计"></a>符号表的结构设计</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int foo(int a,int b)</span><br><span class="line">&#123;</span><br><span class="line">	int x,y;</span><br><span class="line">	const pi&#x3D;3.14;</span><br><span class="line">	x &#x3D; a*a;  y &#x3D; b*b;</span><br><span class="line">	retrun pixy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>需要填入符号表的标识符：</p>
-<table>
-<thead>
-<tr>
-<th>标识符</th>
-<th align="left">语义属性</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>foo</td>
-<td align="left">函数，附加信息：类型，参数情况和入口地址</td>
-</tr>
-<tr>
-<td>a</td>
-<td align="left">形参</td>
-</tr>
-<tr>
-<td>b</td>
-<td align="left">形参</td>
-</tr>
-<tr>
-<td>x</td>
-<td align="left">变量</td>
-</tr>
-<tr>
-<td>y</td>
-<td align="left">变量</td>
-</tr>
-<tr>
-<td>pi</td>
-<td align="left">常量</td>
-</tr>
-</tbody></table>
-<p>由于标识符种类不同，导致语义属性不尽相同</p>
-<h2 id="如何组织符号表？"><a href="#如何组织符号表？" class="headerlink" title="如何组织符号表？"></a>如何组织符号表？</h2><p>下面是“龙书”中提到的一种符号表的体系结构：<br><img src="/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/sym-2.png" alt=" symbol table "></p>
-<p>说明：</p>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>NAME</td>
-<td>标识符源码，内部码</td>
-</tr>
-<tr>
-<td>TYPE</td>
-<td>指针，指向类型表的表项</td>
-</tr>
-<tr>
-<td>CAT</td>
-<td>种类编码：函数f，变量v，类型t，常量c，传值形参vf，传地址形参vn</td>
-</tr>
-<tr>
-<td>ADDR</td>
-<td>指针，根据标识符种类不同，指向函数表，常量表等</td>
-</tr>
-</tbody></table>
-<ul>
-<li>类型表</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>TVAL</td>
-<td>类型编码：整型，浮点型，字符型，布尔型，数组型，结构型</td>
-</tr>
-<tr>
-<td>TPOINT</td>
-<td>指针，根据类型编码的不同，指向不同的信息表项 基本类型：空 数组类型：指向数组表项 结构类型：指向结构表项</td>
-</tr>
-</tbody></table>
-<ul>
-<li>数组表</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>LOW</td>
-<td>数组下届</td>
-</tr>
-<tr>
-<td>UP</td>
-<td>数组上届</td>
-</tr>
-<tr>
-<td>CTP</td>
-<td>成员类型指针，指向类型表中表项</td>
-</tr>
-<tr>
-<td>CTLEN</td>
-<td>成员类型长度，成员类型所占值单元长度</td>
-</tr>
-</tbody></table>
-<ul>
-<li>函数表</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名字</th>
-<th>说明</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>OFF</td>
-<td>函数的值单元地址</td>
-</tr>
-<tr>
-<td>DAT</td>
-<td>指针，指向函数的数据区</td>
-</tr>
-<tr>
-<td>FN</td>
-<td>参数个数</td>
-</tr>
-<tr>
-<td>PAR</td>
-<td>指针，指向形参表</td>
-</tr>
-<tr>
-<td>ENT</td>
-<td>函数运行首地址，运行时填写</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p>其它表</p>
-<ul>
-<li>常量表存放常量的初值</li>
-<li>长度表存放数据类型所占值单元的长度</li>
-</ul>
-</li>
-<li><p>活动记录表<br>一个函数虚拟的值单元存储分配表，在函数运行调用时用到故称活动记录。</p>
-</li>
-</ul>
-<h2 id="符号表例子"><a href="#符号表例子" class="headerlink" title="符号表例子"></a>符号表例子</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int foo(int a,int b)</span><br><span class="line">&#123;</span><br><span class="line">	int x,y;</span><br><span class="line">	const pi&#x3D;3.14;</span><br><span class="line">	x &#x3D; a*a;  y &#x3D; b*b;</span><br><span class="line">	retrun pixy;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>该函数经过语法分析后，填充如下的信息:</p>
-<p><img src="/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/sym-3.png" alt=" symbol table "></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/05/01/BIOS%E5%92%8CUEFI/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/01/BIOS%E5%92%8CUEFI/" class="post-title-link" itemprop="url">BIOS和UEFI</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-01 21:18:10" itemprop="dateCreated datePublished" datetime="2019-05-01T21:18:10+00:00">2019-05-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-11 09:29:16" itemprop="dateModified" datetime="2020-03-11T09:29:16+00:00">2020-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/pc/" itemprop="url" rel="index">
-                    <span itemprop="name">pc</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>最近在某发行版遇到问题，大体情况是修改/etc/default/grub的定制脚本，<br>在BIOS和UEFI主板的机器上结果不同，后调查发现在UEFI机器上，grub的配置文件<br>位于Efi System Paition分区，而不是BIOS机器上的/boot/grub2下。</p>
-<p>这里分析下BIOS和UEFI启动。</p>
-<h2 id="bios"><a href="#bios" class="headerlink" title="bios"></a>bios</h2><p><img src="/2019/05/01/BIOS%E5%92%8CUEFI/bios.png" alt=" bios "></p>
-<ol>
-<li><p>上电，bios firmware开始执行，加载MBR（第一扇区）到指定位置(0x7c00)开始执行第一阶段启动代码(bootcode)</p>
-<blockquote>
-<p>第一阶段启动代码非常小，不超过1个扇区大小（扇区:512字节）</p>
-</blockquote>
-</li>
-<li><p>stage 1代码负责加载并执行stage 2的代码</p>
-<blockquote>
-<p>stage 2代码(grub)功能强大，加载操作系统</p>
-</blockquote>
-</li>
-<li><p>stage 2加载操作系统，操作系统启动</p>
-</li>
-</ol>
-<h2 id="uefi"><a href="#uefi" class="headerlink" title="uefi"></a>uefi</h2><p><img src="/2019/05/01/BIOS%E5%92%8CUEFI/uefi.png" alt=" uefi "></p>
-<ol>
-<li><p>上电，uefi firmware开始执行，加载ESP分区的efi文件执行(解释执行efi byte code)</p>
-<blockquote>
-<p>efi文件中是efi字节码，uefi固件内置efi解释器，用于执行这些代码</p>
-</blockquote>
-</li>
-<li><p>efi bootcode加载引导程序(grub)并执行引导程序</p>
-<blockquote>
-<p>stage 2代码(grub)功能强大，加载操作系统</p>
-</blockquote>
-</li>
-<li><p>stage 2加载操作系统，操作系统启动</p>
-</li>
-</ol>
-<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><p>在系统启动上，除了1和2差别很大，后边系统启动完全一样了。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://www.partitionwizard.com/partitionmagic/uefi-vs-bios.html" target="_blank" rel="noopener">uefi vs bios</a></li>
-<li><a href="https://en.wikipedia.org/wiki/Unified_Extensible_Firmware_Interface" target="_blank" rel="noopener">Unified_Extensible_Firmware_Interface</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/" class="post-title-link" itemprop="url">编写python扩展模块</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-05-01 21:18:10" itemprop="dateCreated datePublished" datetime="2019-05-01T21:18:10+00:00">2019-05-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-11 09:29:16" itemprop="dateModified" datetime="2020-03-11T09:29:16+00:00">2020-03-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/python/" itemprop="url" rel="index">
-                    <span itemprop="name">python</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>一直以来更多的是使用c语言，看到python语言在云计算时代广泛运用，<br>想着如何用c编写模块供python调用。python的官方实现就是c语言实现的，<br>即cpython。python提供了运行时接口供我们编写c扩展模块。</p>
-<p>linux发行版通常把头文件和库文件打包成xxxx-dev的包形式。我们需要<br>安装python-dev来编写python扩展。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;python.h&gt; &#x2F;* Python API to python runtime system *&#x2F;</span><br><span class="line">static PyObject *SpamError;</span><br><span class="line">&#x2F;*</span><br><span class="line">spam.system(string)</span><br><span class="line">*&#x2F;</span><br><span class="line">static PyObject * spam_system(PyObject *self, PyObject *args)</span><br><span class="line">&#123;</span><br><span class="line">        const char *command;</span><br><span class="line">        int sts;</span><br><span class="line">        if (!PyArg_ParseTuple(args,&quot;s&quot;,&amp;command))</span><br><span class="line">                return NULL;</span><br><span class="line">        &#x2F;*</span><br><span class="line">         run the command in another process until it runs done     </span><br><span class="line">        *&#x2F;</span><br><span class="line">        sts &#x3D; system(command);     </span><br><span class="line">        if (sts &lt; 0) &#123;                                         </span><br><span class="line">		PyErr_SetString(SpamError,&quot;System command failed&quot;);     </span><br><span class="line">        &#125;                </span><br><span class="line">        return PyLong_FromLong(sts);</span><br><span class="line">&#125;</span><br><span class="line">static PyMethodDef SpamMethods[] &#x3D; &#123;</span><br><span class="line">        &#123;&quot;system&quot;,spam_system,METH_VARARGS,&quot;Execute a shell command.&quot;&#125;,</span><br><span class="line">        &#123;NULL,NULL,0,NULL&#125;</span><br><span class="line">&#125;;</span><br><span class="line">PyMODINIT_FUNC</span><br><span class="line">initspam(void)</span><br><span class="line">&#123;</span><br><span class="line">        PyObject *m;</span><br><span class="line">        m &#x3D; Py_InitModule(&quot;spam&quot;,SpamMethods);</span><br><span class="line">        if (!m)</span><br><span class="line">                return ;</span><br><span class="line">        SpamError &#x3D; PyErr_NewException(&quot;spam.error&quot;,NULL,NULL);</span><br><span class="line">        Py_INCREF(SpamError);</span><br><span class="line">        PyModule_AddObject(m,&quot;error&quot;,SpamError);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如果模块名为xxx则必须提供xxxinit的函数。在python解释器加载模块的时候会寻找<br>模块动态库文件中导出的xxxinit函数。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -777,8 +227,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">分析下mutter窗口管理器的一个问题</a>
+          分析下mutter窗口管理器的一个问题
         </h1>
 
         <div class="post-meta">
@@ -820,7 +269,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h2 id="mutter-problem"><a href="#mutter-problem" class="headerlink" title="mutter problem"></a>mutter problem</h2><p>gnome hangup after 49.7 days.</p>
+        <h2 id="mutter-problem"><a href="#mutter-problem" class="headerlink" title="mutter problem"></a>mutter problem</h2><p>gnome hangup after 49.7 days.</p>
 <h2 id="mutter"><a href="#mutter" class="headerlink" title="mutter?"></a>mutter?</h2><p>mutter是GNOME3的窗口管理器，用来取代Metacity。</p>
 <blockquote>
 <p><a href="https://zh.wikipedia.org/wiki/Mutter" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/Mutter</a></p>
@@ -855,27 +304,54 @@
 <li><a href="https://jichu4n.com/posts/how-x-window-managers-work-and-how-to-write-one-part-i/" target="_blank" rel="noopener">How X Window Managers Work, And How To Write One</a></li>
 </ol>
 
-      
     </div>
 
     
     
     
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/" title="分析下mutter窗口管理器的一个问题">https://supersojo.github.io/2019/03/01/分析下mutter窗口管理器的一个问题/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
+          <div class="post-tags">
+              <a href="/tags/mutter/" rel="tag"># mutter</a>
+              <a href="/tags/x11/" rel="tag"># x11</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item"></div>
+      <div class="post-nav-item">
+    <a href="/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/" rel="next" title="编写python扩展模块">
+      编写python扩展模块 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
       </footer>
+    
   </article>
   
   
   
 
   </div>
-
-  
-  <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
-  </nav>
-
 
 
           </div>
@@ -926,6 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#mutter-problem"><span class="nav-number">1.</span> <span class="nav-text">mutter problem</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mutter"><span class="nav-number">2.</span> <span class="nav-text">mutter?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#patch-info"><span class="nav-number">3.</span> <span class="nav-text">patch info?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码"><span class="nav-number">4.</span> <span class="nav-text">代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XSERVER-TIME-IS-BEFORE"><span class="nav-number">5.</span> <span class="nav-text">XSERVER_TIME_IS_BEFORE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mutter程序"><span class="nav-number">6.</span> <span class="nav-text">mutter程序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CurrentTime"><span class="nav-number">7.</span> <span class="nav-text">CurrentTime</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#xserver如何更新currentTime"><span class="nav-number">8.</span> <span class="nav-text">xserver如何更新currentTime</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#references"><span class="nav-number">9.</span> <span class="nav-text">references</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
