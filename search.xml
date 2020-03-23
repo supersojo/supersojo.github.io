@@ -246,6 +246,62 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </tags>
   </entry>
   <entry>
+    <title>关于chacl的分析</title>
+    <url>/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h2 id="关于chacl的分析"><a href="#关于chacl的分析" class="headerlink" title="关于chacl的分析"></a>关于chacl的分析</h2><p>最近在nfs上面遇到chacl问题，这里记录下分析过程。</p>
+<h2 id="ls命令"><a href="#ls命令" class="headerlink" title="ls命令"></a>ls命令</h2><p>ls命令根据系统调用getxattr的返回值判断是否要打印”+”</p>
+<p><a href="https://github.com/coreutils/coreutils/blob/master/src/ls.c" target="_blank" rel="noopener">https://github.com/coreutils/coreutils/blob/master/src/ls.c</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">			  </span><br><span class="line">  if (! any_has_acl)</span><br><span class="line">    modebuf[10] &#x3D; &#39;\0&#39;;</span><br><span class="line">  else if (f-&gt;acl_type &#x3D;&#x3D; ACL_T_LSM_CONTEXT_ONLY)</span><br><span class="line">    modebuf[10] &#x3D; &#39;.&#39;;</span><br><span class="line">  else if (f-&gt;acl_type &#x3D;&#x3D; ACL_T_YES)</span><br><span class="line">    modebuf[10] &#x3D; &#39;+&#39;; &#x2F;&#x2F; 有acl数据则打印&quot;+&quot;</span><br><span class="line">&#96;&#96;&#96;	</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;coreutils&#x2F;gnulib&#x2F;blob&#x2F;master&#x2F;lib&#x2F;file-has-acl.c</span><br></pre></td></tr></table></figure>
+<p>int file_has_acl (char const *name, struct stat const *sb)<br>{<br>#if USE_ACL<br>  if (! S_ISLNK (sb-&gt;st_mode))<br>    {</p>
+<h1 id="if-GETXATTR-WITH-POSIX-ACLS"><a href="#if-GETXATTR-WITH-POSIX-ACLS" class="headerlink" title="if GETXATTR_WITH_POSIX_ACLS"></a>if GETXATTR_WITH_POSIX_ACLS</h1><pre><code>  ssize_t ret;
+
+  ret = getxattr (name, XATTR_NAME_POSIX_ACL_ACCESS, NULL, 0); //是否有acl数据
+  if (ret &lt; 0 &amp;&amp; errno == ENODATA)
+    ret = 0;
+  else if (ret &gt; 0)
+    return 1;
+
+  if (ret == 0 &amp;&amp; S_ISDIR (sb-&gt;st_mode))
+    {
+      ret = getxattr (name, XATTR_NAME_POSIX_ACL_DEFAULT, NULL, 0);
+      if (ret &lt; 0 &amp;&amp; errno == ENODATA)
+        ret = 0;
+      else if (ret &gt; 0)
+        return 1;
+    }
+
+  if (ret &lt; 0)
+    return - acl_errno_valid (errno);
+  return ret;
+...</code></pre><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 3.10内核中getxattr</span><br><span class="line"></span><br><span class="line">chacl会调用getxattr。</span><br></pre></td></tr></table></figure>
+<p>getxattr<br>  - vfs_getxattr<br>         - nfs3_getxattr</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">nfs3_getxattr@fs&#x2F;nfs&#x2F;nfs3acl.c</span><br></pre></td></tr></table></figure>
+<p>acl = nfs3_proc_getacl(inode, type);<br>if (IS_ERR(acl))<br>    return PTR_ERR(acl);<br>else if (acl) {<br>    if (type == ACL_TYPE_ACCESS &amp;&amp; acl-&gt;a_count == 0)<br>        error = -ENODATA;<br>    else<br>        error = posix_acl_to_xattr(&amp;init_user_ns, acl, buffer, size);<br>    posix_acl_release(acl);<br>} else<br>    error = -ENODATA;//如果nfs3_proc_getacl返回null则返回ENODATA</p>
+<p>nfs3_proc_getacl@fs/nfs/nfs3acl.c</p>
+<p>if (res.acl_access != NULL) {<br>        if (posix_acl_equiv_mode(res.acl_access, NULL) == 0) {//对于标准权限则置空acl<br>                posix_acl_release(res.acl_access);<br>                res.acl_access = NULL;<br>        }<br>}</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">nfs3_getxattr对于标准权限总是返回ENODATA，所以ls时不会出现&quot;+&quot;。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 4.18内核getxattr</span><br></pre></td></tr></table></figure>
+<p>getxattr<br> - vfs_getxattr<br>       - posix_acl_xattr_get</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">posix_acl_xattr_get@fs&#x2F;posix_acl.c</span><br></pre></td></tr></table></figure>
+<p>acl = get_acl(inode, handler-&gt;flags);<br>if (IS_ERR(acl))<br>        return PTR_ERR(acl);<br>if (acl == NULL)<br>        return -ENODATA;</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">get_acl@fs&#x2F;posix_acl.c</span><br></pre></td></tr></table></figure>
+<p>acl = get_cached_acl(inode, type);<br>if (!is_uncached_acl(acl))<br>        return acl;</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">				</span><br><span class="line">如果inode-&gt;i_acl inode-&gt;i_default_acl有效则使用它,</span><br><span class="line">否则执行nfs3_get_acl，nfs3_get_acl对于标准权限总是返回NULL，从而getxattr返回ENODATA.</span><br><span class="line"></span><br><span class="line">nfs3_get_acl@fs&#x2F;nfs&#x2F;nfs3acl.c</span><br></pre></td></tr></table></figure>
+<p>if (res.acl_access != NULL) {<br>        if ((posix_acl_equiv_mode(res.acl_access, NULL) == 0) ||<br>            res.acl_access-&gt;a_count == 0) {<br>                posix_acl_release(res.acl_access);<br>                res.acl_access = NULL;<br>        }<br>}</p>
+<p>```</p>
+<p>在chacl之后如果inode-&gt;i_acl有效,getxattr返回acl数据。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>出现问题的根本原因是4.18内核使用generic acl功能框架，缓存了错误的acl，导致出问题。</p>
+<p>最新的内核有<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/nfs/nfs3acl.c?h=v5.4&id=ded52fbe7020a5696b0b0a0fdbf234e37bf16f94" target="_blank" rel="noopener">patch</a>修正该问题。<br>即在setacl的时候总是置inode-&gt;i_acl无效。</p>
+]]></content>
+      <categories>
+        <category>kernel</category>
+        <category>nfs</category>
+      </categories>
+      <tags>
+        <tag>acl</tag>
+        <tag>NFS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>NAND Flash接口介绍</title>
     <url>/2020/01/10/NAND%20Flash%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="NAND-Flash接口介绍"><a href="#NAND-Flash接口介绍" class="headerlink" title="NAND Flash接口介绍"></a>NAND Flash接口介绍</h2><p>Nand Flash以廉价，高密度得到了广泛应用，这里介绍下Nand相关接口。目前<br>Nand Flash有两类接口，一类是三星和东芝主导的Toggle NAND接口，一类是其它<br>Flash厂商包括Cypress主导的ONFI接口。</p>
