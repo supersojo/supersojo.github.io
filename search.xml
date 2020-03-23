@@ -246,6 +246,43 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </tags>
   </entry>
   <entry>
+    <title>NAND Flash接口介绍</title>
+    <url>/2020/01/10/NAND%20Flash%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D/</url>
+    <content><![CDATA[<h2 id="NAND-Flash接口介绍"><a href="#NAND-Flash接口介绍" class="headerlink" title="NAND Flash接口介绍"></a>NAND Flash接口介绍</h2><p>Nand Flash以廉价，高密度得到了广泛应用，这里介绍下Nand相关接口。目前<br>Nand Flash有两类接口，一类是三星和东芝主导的Toggle NAND接口，一类是其它<br>Flash厂商包括Cypress主导的ONFI接口。</p>
+<ol>
+<li><p>traditional NAND interface<br>15 pins with 8 data bus and other control signals</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">DQ[7:0] Bidirectional, 8 bits data bus</span><br><span class="line">CE# input 片选信号</span><br><span class="line">ALE input</span><br><span class="line">CLE input</span><br><span class="line">RE# input</span><br><span class="line">WE# input</span><br><span class="line">WP# input</span><br><span class="line">RY&#x2F;BY# output 通知控制器操作完成或者空闲</span><br></pre></td></tr></table></figure>
+<p> 没有时钟信号，该接口是异步接口<br> 最高速率达40Mbps</p>
+</li>
+<li><p>ONFI NAND v1.0 interface<br> add addtional pins for more functions</p>
+ <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">IO[7:0]  Bidirectional, 8 bits data bus(Mandatory)</span><br><span class="line">IO[15:8] Bidirectional, upper 8 bits data bus(Optional)</span><br><span class="line">IO2[7:0] Bidirectional, second 8 bits data bus(Optional) </span><br><span class="line">CE#[3:0] input 支持4个片选</span><br><span class="line">ALE[1:0] input</span><br><span class="line">CLE[1:0] input</span><br><span class="line">RE#[1:0] input</span><br><span class="line">WE#[1:0] input</span><br><span class="line">WP#[1:0] input</span><br><span class="line">RY&#x2F;BY#[3:0] output</span><br></pre></td></tr></table></figure>
+<p> 支持两个8位数据接口或者一个16位数据接口<br> 最高速率达50Mbps</p>
+</li>
+<li><p>Toggle NAND 1.0(Asynchronous DDR NAND Interface)<br> performance and throughout<br> Added DQS signals<br> no clock<br> DQS在上升或者下降沿进行数据传输，类似DDR的方式，提高数据传输率。<br> 最高速率达133Mbps</p>
+</li>
+<li><p>ONFI NAND v2.0 interface<br> 增加时钟信号，支持异步接口保持向后兼容，也可以使用时钟信号支持同步接口<br> 最高速率达133Mbps</p>
+</li>
+<li><p>Toggle NAND 2.0<br>采用差分信号和ODT提高数据传输率和信号质量<br>最高速率达400Mbps</p>
+</li>
+<li><p>ONFINAND3.x和4.x接口<br>采用差分信号和ODT提高数据传输率和信号质量<br>最高速率达400Mbps</p>
+</li>
+<li><p>SPI Nand Flash接口<br>低功耗，接口简单</p>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.embedded.com/flash-101-the-nand-flash-electrical-interface/" target="_blank" rel="noopener">reference</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>NAND</category>
+      </categories>
+      <tags>
+        <tag>NAND Flash</tag>
+        <tag>ONFI</tag>
+        <tag>Toggle Nand</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>x86_64上安装aarch64架构的centos发行版</title>
     <url>/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/</url>
     <content><![CDATA[<h2 id="host上编译安装qemu"><a href="#host上编译安装qemu" class="headerlink" title="host上编译安装qemu"></a>host上编译安装qemu</h2><ul>
