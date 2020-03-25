@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">19</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">20</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,137 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/03/25/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/25/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/" class="post-title-link" itemprop="url">从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-25 09:39:24" itemprop="dateCreated datePublished" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"><a href="#从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器" class="headerlink" title="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"></a>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</h2><p>这个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/ipv4/tcp_timer.c?id=3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188" target="_blank" rel="noopener">patch</a>的描述如下:</p>
+<blockquote>
+<p>Previously there is an off-by-one bug on determining when to abort<br>a stalled window-probing socket. This patch fixes that so it is<br>consistent with tcp_write_timeout().</p>
+</blockquote>
+<p>从描述看关于何时中止执行窗口探测的socket的。下面从协议规范中寻找定时器使用。</p>
+<h2 id="TCP协议中的timer"><a href="#TCP协议中的timer" class="headerlink" title="TCP协议中的timer"></a>TCP协议中的timer</h2><p><img src="/2020/03/25/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/TCP-Timers-1.png" alt="TCP协议中的定时器"><br>协议中主要有4个定时器，注意这里每个TCP连接都有4个定时器。</p>
+<ol>
+<li>Time Out Timer<blockquote>
+<p>TCP uses a time out timer for retransmission of lost segments.</p>
+</blockquote>
+</li>
+<li>Time Wait Timer<blockquote>
+<p>TCP uses a time wait timer during connection termination.</p>
+</blockquote>
+</li>
+<li>Keep Alive Timer<blockquote>
+<p>TCP uses a keep alive timer to prevent long idle TCP connections.</p>
+</blockquote>
+</li>
+<li>Persistent Timer<blockquote>
+<p>TCP uses a persistent timer to deal with a zero-widow-size deadlock situation.<br>It keeps the window size information flowing even if the other end closes its receiver window.</p>
+</blockquote>
+</li>
+</ol>
+<p>从patch的描述看主要涉及窗口探测，即Persistent Timer。</p>
+<h3 id="Persistent-Timer的作用"><a href="#Persistent-Timer的作用" class="headerlink" title="Persistent Timer的作用"></a>Persistent Timer的作用</h3><p>Consider the following situation:</p>
+<ol>
+<li>Sender receives an acknowledgment from the receiver with zero window size.</li>
+<li>This indicates the sender to wait.</li>
+<li>Later, receiver updates the window size and and sends the segment with the update to the sender.</li>
+<li>This segment gets lost.</li>
+<li>Now, both sender and receiver keeps waiting for each other to do something. To deal with such a situation, TCP uses a persistent timer.</li>
+</ol>
+<p>发送测收到zero-window-size的ack报文后，发送测不能再发送报文，等待后续接收测更新窗口大小报文通知。为了防止该通知消息被丢的情况，使用<br>persistent timer，发送测会周期性的窗口探测报文消息，接收测回应该窗口探测消息。如果窗口大小为0，则继续窗口探测过程；非零则恢复数据传输过程。</p>
+<p>接下来分析下在linux内核中TCP协议栈所使用的定时器。</p>
+<h2 id="linux内核中的timer"><a href="#linux内核中的timer" class="headerlink" title="linux内核中的timer"></a>linux内核中的timer</h2><p>在linux内核中每条tcp连接使用一个inet_connection_sock的结构描述。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct inet_connection_sock &#123;</span><br><span class="line">	struct inet_sock &#123;</span><br><span class="line">		struct sock &#123;</span><br><span class="line">			struct timer_list	sk_timer; &#x2F;&#x2F;(1) keepalive timer</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> 	struct timer_list	  icsk_retransmit_timer; &#x2F;&#x2F;(2) time out timer</span><br><span class="line"> 	struct timer_list	  icsk_delack_timer; &#x2F;&#x2F;(3) delay ack timer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-timer"><a href="#sk-timer" class="headerlink" title="sk_timer"></a>sk_timer</h3><p>sk_timer作为keepalive timer使用，在socket设置SOCK_KEEPOPEN时才启用。</p>
+<p>keepalive timer流程如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">server               client</span><br><span class="line">            -&gt;syn   \</span><br><span class="line">			&lt;-synack| 3 handshakes</span><br><span class="line">			-&gt;ack   &#x2F;</span><br><span class="line">			...</span><br><span class="line">			2 hours (keepalive timer timeout)</span><br><span class="line">			--&gt;probe \</span><br><span class="line">			...       |&#x3D;&gt; 9 times (9*75s) </span><br><span class="line">			--&gt;probe &#x2F;</span><br><span class="line">			</span><br><span class="line">			terminate</span><br><span class="line">&#96;&#96;&#96;			</span><br><span class="line"></span><br><span class="line">linux内核对keepalive的处理代码如下：</span><br></pre></td></tr></table></figure>
+<p>static void tcp_keepalive_timer (struct timer_list <em>t)<br>…<br>if (elapsed &gt;= keepalive_time_when(tp)) { // 7200s<br>        /</em> If the TCP_USER_TIMEOUT option is enabled, use that<br>         * to determine when to timeout instead.<br>         <em>/<br>        if ((icsk-&gt;icsk_user_timeout != 0 &amp;&amp;<br>            elapsed &gt;= msecs_to_jiffies(icsk-&gt;icsk_user_timeout) &amp;&amp;<br>            icsk-&gt;icsk_probes_out &gt; 0) ||<br>            (icsk-&gt;icsk_user_timeout == 0 &amp;&amp;<br>            icsk-&gt;icsk_probes_out &gt;= keepalive_probes(tp))) { //到达次数限制9<br>                tcp_send_active_reset(sk, GFP_ATOMIC);<br>                tcp_write_err(sk);<br>                goto out;<br>        }<br>        if (tcp_write_wakeup(sk, LINUX_MIB_TCPKEEPALIVE) &lt;= 0) { //发送probe报文<br>                icsk-&gt;icsk_probes_out++;<br>                elapsed = keepalive_intvl_when(tp);// 75s<br>        } else {<br>                /</em> If keepalive was lost due to local congestion,<br>                 * try harder.<br>                 <em>/<br>                elapsed = TCP_RESOURCE_PROBE_INTERVAL;<br>        }<br>} else {<br>        /</em> It is tp-&gt;rcv_tstamp + keepalive_time_when(tp) */<br>        elapsed = keepalive_time_when(tp) - elapsed;<br>}<br>…</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在上面代码中使用**icsk_probes_out**对probe次数进行统计。keepalive_probes缺省设置为9。</span><br></pre></td></tr></table></figure>
+<p>net.ipv4.tcp_keepalive_probes = 9</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">使用上面的内核选项可以设置该值。</span><br><span class="line"></span><br><span class="line">tcp_write_wakeup负责发出probe报文，这个函数首先判断socket发送队列是否</span><br><span class="line">有报文等待发送，如果有则发送sk-&gt;sk_send_head报文(注意这个指针总是指向下一个要</span><br><span class="line">发送的报文)；如果发送队列空则发送probe报文(注意这个报文的序列号为out of date即无效)。</span><br><span class="line"></span><br><span class="line">如果报文能够到达接收测，则接收测回复ack消息。下面是收到ack报文的处理流程</span><br></pre></td></tr></table></figure>
+<p>static void tcp_ack_probe(struct sock *sk)<br>{<br>        struct inet_connection_sock *icsk = inet_csk(sk);<br>        struct sk_buff *head = tcp_send_head(sk);<br>        const struct tcp_sock *tp = tcp_sk(sk);</p>
+<pre><code>/* Was it a usable window open? */
+if (!head)
+        return;
+if (!after(TCP_SKB_CB(head)-&gt;end_seq, tcp_wnd_end(tp))) { // normal window size
+        icsk-&gt;icsk_backoff = 0;
+        inet_csk_clear_xmit_timer(sk, ICSK_TIME_PROBE0);
+        /* Socket must be waked up by subsequent tcp_data_snd_check().
+         * This function is not for random using!
+         */
+} else { // zero-window-size
+        unsigned long when = tcp_probe0_when(sk, TCP_RTO_MAX);
+
+        tcp_reset_xmit_timer(sk, ICSK_TIME_PROBE0,
+                             when, TCP_RTO_MAX, NULL);
+}</code></pre><p>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">如果接收测返回报文通知窗口大小为0则继续窗口探测过程，由于有接收到报文，</span><br><span class="line">这时keepalive超时时判断距离上次报文时间不会超过7200s，这样keepalive定时器</span><br><span class="line">重置为7200s超时。</span><br><span class="line"></span><br><span class="line">如果报文无法到达接收测，keepalive在75秒后超时，重新发送probe报文直到到达内核设置的</span><br><span class="line">tcp_keepalive_probes次后终止该tcp连接。</span><br><span class="line"></span><br><span class="line">linux内核使用**icsk_probes_out**统计keepalive的探测次数和zero-window-size的探测次数。考虑下面的</span><br><span class="line">一种情况：</span><br><span class="line">keepalive定时器超时了3次后，才从接收测收到ack消息，这时开始窗口探测过程，这里并没有对**icsk_probes_out**</span><br><span class="line">清零，而是继续增加**icsk_probes_out**次数，这样处理有意简化窗口探测的过程。</span><br><span class="line"></span><br><span class="line">## icsk_retransmit_timer</span><br><span class="line"></span><br><span class="line">即重传定时器，对应协议中的Time Out Timer和Persistent Timer。</span><br><span class="line">内核使用一个定时器处理重传定时器和zero-window-size的探测定时器使用。</span><br></pre></td></tr></table></figure>
+<p>net.ipv4.tcp_retries2 = 15</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">内核设置重传次数和zero-window-size次数限制为上面的值。</span><br></pre></td></tr></table></figure>
+<p>server               client<br>            -&gt;syn<br>            &lt;-synack<br>            -&gt;ack<br>            …<br>            &lt;–zero window ack</p>
+<pre><code>--&gt;probe \
+...       |=&gt; 15 times (15* [rto])
+--&gt;probe /</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&#96;&#96;&#96;		</span><br><span class="line">server               client</span><br><span class="line">            -&gt;syn</span><br><span class="line">			&lt;-synack</span><br><span class="line">			-&gt;ack</span><br><span class="line">			...</span><br><span class="line">            --&gt;data (not acked by receiver)</span><br><span class="line">            --&gt;probe \</span><br><span class="line">			...      |&#x3D;&gt; 15 times (15* [rto])</span><br><span class="line">			--&gt;probe &#x2F;</span><br></pre></td></tr></table></figure>
+
+<h3 id="icsk-delack-timer"><a href="#icsk-delack-timer" class="headerlink" title="icsk_delack_timer"></a>icsk_delack_timer</h3><p>待</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.gatevidyalay.com/tcp-timers-transmission-control-protocol/" target="_blank" rel="noopener">tcp协议中的timer</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/" target="_blank" rel="noopener">kernel source</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +370,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -377,7 +508,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -467,7 +598,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -562,7 +693,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
 
           
@@ -639,7 +770,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -735,7 +866,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
 
           
@@ -850,7 +981,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -974,7 +1105,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1073,7 +1204,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
+                <time title="修改时间：2020-03-25 09:39:24" itemprop="dateModified" datetime="2020-03-25T09:39:24+00:00">2020-03-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1173,91 +1304,6 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/07/16/udplite-checksum-problem/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/07/16/udplite-checksum-problem/" class="post-title-link" itemprop="url">udplite checksum problem</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-07-16 22:18:10" itemprop="dateCreated datePublished" datetime="2019-07-16T22:18:10+00:00">2019-07-16</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-23 01:35:35" itemprop="dateModified" datetime="2020-03-23T01:35:35+00:00">2020-03-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>在linux 3.10.0上面，遇到一个udplite校验失败问题。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>udp报文格式:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MAC|IP|UDP|Payload</span><br></pre></td></tr></table></figure>
-
-<p>而如下的udplite报文被drop了。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">MAC|IP|UDP|Payload</span><br><span class="line">14  20  8   61</span><br><span class="line"></span><br><span class="line">udplite_rcv</span><br><span class="line">-&gt;__udp4_lib_rcv</span><br><span class="line">-&gt;udp4_csum_init</span><br><span class="line">-&gt;udplite_checksum_init</span><br><span class="line">-&gt;skb_checksum_init_zero_check</span><br><span class="line">  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~    报bad checksum</span><br></pre></td></tr></table></figure>
-
-<p>在udplite_checksum_init的开始处:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">skb-&gt;len &#x3D; 61 + 8 &#x3D;69</span><br><span class="line">udphdr-&gt;len &#x3D; 64</span><br></pre></td></tr></table></figure>
-<p>UDPLITE协议中，udphdr中len表示对报文多少进行了校验。<br>即UDP_SKB_CB(skb)-&gt;partial_cov=1</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1328,7 +1374,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-count">20</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
