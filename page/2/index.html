@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">20</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">21</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,141 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="post-title-link" itemprop="url">x86_64上安装aarch64架构的centos发行版</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-08-01 21:18:10" itemprop="dateCreated datePublished" datetime="2019-08-01T21:18:10+00:00">2019-08-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="host上编译安装qemu"><a href="#host上编译安装qemu" class="headerlink" title="host上编译安装qemu"></a>host上编译安装qemu</h2><ul>
+<li><p>host: centos 8.0 x86_64</p>
+</li>
+<li><p>下载qemu-4.0.0.tar.gz<br><a href="https://download.qemu.org/" target="_blank" rel="noopener">https://download.qemu.org/</a></p>
+</li>
+<li><p>编译qemu</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --target-list&#x3D;aarch64-softmmu</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>在编译qemu需要安装glibc和glib2的等开发包，请安装相应的开发包。</p>
+</blockquote>
+<h2 id="下载-UEFI-firmware"><a href="#下载-UEFI-firmware" class="headerlink" title="下载 UEFI firmware"></a>下载 UEFI firmware</h2><ul>
+<li>uefi地址<br><a href="http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm" target="_blank" rel="noopener">http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm</a></li>
+</ul>
+<blockquote>
+<p>我们需要支持aarch64的UEFI固件，上面的rpm在x86_64上无法直接安装，可以通过下面的命令获取UEFI固件。</p>
+</blockquote>
+<ul>
+<li>解压uefi固件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ rpm2cpio edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm | cpio -div </span><br><span class="line">$ tree usr</span><br><span class="line">usr</span><br><span class="line">└── share</span><br><span class="line">    ├── AAVMF</span><br><span class="line">    │   ├── AAVMF_CODE.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │   ├── AAVMF_CODE.verbose.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-pflash.raw</span><br><span class="line">    │   └── AAVMF_VARS.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;vars-template-pflash.raw</span><br><span class="line">    ├── edk2</span><br><span class="line">    │   └── aarch64</span><br><span class="line">    │       ├── QEMU_EFI.fd</span><br><span class="line">    │       ├── QEMU_EFI-pflash.raw</span><br><span class="line">    │       ├── QEMU_EFI.silent.fd</span><br><span class="line">    │       ├── QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │       ├── QEMU_VARS.fd</span><br><span class="line">    │       └── vars-template-pflash.raw</span><br><span class="line">    ├── licenses</span><br><span class="line">    │   └── edk2-aarch64</span><br><span class="line">    │       ├── License.edk2.txt</span><br><span class="line">    │       ├── LICENSE.openssl</span><br><span class="line">    │       └── License.txt</span><br><span class="line">    └── qemu</span><br><span class="line">        └── firmware</span><br><span class="line">            ├── 60-edk2-aarch64.json</span><br><span class="line">            └── 70-edk2-aarch64-verbose.json</span><br><span class="line"></span><br><span class="line">8 directories, 14 files</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>使用上面解压出来的UEFI固件:QEMU_EFI.fd</p>
+</blockquote>
+<h2 id="运行虚拟机-安装centos发行版"><a href="#运行虚拟机-安装centos发行版" class="headerlink" title="运行虚拟机 安装centos发行版"></a>运行虚拟机 安装centos发行版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 2 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>上面的命令没有给VM配置网络接口，仅仅用来安装操作系统！！</li>
+<li>centos的安装完全是基于命令行界面的，按照提示安装就可以了</li>
+</ul>
+<h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><p>网络参照<a href="https://wzt.ac.cn/2019/09/10/QEMU-networking/" target="_blank" rel="noopener">这个文档</a>，配置tap接口给aarch64虚拟机使用。</p>
+<ul>
+<li><p>配置接口<br>如果由brctl命令则使用brctl命令。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
+<p>如果没有brctl命令，可以使用ip命令代替。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>VM使用网络接口</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+<p>使用上面的参数让qemu使用tap接口作为vm的网络接口。<br>完整的命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<blockquote>
+<p>-boot c参数指定硬盘启动无效，原因不明，规避方法是启动中按esc进入UEFI的bootmgr选择硬盘启动。</p>
+</blockquote>
+<h2 id="配置ssh访问"><a href="#配置ssh访问" class="headerlink" title="配置ssh访问"></a>配置ssh访问</h2><p>登录aarch64 centos后，设置网络接口。这里VM使用的tap接口时桥接到外部网络的，配置地址后就可以访问。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>安装aarch64的centos后，登录发现虚拟机效率很低。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;proc&#x2F;cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">BogoMIPS        : 125.00</span><br><span class="line">Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid</span><br><span class="line">CPU implementer : 0x41</span><br><span class="line">CPU architecture: 8</span><br><span class="line">CPU variant     : 0x1</span><br><span class="line">CPU part        : 0xd07</span><br><span class="line">CPU revision    : 0</span><br></pre></td></tr></table></figure>
+
+<p>这里可见模拟cpu的<a href="https://zh.wikipedia.org/wiki/BogoMips" target="_blank" rel="noopener">BogoMIPS</a>为125，即每秒125M指令，实际CPU的主频在250M左右。<br>host上cpu主频在2.2G，执行效率仅为<strong>10%</strong>，有着<strong>90%</strong>的性能损失。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><p><a href="https://marcin.juszkiewicz.com.pl/2015/04/17/running-vms-on-fedoraaarch64/" target="_blank" rel="noopener">Running VMs on Fedora/AArch64</a></p>
+</li>
+<li><p><a href="https://www.cnblogs.com/linuxxl/p/11658387.html" target="_blank" rel="noopener">x86 平台安装arm虚拟机</a></p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/07/16/udplite-checksum-problem/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +374,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -324,7 +459,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -408,7 +543,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -500,7 +635,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -585,7 +720,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -673,7 +808,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -949,7 +1084,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1061,7 +1196,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1141,7 +1276,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1215,122 +1350,11 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">linux发行版DVD安装机制分析</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2017-04-12 22:10:10" itemprop="dateCreated datePublished" datetime="2017-04-12T22:10:10+00:00">2017-04-12</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="linux发行版DVD安装机制分析"><a href="#linux发行版DVD安装机制分析" class="headerlink" title="linux发行版DVD安装机制分析"></a>linux发行版DVD安装机制分析</h2><p>想知道linux发行版究竟是怎么启动安装的吗，下面简单的分析下dvd光盘启动linux机制。</p>
-<h2 id="ISO-9660-标准"><a href="#ISO-9660-标准" class="headerlink" title="ISO 9660 标准"></a>ISO 9660 标准</h2><p>如果系统支持DVD启动，CD/DVD镜像格式必须满足标准，目前主要是采用<a href="http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-119.pdf" target="_blank" rel="noopener">ISO 9660标准</a>。</p>
-<p>ISO 9660是CD-ROM的标准文件系统。它还广泛用于DVD和BD介质上，也可能存在于USB sticks或硬盘上。</p>
-<p>ISO 9660基本信息：</p>
-<ol>
-<li>扇区大小<br>ISO 9660扇区正常都是2KB，尽管规范说可选，但是很难找到不是2K扇区大小的DVD</li>
-<li>数字编码<br>支持大段和小端模式   </li>
-<li>字符串编码<br>采用ASCII编码，但并不是所有字符都可用。但并不是所有DVD遵循这个规范。</li>
-<li>大小限制<br>最大2^32的block，即8TB。</li>
-<li>系统区域<br>前32KB(16个扇区)可以存储任意数据。如果ISO 9660文件系统存放在usb sticks或者硬盘，则一般用于存放boot代码(MBR)。</li>
-</ol>
-<h2 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h2><p>BIOS/EFI固件支持CD/DVD启动，根据ISO 9660标准寻找光盘上的boot record记录，根据boot record进而找到boot image(isolinux.bin)，<br>执行bootimage代码，根据isolinux.cfg的配置加载内核(vmlinuz)和RAM DISK(initrd)，加载完后跳转到<br>内核执行。</p>
-<p>这个initrd在内核启动时作为内存根文件系统使用，加载必要的驱动，然后内核切换到真正的根文件系统上面。<br>对于RHEL系就是光盘LiveOS下的squashfs.img。内核会挂载squashfs镜像，然后切换到其中的根文件系统。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@vm]# file squashfs.img</span><br><span class="line">squashfs.img: Squashfs filesystem, little endian, version 4.0, 433674553 bytes, 3 inodes, blocksize: 131072 bytes, created: Wed Mar 18 13:21:34 2020</span><br></pre></td></tr></table></figure>
-<p>挂载该squashfs镜像后可得到里边是一个rootfs.img(ext4文件系统镜像)。<br>这个rootfs.img就是内核在安装发行版时使用的根文件系统。</p>
-<h3 id="vmlinuz的生成"><a href="#vmlinuz的生成" class="headerlink" title="vmlinuz的生成"></a>vmlinuz的生成</h3><p>vmlinuz是内核文件，如果是自己编译内核，可以到<a href="https://www.kernel.org/" target="_blank" rel="noopener">官网</a>下载对应版本的<br>源码，编译。对于RHEL系发行版，一般有对应版本的源码包，如RPM源码包，安装后可以使用<br><a href="https://fedoraproject.org/wiki/Building_a_custom_kernel/Source_RPM" target="_blank" rel="noopener">rpmbuild编译内核</a>。<br>对于debian系发行版，可以参考<a href="https://blog.lpxin.com/2019/05/15/%E4%BD%BF%E7%94%A8make-kpkg%E7%BC%96%E8%AF%91deb%E5%86%85%E6%A0%B8%E5%AE%89%E8%A3%85%E5%8C%85/" target="_blank" rel="noopener">这里</a>。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@vm]# file vmlinuz</span><br><span class="line">vmlinuz: Linux kernel x86 boot executable bzImage, version 3.10.0-514.el7.x86_64 (root@RX300S8-1) #1 SMP Wed Mar 18 15:05:, RO-rootFS, swap_dev 0x5, Normal VGA</span><br></pre></td></tr></table></figure>
-
-<h3 id="initrd的解压和打包"><a href="#initrd的解压和打包" class="headerlink" title="initrd的解压和打包"></a>initrd的解压和打包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@vm]# file initrd.img</span><br><span class="line">initrd.img: LZMA compressed data, streamed</span><br></pre></td></tr></table></figure>
-
-<p>一般initrd都是经过压缩的，如上是采用lzma压缩的。需要lzma解压，完成后得到cpio包。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cpio -idmv &lt;initrd.img</span><br></pre></td></tr></table></figure>
-
-<p>经过cpio命令可以解压得到里边的内容。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@vm]# ls</span><br><span class="line">bin  etc   lib    proc  run   shutdown  sysroot  usr</span><br><span class="line">dev  init  lib64  root  sbin  sys       tmp      var</span><br></pre></td></tr></table></figure>
-<p>这时可以对里边的内容修改，如替换成自己的内核驱动等等。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">find . | cpio -c -o ..&#x2F;initrd.img</span><br></pre></td></tr></table></figure>
-<p>上面用于打包cpio，然后经过lzma压缩就可以得到可用的initrd。</p>
-<p>这里注意如果使用自己的lib/modules/xxxx替换，需要depmod一下，生成<br>对应的modules.alias等文件，这样系统才能正常工作。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">depmod -a -b &lt;lib&#x2F;modules&#x2F;xxxx中lib的父目录&gt;  -F &lt;Your System.map文件&gt;  -E &lt;Your symvers文件&gt; &lt;lib&#x2F;modules&#x2F;xxxx中的xxxx字符串即内核版本号&gt;</span><br></pre></td></tr></table></figure>
-<p>经过上述步骤后打包成的initrd是可以正常工作的。</p>
-<h3 id="squashfs镜像的解压和打包"><a href="#squashfs镜像的解压和打包" class="headerlink" title="squashfs镜像的解压和打包"></a>squashfs镜像的解压和打包</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir tmp_squashfs</span><br><span class="line">mount squashfs.img tmp_squashfs</span><br><span class="line">[root@vm tmp_squashfs]# tree</span><br><span class="line">.</span><br><span class="line">└── LiveOS</span><br><span class="line">    └── rootfs.img</span><br><span class="line"></span><br><span class="line">1 directory, 1 file</span><br></pre></td></tr></table></figure>
-<p>如果需要修改其中的rootfs.img需要拷贝出来，然后挂载该rootfs镜像，修改完直接卸载。<br>然后重新做成squashfs镜像。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mksquashfs &lt;Your squashfs目录&gt; squashfs.img</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上述步骤可以详细了解linux发行版启动安装机制。<br>简单讲首先运行一个linux内核(CD/DVD上面)，然后执行发行版的安装程序完成具体的安装。<br>安装程序负责对硬盘分区，挂载，使用CD/DVD上的目录作为安装源安装软件，最好配置重启完成安装。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1396,7 +1420,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>

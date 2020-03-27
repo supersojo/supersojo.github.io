@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">20</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">21</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,122 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/03/27/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/27/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/" class="post-title-link" itemprop="url">bpf入门系列-1</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-27 07:30:50" itemprop="dateCreated datePublished" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="bpf的build环境"><a href="#bpf的build环境" class="headerlink" title="bpf的build环境"></a>bpf的build环境</h2><p>简单讲，bpf是内核内置的虚拟机，对bpf的支持，内核需要开启编译选项如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_BPF&#x3D;y</span><br><span class="line">CONFIG_BPF_SYSCALL&#x3D;y</span><br><span class="line">CONFIG_NET_CLS_BPF&#x3D;m</span><br><span class="line">CONFIG_NET_ACT_BPF&#x3D;m</span><br><span class="line">CONFIG_BPF_JIT&#x3D;y</span><br><span class="line">CONFIG_HAVE_BPF_JIT&#x3D;y</span><br><span class="line">CONFIG_BPF_EVENTS&#x3D;y</span><br></pre></td></tr></table></figure>
+<p>[1]中是在oracle linux上面的介绍，在ubuntu1804上遇到很多问题，这里把问题列举下。</p>
+<h2 id="build-environment"><a href="#build-environment" class="headerlink" title="build environment"></a>build environment</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Distro: ubuntu 1804</span><br><span class="line">Kernel: 5.3.0-42</span><br><span class="line">Packages:</span><br><span class="line">linux-image-5.3.0-42-generic</span><br><span class="line">linux-image-5.3.0-42-generic-dbgsym</span><br><span class="line">linux-headers-5.3.0-42-generic</span><br><span class="line">linux-headers-5.3.0-42</span><br><span class="line">linux-source-5.3.0</span><br><span class="line">llvm-9</span><br><span class="line">clang-9</span><br><span class="line">libelf-dev</span><br></pre></td></tr></table></figure>
+<p>在ubuntu1804上我安装了5.3.0的内核，llvm和clang都是安装的9的，另外要安装elf开发库。由于Makefile中使用clang和llc命令，这里建立软链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s &#x2F;usr&#x2F;bin&#x2F;llc-9 &#x2F;usr&#x2F;bin&#x2F;llc</span><br><span class="line">ln -s &#x2F;usr&#x2F;bin&#x2F;clang-9 &#x2F;usr&#x2F;bin&#x2F;clang</span><br></pre></td></tr></table></figure>
+
+<p>把代码clone到本地</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;oracle&#x2F;linux-blog-sample-code.git</span><br></pre></td></tr></table></figure>
+
+<p>master分支只有README，源码文件在bpf-test分支上，所以切换分支</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b bpf-test origin&#x2F;bpf-test</span><br></pre></td></tr></table></figure>
+
+<p>这时编译例子程序，有如下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cd bpf-test</span><br><span class="line">$ make</span><br><span class="line">...</span><br><span class="line">LLVM ERROR: &#39;helper_test_init&#39; label emitted multiple times to assembly file</span><br><span class="line">Makefile:69: recipe for target &#39;test_bpf_helper_init_kern.o&#39; failed</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><a href="https://patchwork.ozlabs.org/patch/808209/" target="_blank" rel="noopener">这里</a>提到如果section名字和函数名字一样，clang会报错。我们可以<br>修改一下函数名字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bpf&#x2F;test_bpf_helper_init_kern.c</span><br><span class="line">helper_test_init &#x3D;&gt; helper_test_init_prog</span><br></pre></td></tr></table></figure>
+
+<p>继续编译发现还有类似错误，可以按照这种方式修改。由于其它地方使用了宏方式定义section，这里修改宏定义，在函数名后追加_prog</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bpf&#x2F;test_bpf_helper_kern.h</span><br><span class="line"></span><br><span class="line">#define BPF_HELPER_TEST_FUNC(helper, name, direction)                   \</span><br><span class="line">SEC(BPF_HELPER_TEST_NAME(helper, name, direction))                      \</span><br><span class="line">static __always_inline int helper##_##name##_##direction##_prog(struct __sk_buff *skb)</span><br></pre></td></tr></table></figure>
+
+<p>这样bpf程序可以正确编译出来，后面开始运行例子程序。</p>
+<h2 id="run-problem"><a href="#run-problem" class="headerlink" title="run problem"></a>run problem</h2><p>在运行程序时有如下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test# make test</span><br><span class="line">make  -C bpf test</span><br><span class="line">make[1]: Entering directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;bpf&#39;</span><br><span class="line">make[1]: &#39;test&#39; is up to date.</span><br><span class="line">make[1]: Leaving directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;bpf&#39;</span><br><span class="line">make  -C user test</span><br><span class="line">make[1]: Entering directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;user&#39;</span><br><span class="line">bash test_bpf_helper_run.sh</span><br><span class="line">before setup</span><br><span class="line">0 maps not supported in current map section!</span><br><span class="line">Error fixing up map structure, incompatible struct bpf_elf_map used?</span><br><span class="line">Error fetching ELF ancillary data!</span><br><span class="line">Unable to load program</span><br><span class="line">setup ok</span><br><span class="line">could not find map bpf_helper_test_map: No such file or directory</span><br><span class="line">Makefile:63: recipe for target &#39;test&#39; failed</span><br><span class="line">make[1]: *** [test] Error 1</span><br><span class="line">make[1]: Leaving directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;user&#39;</span><br><span class="line">Makefile:69: recipe for target &#39;test-user&#39; failed</span><br><span class="line">make: *** [test-user] Error 2</span><br></pre></td></tr></table></figure>
+
+<p>大致是说在bpf程序中找不到map。</p>
+<p>测试命令执行的是以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tc filter add dev veth1 ingress bpf da \</span><br><span class="line">            obj ..&#x2F;bpf&#x2F;test_bpf_helper_init_kern.o \</span><br><span class="line">            sec helper_test_init</span><br></pre></td></tr></table></figure>
+<p>tc是iproute2包中的命令，这里是iproute2的<a href="https://github.com/shemminger/iproute2" target="_blank" rel="noopener">upstream</a>地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;shemminger&#x2F;iproute2.git</span><br><span class="line">grep &quot;maps not supported&quot; -rsn .&#x2F;</span><br><span class="line">...</span><br><span class="line">.&#x2F;lib&#x2F;bpf.c:1886:               fprintf(stderr, &quot;struct bpf_elf_map too small, not supported!\n&quot;);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>看下报错的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">static int bpf_fetch_maps_end(struct bpf_elf_ctx *ctx)</span><br><span class="line">&#123;</span><br><span class="line">        struct bpf_elf_map fixup[ARRAY_SIZE(ctx-&gt;maps)] &#x3D; &#123;&#125;;</span><br><span class="line">        int i, sym_num &#x3D; bpf_map_num_sym(ctx);</span><br><span class="line">        __u8 *buff;</span><br><span class="line"></span><br><span class="line">        if (sym_num &#x3D;&#x3D; 0 || sym_num &gt; ARRAY_SIZE(ctx-&gt;maps)) &#123;</span><br><span class="line">                fprintf(stderr, &quot;%u maps not supported in current map section!\n&quot;,</span><br><span class="line">                        sym_num);</span><br><span class="line">...</span><br><span class="line">static int bpf_map_num_sym(struct bpf_elf_ctx *ctx)</span><br><span class="line">&#123;</span><br><span class="line">	int i, num &#x3D; 0;</span><br><span class="line">	GElf_Sym sym;</span><br><span class="line"></span><br><span class="line">	for (i &#x3D; 0; i &lt; ctx-&gt;sym_num; i++) &#123;</span><br><span class="line">		int type;</span><br><span class="line"></span><br><span class="line">		if (gelf_getsym(ctx-&gt;sym_tab, i, &amp;sym) !&#x3D; &amp;sym)</span><br><span class="line">			continue;</span><br><span class="line"></span><br><span class="line">		type &#x3D; GELF_ST_TYPE(sym.st_info);</span><br><span class="line">		if (GELF_ST_BIND(sym.st_info) !&#x3D; STB_GLOBAL ||</span><br><span class="line">		    (type !&#x3D; STT_NOTYPE &amp;&amp; type !&#x3D; STT_OBJECT) ||</span><br><span class="line">		    sym.st_shndx !&#x3D; ctx-&gt;sec_maps)</span><br><span class="line">			continue;</span><br><span class="line">		num++;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见bpf_map_num_sym返回了0。以上是iproute2的upstream代码，检查符号类型，如果不是STT_NOTYPE和STT_OBJECT则跳过，我们需要看下ubuntu中iproute2的代码。<br>安装ubuntu中iproute2源码包。</p>
+<p>下面命令会安装ubuntu仓库中最新的iproute2源码包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt source iproute2</span><br></pre></td></tr></table></figure>
+
+<p>可能你需要特定版本的源码包，这时需要检查系统iproute2的版本号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;iproute2&#x2F;debian# dpkg -l | grep iproute2</span><br><span class="line">ii  iproute2                                     4.15.0-2ubuntu1                                 amd64        networking and traffic control tools</span><br><span class="line">root@ubuntu:~# apt source iproute2&#x3D;4.15.0</span><br></pre></td></tr></table></figure>
+
+<p>这样我们可以检查对应版本4.15.0的iproute2的中bpf_map_num_sym的实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">static int bpf_map_num_sym(struct bpf_elf_ctx *ctx)</span><br><span class="line">&#123;</span><br><span class="line">        int i, num &#x3D; 0;</span><br><span class="line">        GElf_Sym sym;</span><br><span class="line"></span><br><span class="line">        for (i &#x3D; 0; i &lt; ctx-&gt;sym_num; i++) &#123;</span><br><span class="line">                if (gelf_getsym(ctx-&gt;sym_tab, i, &amp;sym) !&#x3D; &amp;sym)</span><br><span class="line">                        continue;</span><br><span class="line"></span><br><span class="line">                if (GELF_ST_BIND(sym.st_info) !&#x3D; STB_GLOBAL ||</span><br><span class="line">                    GELF_ST_TYPE(sym.st_info) !&#x3D; STT_NOTYPE ||</span><br><span class="line">                    sym.st_shndx !&#x3D; ctx-&gt;sec_maps)</span><br><span class="line">                        continue;</span><br><span class="line">                num++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>检查符号的类型，如果不是STT_NOTYPE则跳过。这里和upstream实现是有区别的，我们接下来需要确认我们生成的bpf程序中符号的类型。</p>
+<p>首先确认有maps段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test# llvm-readelf-9 --sections bpf&#x2F;test_bpf_helper_init_kern.o</span><br><span class="line"></span><br><span class="line">There are 23 section headers, starting at offset 0x3068:</span><br><span class="line"></span><br><span class="line">Section Headers:</span><br><span class="line">  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al</span><br><span class="line">  [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0</span><br><span class="line">  [ 1] .strtab           STRTAB          0000000000000000 002e10 000256 00      0   0  1</span><br><span class="line">  [ 2] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  4</span><br><span class="line">  [ 3] helper_test_init  PROGBITS        0000000000000000 000040 000010 00  AX  0   0  8</span><br><span class="line">  [ 4] .rodata.str1.1    PROGBITS        0000000000000000 000050 00025f 01 AMS  0   0  1</span><br><span class="line">  [ 5] .data             PROGBITS        0000000000000000 0002b0 0001c0 00  WA  0   0 16</span><br><span class="line">  [ 6] .rel.data         REL             0000000000000000 0023c0 000370 10     22   5  8</span><br><span class="line">  [ 7] maps              PROGBITS        0000000000000000 000470 00001c 00  WA  0   0  4</span><br><span class="line">  [ 8] license           PROGBITS        0000000000000000 00048c 000004 00  WA  0   0  1</span><br><span class="line">  [ 9] .debug_str        PROGBITS        0000000000000000 000490 0003c3 01  MS  0   0  1</span><br><span class="line">  [10] .debug_abbrev     PROGBITS        0000000000000000 000853 000103 00      0   0  1</span><br><span class="line">  [11] .debug_info       PROGBITS        0000000000000000 000956 000568 00      0   0  1</span><br><span class="line">  [12] .rel.debug_info   REL             0000000000000000 002730 000680 10     22  11  8</span><br><span class="line">  [13] .debug_macinfo    PROGBITS        0000000000000000 000ebe 000001 00      0   0  1</span><br><span class="line">  [14] .BTF              PROGBITS        0000000000000000 000ebf 0006b9 00      0   0  1</span><br><span class="line">  [15] .rel.BTF          REL             0000000000000000 002db0 000020 10     22  14  8</span><br><span class="line">  [16] .BTF.ext          PROGBITS        0000000000000000 001578 000058 00      0   0  1</span><br><span class="line">  [17] .rel.BTF.ext      REL             0000000000000000 002dd0 000020 10     22  16  8</span><br><span class="line">  [18] .eh_frame         PROGBITS        0000000000000000 0015d0 000030 00   A  0   0  8</span><br><span class="line">  [19] .rel.eh_frame     REL             0000000000000000 002df0 000010 10     22  18  8</span><br><span class="line">  [20] .debug_line       PROGBITS        0000000000000000 001600 000141 00      0   0  1</span><br><span class="line">  [21] .rel.debug_line   REL             0000000000000000 002e00 000010 10     22  20  8</span><br><span class="line">  [22] .symtab           SYMTAB          0000000000000000 001748 000c78 18      1 129  8</span><br><span class="line">Key to Flags:</span><br><span class="line">  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)</span><br><span class="line">  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)</span><br><span class="line">  O (extra OS processing required) o (OS specific), p (processor specific)</span><br></pre></td></tr></table></figure>
+
+<p>从上面的输出看有maps段，再看下maps段的符号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bpf&#x2F;test_bpf_helper_kern.h</span><br><span class="line">struct bpf_elf_map SEC(&quot;maps&quot;) bpf_helper_test_map &#x3D; &#123;</span><br><span class="line">        .type &#x3D; BPF_MAP_TYPE_HASH,</span><br><span class="line">        .size_key &#x3D; sizeof(long),</span><br><span class="line">        .size_value &#x3D; sizeof(long),</span><br><span class="line">        .pinning &#x3D; PIN_GLOBAL_NS,</span><br><span class="line">        .max_elem &#x3D; 256,</span><br><span class="line">&#125;;</span><br><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test# llvm-readelf-9 -s bpf&#x2F;test_bpf_helper_init_kern.o | grep bpf_helper_test_map</span><br><span class="line">   130: 0000000000000000    28 OBJECT  GLOBAL DEFAULT    7 bpf_helper_test_map</span><br></pre></td></tr></table></figure>
+<p>哇，这里bpf_helper_test_map的类型是OBJECT，tc程序认为不是有效的符号而跳过了。我们需要修改iproute2的代码重新打包，注意有3个函数都需要修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bpf_map_num_sym</span><br><span class="line">bpf_map_verify_all_offs</span><br><span class="line">bpf_map_fetch_name</span><br></pre></td></tr></table></figure>
+
+<p>关于debian下编译打包参考<a href="https://moeclub.org/2017/03/31/100/?spm=38.1" target="_blank" rel="noopener">这里</a><br>这里列下简单步骤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir YourPackage</span><br><span class="line">cd YourPackage</span><br><span class="line">apt source -t bionic iproute2</span><br><span class="line">apt build-dep -y -t bionic iproute2</span><br><span class="line">vim lib&#x2F;bpf.c  &#x3D;&#x3D;&gt; modify the source code</span><br><span class="line">dpkg-buildpackge --commit</span><br><span class="line">dpkg-buildpackge </span><br><span class="line">dpkg -i ..&#x2F;iproute2*.deb</span><br></pre></td></tr></table></figure>
+
+<p>这时例子程序可以成功运行了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make test</span><br></pre></td></tr></table></figure>
+
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ol>
+<li><a href="https://blogs.oracle.com/linux/notes-on-bpf-4" target="_blank" rel="noopener">How to build bpf program out of the kernel tree</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +355,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -385,7 +501,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -523,7 +639,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -613,7 +729,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -708,7 +824,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
 
           
@@ -785,7 +901,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -881,7 +997,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
 
           
@@ -996,7 +1112,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1120,7 +1236,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
+                <time title="修改时间：2020-03-27 07:30:50" itemprop="dateModified" datetime="2020-03-27T07:30:50+00:00">2020-03-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1184,146 +1300,11 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="post-title-link" itemprop="url">x86_64上安装aarch64架构的centos发行版</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-08-01 21:18:10" itemprop="dateCreated datePublished" datetime="2019-08-01T21:18:10+00:00">2019-08-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-03-26 01:30:20" itemprop="dateModified" datetime="2020-03-26T01:30:20+00:00">2020-03-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="host上编译安装qemu"><a href="#host上编译安装qemu" class="headerlink" title="host上编译安装qemu"></a>host上编译安装qemu</h2><ul>
-<li><p>host: centos 8.0 x86_64</p>
-</li>
-<li><p>下载qemu-4.0.0.tar.gz<br><a href="https://download.qemu.org/" target="_blank" rel="noopener">https://download.qemu.org/</a></p>
-</li>
-<li><p>编译qemu</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --target-list&#x3D;aarch64-softmmu</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>在编译qemu需要安装glibc和glib2的等开发包，请安装相应的开发包。</p>
-</blockquote>
-<h2 id="下载-UEFI-firmware"><a href="#下载-UEFI-firmware" class="headerlink" title="下载 UEFI firmware"></a>下载 UEFI firmware</h2><ul>
-<li>uefi地址<br><a href="http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm" target="_blank" rel="noopener">http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm</a></li>
-</ul>
-<blockquote>
-<p>我们需要支持aarch64的UEFI固件，上面的rpm在x86_64上无法直接安装，可以通过下面的命令获取UEFI固件。</p>
-</blockquote>
-<ul>
-<li>解压uefi固件</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ rpm2cpio edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm | cpio -div </span><br><span class="line">$ tree usr</span><br><span class="line">usr</span><br><span class="line">└── share</span><br><span class="line">    ├── AAVMF</span><br><span class="line">    │   ├── AAVMF_CODE.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │   ├── AAVMF_CODE.verbose.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-pflash.raw</span><br><span class="line">    │   └── AAVMF_VARS.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;vars-template-pflash.raw</span><br><span class="line">    ├── edk2</span><br><span class="line">    │   └── aarch64</span><br><span class="line">    │       ├── QEMU_EFI.fd</span><br><span class="line">    │       ├── QEMU_EFI-pflash.raw</span><br><span class="line">    │       ├── QEMU_EFI.silent.fd</span><br><span class="line">    │       ├── QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │       ├── QEMU_VARS.fd</span><br><span class="line">    │       └── vars-template-pflash.raw</span><br><span class="line">    ├── licenses</span><br><span class="line">    │   └── edk2-aarch64</span><br><span class="line">    │       ├── License.edk2.txt</span><br><span class="line">    │       ├── LICENSE.openssl</span><br><span class="line">    │       └── License.txt</span><br><span class="line">    └── qemu</span><br><span class="line">        └── firmware</span><br><span class="line">            ├── 60-edk2-aarch64.json</span><br><span class="line">            └── 70-edk2-aarch64-verbose.json</span><br><span class="line"></span><br><span class="line">8 directories, 14 files</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>使用上面解压出来的UEFI固件:QEMU_EFI.fd</p>
-</blockquote>
-<h2 id="运行虚拟机-安装centos发行版"><a href="#运行虚拟机-安装centos发行版" class="headerlink" title="运行虚拟机 安装centos发行版"></a>运行虚拟机 安装centos发行版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 2 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>上面的命令没有给VM配置网络接口，仅仅用来安装操作系统！！</li>
-<li>centos的安装完全是基于命令行界面的，按照提示安装就可以了</li>
-</ul>
-<h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><p>网络参照<a href="https://wzt.ac.cn/2019/09/10/QEMU-networking/" target="_blank" rel="noopener">这个文档</a>，配置tap接口给aarch64虚拟机使用。</p>
-<ul>
-<li><p>配置接口<br>如果由brctl命令则使用brctl命令。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
-<p>如果没有brctl命令，可以使用ip命令代替。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>VM使用网络接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
-<p>使用上面的参数让qemu使用tap接口作为vm的网络接口。<br>完整的命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<blockquote>
-<p>-boot c参数指定硬盘启动无效，原因不明，规避方法是启动中按esc进入UEFI的bootmgr选择硬盘启动。</p>
-</blockquote>
-<h2 id="配置ssh访问"><a href="#配置ssh访问" class="headerlink" title="配置ssh访问"></a>配置ssh访问</h2><p>登录aarch64 centos后，设置网络接口。这里VM使用的tap接口时桥接到外部网络的，配置地址后就可以访问。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>安装aarch64的centos后，登录发现虚拟机效率很低。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;proc&#x2F;cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">BogoMIPS        : 125.00</span><br><span class="line">Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid</span><br><span class="line">CPU implementer : 0x41</span><br><span class="line">CPU architecture: 8</span><br><span class="line">CPU variant     : 0x1</span><br><span class="line">CPU part        : 0xd07</span><br><span class="line">CPU revision    : 0</span><br></pre></td></tr></table></figure>
-
-<p>这里可见模拟cpu的<a href="https://zh.wikipedia.org/wiki/BogoMips" target="_blank" rel="noopener">BogoMIPS</a>为125，即每秒125M指令，实际CPU的主频在250M左右。<br>host上cpu主频在2.2G，执行效率仅为<strong>10%</strong>，有着<strong>90%</strong>的性能损失。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><p><a href="https://marcin.juszkiewicz.com.pl/2015/04/17/running-vms-on-fedoraaarch64/" target="_blank" rel="noopener">Running VMs on Fedora/AArch64</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/linuxxl/p/11658387.html" target="_blank" rel="noopener">x86 平台安装arm虚拟机</a></p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1389,7 +1370,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">20</span>
+          <span class="site-state-item-count">21</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
