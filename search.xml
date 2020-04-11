@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>bpf入门系列-2</title>
-    <url>/2020/03/27/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/</url>
+    <url>/2020/04/11/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/</url>
     <content><![CDATA[<h2 id="头文件设置"><a href="#头文件设置" class="headerlink" title="头文件设置"></a>头文件设置</h2><p>要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。</p>
 <p>首先介绍下<a href="https://stackoverflow.com/questions/18858190/whats-in-include-uapi-of-kernel-source-project" target="_blank" rel="noopener">uapi</a>。<br>uapi主要是以下两个目录</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kernel_dir&#x2F;include&#x2F;uapi</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi</span><br></pre></td></tr></table></figure>
@@ -372,65 +372,6 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <tags>
         <tag>RSA</tag>
         <tag>签名</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nfs cache problem</title>
-    <url>/2020/01/20/nfs-cache-problem/</url>
-    <content><![CDATA[<h1 id="first-section"><a href="#first-section" class="headerlink" title="first section"></a>first section</h1><p>some content</p>
-<h2 id="subsection"><a href="#subsection" class="headerlink" title="subsection"></a>subsection</h2><h1 id="second-section"><a href="#second-section" class="headerlink" title="second section"></a>second section</h1><p>some content<br><em>emphasis</em> <em>emphasis</em><br><strong>emphasis <em>underscore</em></strong><br><del>scratch</del></p>
-<h1 id="lists"><a href="#lists" class="headerlink" title="lists"></a>lists</h1><ol>
-<li>first</li>
-<li>second<br>..* unordered sublist<br>..* unordered sublist</li>
-<li>another</li>
-<li>the other<br>…some indent here</li>
-</ol>
-<ul>
-<li>unordered list</li>
-</ul>
-<ul>
-<li>minus</li>
-</ul>
-<ul>
-<li>plus</li>
-</ul>
-<h1 id="links"><a href="#links" class="headerlink" title="links"></a>links</h1><p><a href="http://a.com" target="_blank" rel="noopener">link title</a><br><a href="http://b.com" target="_blank" rel="noopener">link title</a></p>
-<h1 id="images"><a href="#images" class="headerlink" title="images"></a>images</h1><p>inline:<br><img src="http://a.com/a.png" alt="some text"></p>
-<p>refer:<br><img src="http://a.com/a.png" alt="some text"></p>
-<h1 id="code-ang-highlighting"><a href="#code-ang-highlighting" class="headerlink" title="code ang highlighting"></a>code ang highlighting</h1><p>inline <code>code</code>.</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line">some code</span><br></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">print(<span class="string">'hello'</span>)</span><br></pre></td></tr></table></figure>
-
-<h1 id="tables"><a href="#tables" class="headerlink" title="tables"></a>tables</h1><table>
-<thead>
-<tr>
-<th>table</th>
-<th align="left">area</th>
-<th align="center">cool</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>a</td>
-<td align="left">as</td>
-<td align="center">cool</td>
-</tr>
-<tr>
-<td>b</td>
-<td align="left">ad</td>
-<td align="center">hot</td>
-</tr>
-</tbody></table>
-<h1 id="blockquotes"><a href="#blockquotes" class="headerlink" title="blockquotes"></a>blockquotes</h1><blockquote>
-<p>some content<br>other content</p>
-</blockquote>
-<h1 id="horizontal-rule"><a href="#horizontal-rule" class="headerlink" title="horizontal rule"></a>horizontal rule</h1><p>maybe<br>…<br>maybe</p>
-<hr>
-<p>maybe</p>
-<hr>
-<hr>
-<h1 id="line-breaks"><a href="#line-breaks" class="headerlink" title="line breaks"></a>line breaks</h1>]]></content>
-      <tags>
-        <tag>nfs</tag>
       </tags>
   </entry>
   <entry>
