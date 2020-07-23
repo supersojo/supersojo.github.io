@@ -46,20 +46,19 @@
   };
 </script>
 
-  <meta name="description" content="问题近期遇到松散源路由报文通信失败，通过systemtap可以很快定位报文丢弃在何处。 直接上探测脚本: 12345678910111213141516171819202122232425probe begin()&amp;#123;  print(&quot;Begin probe..\n&quot;)&amp;#125;probe end()&amp;#123;  print(&quot;End probe.\n&amp;q">
+  <meta name="description" content="头文件设置要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。 首先介绍下uapi。uapi主要是以下两个目录 12kernel_dir&#x2F;include&#x2F;uapikernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi  uapi的目的是让头文件更加清晰，只">
 <meta property="og:type" content="article">
-<meta property="og:title" content="松散源路由发包失败问题">
-<meta property="og:url" content="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/index.html">
+<meta property="og:title" content="bpf入门系列-2">
+<meta property="og:url" content="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/index.html">
 <meta property="og:site_name" content="Linux&#39;s Notes">
-<meta property="og:description" content="问题近期遇到松散源路由报文通信失败，通过systemtap可以很快定位报文丢弃在何处。 直接上探测脚本: 12345678910111213141516171819202122232425probe begin()&amp;#123;  print(&quot;Begin probe..\n&quot;)&amp;#125;probe end()&amp;#123;  print(&quot;End probe.\n&amp;q">
+<meta property="og:description" content="头文件设置要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。 首先介绍下uapi。uapi主要是以下两个目录 12kernel_dir&#x2F;include&#x2F;uapikernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi  uapi的目的是让头文件更加清晰，只">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2019-06-20T20:10:10.000Z">
+<meta property="article:published_time" content="2020-02-17T21:21:10.000Z">
 <meta property="article:modified_time" content="2020-07-23T06:12:08.144Z">
-<meta property="article:tag" content="松散源路由">
-<meta property="article:tag" content="source route">
+<meta property="article:tag" content="bpf">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
+<link rel="canonical" href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/">
 
 
 <script id="page-configurations">
@@ -71,7 +70,7 @@
   };
 </script>
 
-  <title>松散源路由发包失败问题 | Linux's Notes</title>
+  <title>bpf入门系列-2 | Linux's Notes</title>
   
 
 
@@ -214,7 +213,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -227,7 +226,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          松散源路由发包失败问题
+          bpf入门系列-2
         </h1>
 
         <div class="post-meta">
@@ -237,7 +236,7 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2019-06-20 20:10:10" itemprop="dateCreated datePublished" datetime="2019-06-20T20:10:10+00:00">2019-06-20</time>
+              <time title="创建时间：2020-02-17 21:21:10" itemprop="dateCreated datePublished" datetime="2020-02-17T21:21:10+00:00">2020-02-17</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
@@ -252,8 +251,8 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
+                  <a href="/categories/kernel/" itemprop="url" rel="index">
+                    <span itemprop="name">kernel</span>
                   </a>
                 </span>
             </span>
@@ -269,15 +268,39 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>近期遇到松散源路由报文通信失败，通过systemtap可以很快定位报文丢弃在何处。</p>
-<p>直接上探测脚本:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">probe begin()</span><br><span class="line">&#123;</span><br><span class="line">  print(&quot;Begin probe..\n&quot;)</span><br><span class="line">&#125;</span><br><span class="line">probe end()</span><br><span class="line">&#123;</span><br><span class="line">  print(&quot;End probe.\n&quot;)</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.function(&quot;icmp_echo&quot;)</span><br><span class="line">&#123;</span><br><span class="line">  print_backtrace()&#x2F;&#x2F;调用栈回溯</span><br><span class="line">  printf(&quot;%s\n&quot;,pp())&#x2F;&#x2F;调用点</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.statement(&quot;*@net&#x2F;ipv4&#x2F;ip_input.c:341&quot;)</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;%s\n&quot;,pp())</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.function(&quot;ip_options_compile&quot;).return</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;ip_options_compile return:%d\n&quot;,$return)</span><br><span class="line">&#125;</span><br><span class="line">probe timer.ms(10000)</span><br><span class="line">&#123;</span><br><span class="line">  exit()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h2 id="头文件设置"><a href="#头文件设置" class="headerlink" title="头文件设置"></a>头文件设置</h2><p>要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。</p>
+<p>首先介绍下<a href="https://stackoverflow.com/questions/18858190/whats-in-include-uapi-of-kernel-source-project" target="_blank" rel="noopener">uapi</a>。<br>uapi主要是以下两个目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kernel_dir&#x2F;include&#x2F;uapi</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi</span><br></pre></td></tr></table></figure>
 
-<blockquote>
-<p>在报文路径上增加探测点直接定位出丢包位置。</p>
-</blockquote>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这个具体问题是在函数static inline bool ip_rcv_options(struct sk_buff *skb)中如果源路由未打开则直接drop。</p>
-<p>打开内核中源路由选项，通信正常。</p>
+<p>uapi的目的是让头文件更加清晰，只有上面的头文件是用户态可以使用的，其它的作为内核私有头文件使用。</p>
+<p>在编译bpf程序时我们要用到内核头文件，而不仅仅上上面的uapi的头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;generated</span><br><span class="line">kernel_dir&#x2F;include</span><br></pre></td></tr></table></figure>
+<p>关于<a href="https://blog.linote.cn/2020/03/27/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/" target="_blank" rel="noopener">这个例子</a>的编译，如果使用内核头文件会遇到问题，例子中带了include/types.h，这个头文件和内核头文件冲突，可行workaround方案是把自带include放到编译选项的最后。<br><strong>编译器在寻找头文件是总是按照编译选项中列出目录先后的顺序搜索</strong>。</p>
+<p>另外看下uapi/linux/types.h文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _UAPI_LINUX_TYPES_H</span><br><span class="line">#define _UAPI_LINUX_TYPES_H</span><br><span class="line"></span><br><span class="line">#include &lt;asm&#x2F;types.h&gt;</span><br><span class="line"></span><br><span class="line">#ifndef __ASSEMBLY__</span><br><span class="line">#ifndef __KERNEL__</span><br><span class="line">#ifndef __EXPORTED_HEADERS__</span><br><span class="line">#warning &quot;Attempt to use kernel headers from user space, see http:&#x2F;&#x2F;kernelnewbies.org&#x2F;KernelHeaders&quot;</span><br><span class="line">#endif &#x2F;* __EXPORTED_HEADERS__ *&#x2F;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#include &lt;linux&#x2F;posix_types.h&gt;</span><br></pre></td></tr></table></figure>
+<p>我们在使用时需要定义<strong>KERNEL</strong>宏。</p>
+<p>一个可用的头文件包含选项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">linuxhdrs ?&#x3D; &#x2F;usr&#x2F;src&#x2F;linux-headers-&#96;uname -r&#96;</span><br><span class="line">LINUXINCLUDE &#x3D;  -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;generated \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;generated&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include&#x2F;generated&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include&#x2F;uapi \</span><br><span class="line">                -include $(linuxhdrs)&#x2F;include&#x2F;linux&#x2F;kconfig.h</span><br></pre></td></tr></table></figure>
+
+<p>在头文件设置好后，还需要额外编译选项用于编译bpf程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CLANG ?&#x3D; clang</span><br><span class="line">INC_FLAGS &#x3D; -nostdinc -isystem $(shell $(CLANG) -print-file-name&#x3D;include)</span><br><span class="line">EXTRA_CFLAGS ?&#x3D; -O2 -g -Wall -emit-llvm</span><br><span class="line">LLC ?&#x3D; llc</span><br><span class="line">CLANG ?&#x3D; clang</span><br><span class="line">LLVM_OBJDUMP ?&#x3D; llvm-objdump</span><br><span class="line"></span><br><span class="line">$(KERNELOBJS):  %.o:%.c</span><br><span class="line">        $(CLANG) $(INC_FLAGS) \</span><br><span class="line">                -D__KERNEL__ -D__ASM_SYSREG_H \</span><br><span class="line">                $(DEBUG_FLAGS) \</span><br><span class="line">                -Wno-unused-value -Wno-pointer-sign \</span><br><span class="line">                -Wno-compare-distinct-pointer-types \</span><br><span class="line">                -Wno-gnu-variable-sized-type-not-at-end \</span><br><span class="line">                -Wno-address-of-packed-member -Wno-tautological-compare \</span><br><span class="line">                -Wno-unknown-warning-option \</span><br><span class="line">                $(LINUXINCLUDE) \</span><br><span class="line">                -I..&#x2F;include \</span><br><span class="line">                $(EXTRA_CFLAGS) -c $&lt; -o -| $(LLC) -march&#x3D;bpf -filetype&#x3D;obj -o $@</span><br></pre></td></tr></table></figure>
+
+<h2 id="一个bpf程序框架"><a href="#一个bpf程序框架" class="headerlink" title="一个bpf程序框架"></a>一个bpf程序框架</h2><p>这里是我整理的一个bpf框架，地址是<a href="https://github.com/supersojo/bpf_skeleton" target="_blank" rel="noopener">bpf_skeleton</a></p>
+<p>这里讲下遇到的问题。首先是内核部分，按照上面一节设置头文件后问题不大，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;bpf_skeleton# ls kern</span><br><span class="line">bitehist.c  bpf_endian.h  bpf_helpers.h  Makefile</span><br></pre></td></tr></table></figure>
+
+<p>可能对为何需要bpf_helpers.h有疑问，bpf程序最终是编译成bpf字节码，由bpf虚拟机执行，这里把bpf函数设置为整数标识，最后由llvm生成对bpf内核函数的调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static void *(*bpf_map_lookup_elem)(void *map, void *key) &#x3D;</span><br><span class="line">        (void *) BPF_FUNC_map_lookup_elem;</span><br><span class="line">static int (*bpf_map_update_elem)(void *map, void *key, void *value,</span><br><span class="line">                                  unsigned long long flags) &#x3D;</span><br><span class="line">        (void *) BPF_FUNC_map_update_elem;</span><br></pre></td></tr></table></figure>
+<p>上面只是对bpf函数赋值为bpf内核函数对应的整数标识</p>
+<p>为使用libbpf，这里通过在内核源码目录下编译安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd kernel_dir&#x2F;tools&#x2F;lib&#x2F;bpf</span><br><span class="line">make &amp;&amp; make install &amp;&amp; make install_headers</span><br></pre></td></tr></table></figure>
+<p>这样缺省头文件安装到/usr/local/include，库文件安装到/usr/local/lib64下面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;bpf_skeleton# ls user&#x2F;</span><br><span class="line">bitehist.c       bpf_load.c  linux     perf-sys.h</span><br><span class="line">bitehist_kern.o  bpf_load.h  Makefile</span><br></pre></td></tr></table></figure>
+<p>可能注意到为何有linux/types.h，uapi不是有对应头文件吗? 使用uapi下的types.h需要定义<strong>KERNEL</strong>，这里使用tools下自带的，可以不依赖内核头文件就可以编译用户态代码<br>bpf_load.c是从samples/bpf下拷贝过来的，里面是bpd加载的实用函数，非常方便。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上面步骤，我们拥有了一个可以使用的bpf框架，开始编写自己的bpf程序吧</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://github.com/brendangregg/BPF-tools/tree/master/new/2019-05-21" target="_blank" rel="noopener">BPF tools</a></li>
+</ol>
 
     </div>
 
@@ -293,7 +316,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" title="松散源路由发包失败问题">https://supersojo.github.io/2019/06/20/松散源路由发包失败问题/</a>
+    <a href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/" title="bpf入门系列-2">https://supersojo.github.io/2020/02/17/bpf入门系列-2/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -304,8 +327,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1/" rel="tag"># 松散源路由</a>
-              <a href="/tags/source-route/" rel="tag"># source route</a>
+              <a href="/tags/bpf/" rel="tag"># bpf</a>
           </div>
 
         
@@ -314,12 +336,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2019/06/10/x86_64%20calling%20conversion/" rel="prev" title="x86_64 calling conventions">
-      <i class="fa fa-chevron-left"></i> x86_64 calling conventions
+    <a href="/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/" rel="prev" title="bpf入门系列-1">
+      <i class="fa fa-chevron-left"></i> bpf入门系列-1
     </a></div>
       <div class="post-nav-item">
-    <a href="/2019/07/16/udplite-checksum-problem/" rel="next" title="udplite checksum problem">
-      udplite checksum problem <i class="fa fa-chevron-right"></i>
+    <a href="/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/" rel="next" title="ubuntu清理磁盘空间">
+      ubuntu清理磁盘空间 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -380,7 +402,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析"><span class="nav-number">2.</span> <span class="nav-text">分析</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#头文件设置"><span class="nav-number">1.</span> <span class="nav-text">头文件设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一个bpf程序框架"><span class="nav-number">2.</span> <span class="nav-text">一个bpf程序框架</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
