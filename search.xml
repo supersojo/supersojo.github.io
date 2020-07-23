@@ -2,7 +2,7 @@
 <search>
   <entry>
     <title>bpf入门系列-2</title>
-    <url>/2020/04/11/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/</url>
+    <url>/2020/07/23/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/</url>
     <content><![CDATA[<h2 id="头文件设置"><a href="#头文件设置" class="headerlink" title="头文件设置"></a>头文件设置</h2><p>要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。</p>
 <p>首先介绍下<a href="https://stackoverflow.com/questions/18858190/whats-in-include-uapi-of-kernel-source-project" target="_blank" rel="noopener">uapi</a>。<br>uapi主要是以下两个目录</p>
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">kernel_dir&#x2F;include&#x2F;uapi</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi</span><br></pre></td></tr></table></figure>
@@ -37,6 +37,23 @@
 <li><a href="https://github.com/brendangregg/BPF-tools/tree/master/new/2019-05-21" target="_blank" rel="noopener">BPF tools</a></li>
 </ol>
 ]]></content>
+  </entry>
+  <entry>
+    <title>关于kodi声音变小的问题</title>
+    <url>/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<p>由于debian下使用kodi不是官方推荐的，所以更新发行版到ubuntu 20.04 lts版。<br>但是kodi经过HDMI连接电视后声音非常小，把电视上音量调到最大，勉强可以听清。</p>
+<h2 id="1、排除电视自身的问题"><a href="#1、排除电视自身的问题" class="headerlink" title="1、排除电视自身的问题"></a>1、排除电视自身的问题</h2><p>使用电视自带的系统播放视频，声音正常，可以排除电视的问题。</p>
+<h2 id="2、kodi设置的问题"><a href="#2、kodi设置的问题" class="headerlink" title="2、kodi设置的问题"></a>2、kodi设置的问题</h2><p>google搜索相关的问题得到以下信息。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">https:&#x2F;&#x2F;discourse.coreelec.org&#x2F;t&#x2F;solved-sound-volume-via-hdmi-suddenly-very-low&#x2F;6045&#x2F;4</span><br><span class="line"></span><br><span class="line">A couple of things that might help.</span><br><span class="line"></span><br><span class="line">One, plug a keyboard in and press the + key a few times. kodi’s volume indicator should popup to centre of the screen. It’s possible that kodi’s internal sound level ended up turned down some how. Use + and - keys to adjust volume level if this is the case.</span><br><span class="line"></span><br><span class="line">Two, check the audio device that you are using, Settings&#x2F;System&#x2F;Audio. Try changing it to one that mentions hdmi at the end of it. If it is not already on that one.</span><br><span class="line"></span><br><span class="line">The +&#x2F;- did the trick. Tbh, I didn’t even know Kodi had that key shortcuts.</span><br><span class="line">In all the years I’ve been using Kodi on several platforms, I’ve always used CEC.</span><br><span class="line"></span><br><span class="line">For some reason the volume was at one third. Putting it back to 100% and volume was back to normal (for me).</span><br><span class="line"></span><br><span class="line">Thanks for the replies!</span><br></pre></td></tr></table></figure>
+
+<p>解决方法是连接键盘，按+/-键，出现kodi音量调节项，设置到最大音量恢复正常。<br>但是还有点问题，每次电视关掉再打开声音又变小，必须重启kodi才恢复正常。</p>
+]]></content>
+      <categories>
+        <category>pc</category>
+      </categories>
+      <tags>
+        <tag>kodi</tag>
+      </tags>
   </entry>
   <entry>
     <title>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</title>

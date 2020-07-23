@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
 <meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 4.2.0">
+<meta name="generator" content="Hexo 4.2.1">
   <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
   <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
@@ -142,7 +142,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">40</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">41</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">21</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">22</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,115 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">分析下mutter窗口管理器的一个问题</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2019-03-01 23:01:20" itemprop="dateCreated datePublished" datetime="2019-03-01T23:01:20+00:00">2019-03-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-23 06:05:43" itemprop="dateModified" datetime="2020-07-23T06:05:43+00:00">2020-07-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/mutter/" itemprop="url" rel="index">
+                    <span itemprop="name">mutter</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="mutter-problem"><a href="#mutter-problem" class="headerlink" title="mutter problem"></a>mutter problem</h2><p>gnome hangup after 49.7 days.</p>
+<h2 id="mutter"><a href="#mutter" class="headerlink" title="mutter?"></a>mutter?</h2><p>mutter是GNOME3的窗口管理器，用来取代Metacity。</p>
+<blockquote>
+<p><a href="https://zh.wikipedia.org/wiki/Mutter" target="_blank" rel="noopener">https://zh.wikipedia.org/wiki/Mutter</a></p>
+</blockquote>
+<h2 id="patch-info"><a href="#patch-info" class="headerlink" title="patch info?"></a>patch info?</h2><p>[backends/x11: Fix time-comparison bug causing hang]<a href="https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/12/diffs?commit_id=102abeedf4d3a804bed2e1930a93a52e4475a3bb" target="_blank" rel="noopener">https://gitlab.gnome.org/GNOME/mutter/-/merge_requests/12/diffs?commit_id=102abeedf4d3a804bed2e1930a93a52e4475a3bb</a></p>
+<blockquote>
+<p>A comparison in translate_device_event() does not account for the fact<br>that X’s clock wraps about every 49.7 days.  When triggered, this causes<br>an unresponsive GUI.<br>Replace simple less-than comparison with XSERVER_TIME_IS_BEFORE macro,<br>which accounts for the wrapping of X’s clock.</p>
+</blockquote>
+<p>详细的提交记录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">commit 942883577ea700f0f419c335185891ff9a02e07b</span><br><span class="line">Author: Jonas Ådahl &lt;jadahl@gmail.com&gt;</span><br><span class="line">Date:   Fri Oct 25 10:06:55 2019 +0200</span><br><span class="line"></span><br><span class="line">    x11: Limit touch replay pointer events to when replaying</span><br><span class="line"></span><br><span class="line">    When a touch sequence was rejected, the emulated pointer events would be</span><br><span class="line">    replayed with old timestamps. This caused issues with grabs as they</span><br><span class="line">    would be ignored due to being too old. This was mitigated by making sure</span><br><span class="line">    device event timestamps never travelled back in time by tampering with</span><br><span class="line">    any event that had a timestamp seemingly in the past.</span><br><span class="line"></span><br><span class="line">    This failed when the most recent timestamp that had been received were</span><br><span class="line">    much older than the timestamp of the new event. This could for example</span><br><span class="line">    happen when a session was left not interacted with for 40+ days or so;</span><br><span class="line">    when interacted with again, as any new timestamp would according to</span><br><span class="line">    XSERVER_TIME_IS_BEFORE() still be in the past compared to the &quot;most</span><br><span class="line">    recent&quot; one. The effect is that we&#39;d always use the &#96;latest_evtime&#96; for</span><br><span class="line">    all new device events without ever updating it.</span><br><span class="line"></span><br><span class="line">    The end result of this was that passive grabs would become active when</span><br><span class="line">    interacted with, but would then newer be released, as the timestamps to</span><br><span class="line">    XIAllowEvents() would out of date, resulting in the desktop effectively</span><br><span class="line">    freezing, as the Shell would have an active pointer grab.</span><br><span class="line"></span><br><span class="line">    To avoid the situation where we get stuck with an old &#96;latest_evtime&#96;</span><br><span class="line">    timestamp, limit the tampering with device event timestamp to 1) only</span><br><span class="line">    pointer events, and 2) only during the replay sequence. The second part</span><br><span class="line">    is implemented by sending an asynchronous message via the X server after</span><br><span class="line">    rejecting a touch sequence, only potentially tampering with the device</span><br><span class="line">    event timestamps until the reply. This should avoid the stuck timestamp</span><br><span class="line">    as in those situations, we&#39;ll always have a relatively up to date</span><br><span class="line">    &#96;latest_evtime&#96; meaning XSERVER_TIME_IS_BEFORE() will not get confused.</span><br><span class="line"></span><br><span class="line">    https:&#x2F;&#x2F;gitlab.gnome.org&#x2F;GNOME&#x2F;mutter&#x2F;merge_requests&#x2F;886</span><br></pre></td></tr></table></figure>
+<p>指针焦点被某个程序grab后，由于时间戳不对一直得不到释放。指针事件无法正确传递导致<br>桌面无响应。</p>
+<h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">static void</span><br><span class="line">translate_device_event (MetaBackendX11 *x11,</span><br><span class="line">                        XIDeviceEvent  *device_event)</span><br><span class="line">&#123;</span><br><span class="line">  MetaBackendX11Private *priv &#x3D; meta_backend_x11_get_instance_private (x11);</span><br><span class="line"></span><br><span class="line">  meta_backend_x11_translate_device_event (x11, device_event);</span><br><span class="line"></span><br><span class="line">  if (!device_event-&gt;send_event &amp;&amp; device_event-&gt;time !&#x3D; CurrentTime)</span><br><span class="line">    &#123;</span><br><span class="line">-     if (device_event-&gt;time &lt; priv-&gt;latest_evtime)</span><br><span class="line">+     if (XSERVER_TIME_IS_BEFORE (device_event-&gt;time, priv-&gt;latest_evtime))</span><br><span class="line">        &#123;</span><br><span class="line">          &#x2F;* Emulated pointer events received after XIRejectTouch is received</span><br><span class="line">           * on a passive touch grab will contain older timestamps, update those</span><br><span class="line">           * so we dont get InvalidTime at grabs.</span><br><span class="line">           *&#x2F;</span><br><span class="line">          device_event-&gt;time &#x3D; priv-&gt;latest_evtime;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">      &#x2F;* Update the internal latest evtime, for any possible later use *&#x2F;</span><br><span class="line">      priv-&gt;latest_evtime &#x3D; device_event-&gt;time;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>time是32位无符号整数，单位是ms，大约49.7天会溢出。在溢出后，导致事件的时间戳<br>被设置位很久之前的值，在提交给xserver时无效。</p>
+<h2 id="XSERVER-TIME-IS-BEFORE"><a href="#XSERVER-TIME-IS-BEFORE" class="headerlink" title="XSERVER_TIME_IS_BEFORE"></a>XSERVER_TIME_IS_BEFORE</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;* Xserver time can wraparound, thus comparing two timestamps needs to take</span><br><span class="line"> * this into account.  Here&#39;s a little macro to help out.  If no wraparound</span><br><span class="line"> * has occurred, this is equivalent to</span><br><span class="line"> *   time1 &lt; time2</span><br><span class="line"> * Of course, the rest of the ugliness of this macro comes from accounting</span><br><span class="line"> * for the fact that wraparound can occur and the fact that a timestamp of</span><br><span class="line"> * 0 must be special-cased since it means older than anything else.</span><br><span class="line"> *</span><br><span class="line"> * Note that this is NOT an equivalent for time1 &lt;&#x3D; time2; if that&#39;s what</span><br><span class="line"> * you need then you&#39;ll need to swap the order of the arguments and negate</span><br><span class="line"> * the result.</span><br><span class="line"> *&#x2F;</span><br><span class="line">#define XSERVER_TIME_IS_BEFORE_ASSUMING_REAL_TIMESTAMPS(time1, time2) \</span><br><span class="line">	( (( (time1) &lt; (time2) ) &amp;&amp; ( (time2) - (time1) &lt; ((guint32)-1)&#x2F;2 )) || \</span><br><span class="line">		(( (time1) &gt; (time2) ) &amp;&amp; ( (time1) - (time2) &gt; ((guint32)-1)&#x2F;2 )) \</span><br><span class="line">	)</span><br><span class="line">#define XSERVER_TIME_IS_BEFORE(time1, time2) \</span><br><span class="line">	( (time1) &#x3D;&#x3D; 0 || \</span><br><span class="line">		(XSERVER_TIME_IS_BEFORE_ASSUMING_REAL_TIMESTAMPS(time1, time2) &amp;&amp; \</span><br><span class="line">		(time2) !&#x3D; 0) \</span><br><span class="line">	)</span><br></pre></td></tr></table></figure>
+<p>根据patch的修改，如果时间戳不对，则窗口不响应。</p>
+<p>X服务器对时间戳的使用例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">time &#x3D; ClientTimeToServerTime(ctime);</span><br><span class="line">if ((CompareTimeStamps(time, currentTime) &#x3D;&#x3D; LATER) ||</span><br><span class="line">             (CompareTimeStamps(time, grabInfo-&gt;grabTime) &#x3D;&#x3D; EARLIER)</span><br><span class="line">	xxx</span><br></pre></td></tr></table></figure>
+<p>这里先调用ClientTimeToServerTime把32位无符号转换为<br>TimeStamp类型，然后和currentTime进行比较。</p>
+<h2 id="mutter程序"><a href="#mutter程序" class="headerlink" title="mutter程序"></a>mutter程序</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line"> \--meta_init</span><br><span class="line">      \--- meta_clutter_init</span><br><span class="line">	             \-- source &#x3D; g_source_new (&amp;event_funcs, sizeof (GSource));</span><br><span class="line">				 \-- meta_backend_post_init</span><br><span class="line">				         \-- META_BACKEND_GET_CLASS (backend)-&gt;post_init (backend);</span><br><span class="line">						       \-- x_event_source_new</span><br><span class="line">							          \--  source &#x3D; g_source_new (&amp;x_event_funcs, sizeof (XEventSource));</span><br><span class="line">      \--- meta_main_loop &#x3D; g_main_loop_new (NULL, FALSE);</span><br><span class="line"> \--meta_run </span><br><span class="line">      \--- g_main_loop_run (meta_main_loop);</span><br></pre></td></tr></table></figure>
+<p>mutter是基于glib的程序，通过事件源机制注册事件处理函数。</p>
+<p>meta_backend_post_init中创建的事件源处理函数会调用XPending把窗口事件取出来，然后dispatch。<br>mutter作为窗口管理器会”收到”很多窗口的事件(实际也是通过xserver发过来，见<a href="https://jichu4n.com/posts/how-x-window-managers-work-and-how-to-write-one-part-i/" target="_blank" rel="noopener">substructure redirection</a>)，主要是窗口事件，这样mutter负责把窗口消息再发给<br>X服务器。</p>
+<h2 id="CurrentTime"><a href="#CurrentTime" class="headerlink" title="CurrentTime"></a>CurrentTime</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;usr&#x2F;include&#x2F;X11&#x2F;X.h:139:</span><br><span class="line">#define CurrentTime          0L        &#x2F;* special Time *&#x2F;</span><br></pre></td></tr></table></figure>
+<p>xserver如果使用client传递过来的timestamp</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;dix&#x2F;dixutils.c</span><br><span class="line">&#x2F;*</span><br><span class="line"> * convert client times to server TimeStamps</span><br><span class="line"> *&#x2F;</span><br><span class="line">#define HALFMONTH ((unsigned long) 1&lt;&lt;31)</span><br><span class="line">TimeStamp</span><br><span class="line">ClientTimeToServerTime(CARD32 c)</span><br><span class="line">&#123;</span><br><span class="line">    TimeStamp ts;</span><br><span class="line"></span><br><span class="line">    if (c &#x3D;&#x3D; CurrentTime)</span><br><span class="line">        return currentTime;</span><br><span class="line">    ts.months &#x3D; currentTime.months;</span><br><span class="line">    ts.milliseconds &#x3D; c;</span><br><span class="line">    if (c &gt; currentTime.milliseconds) &#123;</span><br><span class="line">        if (((unsigned long) c - currentTime.milliseconds) &gt; HALFMONTH)</span><br><span class="line">            ts.months -&#x3D; 1;</span><br><span class="line">    &#125;</span><br><span class="line">    else if (c &lt; currentTime.milliseconds) &#123;</span><br><span class="line">        if (((unsigned long) currentTime.milliseconds - c) &gt; HALFMONTH)</span><br><span class="line">            ts.months +&#x3D; 1;</span><br><span class="line">    &#125;</span><br><span class="line">    return ts;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="xserver如何更新currentTime"><a href="#xserver如何更新currentTime" class="headerlink" title="xserver如何更新currentTime"></a>xserver如何更新currentTime</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;dix&#x2F;dispatch.c</span><br><span class="line">void</span><br><span class="line">UpdateCurrentTime(void)</span><br><span class="line">&#123;</span><br><span class="line">    TimeStamp systime;</span><br><span class="line"></span><br><span class="line">    &#x2F;* To avoid time running backwards, we must call GetTimeInMillis before</span><br><span class="line">     * calling ProcessInputEvents.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    systime.months &#x3D; currentTime.months;</span><br><span class="line">    systime.milliseconds &#x3D; GetTimeInMillis();</span><br><span class="line">    if (systime.milliseconds &lt; currentTime.milliseconds)</span><br><span class="line">        systime.months++;</span><br><span class="line">    if (InputCheckPending())</span><br><span class="line">        ProcessInputEvents();</span><br><span class="line">    if (CompareTimeStamps(systime, currentTime) &#x3D;&#x3D; LATER)</span><br><span class="line">        currentTime &#x3D; systime;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="references"><a href="#references" class="headerlink" title="references"></a>references</h2><ol>
+<li><a href="https://magcius.github.io/xplain/article/x-basics.html" target="_blank" rel="noopener">x basics</a></li>
+<li><a href="https://www.x.org/wiki/guide/concepts/" target="_blank" rel="noopener">x concepts</a></li>
+<li><a href="https://www.x.org/docs/XProtocol/proto.pdf" target="_blank" rel="noopener">X Window System Protocol</a></li>
+<li><a href="https://jichu4n.com/posts/how-x-window-managers-work-and-how-to-write-one-part-i/" target="_blank" rel="noopener">How X Window Managers Work, And How To Write One</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +348,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-04-11 00:33:27" itemprop="dateModified" datetime="2020-04-11T00:33:27+00:00">2020-04-11</time>
+                <time title="修改时间：2020-07-23 06:05:43" itemprop="dateModified" datetime="2020-07-23T06:05:43+00:00">2020-07-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -385,7 +494,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-count">22</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -398,7 +507,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">40</span>
+        <span class="site-state-item-count">41</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
