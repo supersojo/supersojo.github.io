@@ -47,10 +47,10 @@ var Affix = {
   checkPosition: function() {
     if (window.getComputedStyle(this.element).display === 'none') return;
     let height = this.element.offsetHeight;
-    let { offset } = this;
+    let offset = this.offset;
     let offsetTop = offset.top;
     let offsetBottom = offset.bottom;
-    let { scrollHeight } = document.body;
+    let scrollHeight = document.body.scrollHeight;
     let affix = this.getState(scrollHeight, height, offsetTop, offsetBottom);
     if (this.affixed !== affix) {
       if (this.unpin != null) this.element.style.top = '';
@@ -80,7 +80,7 @@ NexT.utils.getAffixParam = function() {
   };
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+window.addEventListener('DOMContentLoaded', () => {
 
   Affix.init(document.querySelector('.sidebar-inner'), NexT.utils.getAffixParam());
 });
