@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"supersojo.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器这个patch的描述如下:  Previously there is an off-by-one bug on determining when to aborta stalled window-probing socket. This patch fixes that so it isconsistent with tcp_wr">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器">
+<meta property="og:url" content="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/index.html">
+<meta property="og:site_name" content="Linux&#39;s Notes">
+<meta property="og:description" content="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器这个patch的描述如下:  Previously there is an off-by-one bug on determining when to aborta stalled window-probing socket. This patch fixes that so it isconsistent with tcp_wr">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/TCP-Timers-1.png">
+<meta property="og:image" content="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/keepalive.png">
+<meta property="og:image" content="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/zero-window-size.png">
+<meta property="og:image" content="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/retransmit.png">
+<meta property="article:published_time" content="2020-03-10T20:18:10.000Z">
+<meta property="article:modified_time" content="2020-07-24T05:11:33.859Z">
+<meta property="article:tag" content="tcp">
+<meta property="article:tag" content="timer">
+<meta property="article:tag" content="keepalive">
+<meta property="article:tag" content="zero-window-size">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/TCP-Timers-1.png">
+
+<link rel="canonical" href="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器 | Linux's Notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Linux's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Linux's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Say what you do and do what you say</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-10 20:18:10" itemprop="dateCreated datePublished" datetime="2020-03-10T20:18:10+00:00">2020-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"><a href="#从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器" class="headerlink" title="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"></a>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</h2><p>这个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/ipv4/tcp_timer.c?id=3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188" target="_blank" rel="noopener">patch</a>的描述如下:</p>
+<blockquote>
+<p>Previously there is an off-by-one bug on determining when to abort<br>a stalled window-probing socket. This patch fixes that so it is<br>consistent with tcp_write_timeout().</p>
+</blockquote>
+<p>从描述看关于何时中止执行窗口探测的socket的。下面从协议规范中寻找定时器使用。</p>
+<h2 id="TCP协议中的timer"><a href="#TCP协议中的timer" class="headerlink" title="TCP协议中的timer"></a>TCP协议中的timer</h2><p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/TCP-Timers-1.png" alt="TCP协议中的定时器"></p>
+<p>协议中主要有4个定时器，注意这里每个TCP连接都有4个定时器。</p>
+<ol>
+<li>Time Out Timer<blockquote>
+<p>TCP uses a time out timer for retransmission of lost segments.</p>
+</blockquote>
+</li>
+<li>Time Wait Timer<blockquote>
+<p>TCP uses a time wait timer during connection termination.</p>
+</blockquote>
+</li>
+<li>Keep Alive Timer<blockquote>
+<p>TCP uses a keep alive timer to prevent long idle TCP connections.</p>
+</blockquote>
+</li>
+<li>Persistent Timer<blockquote>
+<p>TCP uses a persistent timer to deal with a zero-widow-size deadlock situation.<br>It keeps the window size information flowing even if the other end closes its receiver window.</p>
+</blockquote>
+</li>
+</ol>
+<p>从patch的描述看主要涉及窗口探测，即Persistent Timer。</p>
+<h3 id="Persistent-Timer的作用"><a href="#Persistent-Timer的作用" class="headerlink" title="Persistent Timer的作用"></a>Persistent Timer的作用</h3><p>Consider the following situation:</p>
+<ol>
+<li>Sender receives an acknowledgment from the receiver with zero window size.</li>
+<li>This indicates the sender to wait.</li>
+<li>Later, receiver updates the window size and and sends the segment with the update to the sender.</li>
+<li>This segment gets lost.</li>
+<li>Now, both sender and receiver keeps waiting for each other to do something. To deal with such a situation, TCP uses a persistent timer.</li>
+</ol>
+<p>发送测收到zero-window-size的ack报文后，发送测不能再发送报文，等待后续接收测更新窗口大小报文通知。为了防止该通知消息被丢的情况，使用<br>persistent timer，发送测会周期性的窗口探测报文消息，接收测回应该窗口探测消息。如果窗口大小为0，则继续窗口探测过程；非零则恢复数据传输过程。</p>
+<p>接下来分析下在linux内核中TCP协议栈所使用的定时器。</p>
+<h2 id="linux内核中的timer"><a href="#linux内核中的timer" class="headerlink" title="linux内核中的timer"></a>linux内核中的timer</h2><p>在linux内核中每条tcp连接使用一个inet_connection_sock的结构描述。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct inet_connection_sock &#123;</span><br><span class="line">	struct inet_sock &#123;</span><br><span class="line">		struct sock &#123;</span><br><span class="line">			struct timer_list	sk_timer; &#x2F;&#x2F;(1) keepalive timer</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> 	struct timer_list	  icsk_retransmit_timer; &#x2F;&#x2F;(2) time out timer</span><br><span class="line"> 	struct timer_list	  icsk_delack_timer; &#x2F;&#x2F;(3) delay ack timer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-timer"><a href="#sk-timer" class="headerlink" title="sk_timer"></a>sk_timer</h3><p>sk_timer作为keepalive timer使用，在socket设置SOCK_KEEPOPEN时才启用。</p>
+<p>keepalive timer流程如下:<br><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/keepalive.png" alt="keepalive机制"></p>
+<p>linux内核对keepalive的处理代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">static void tcp_keepalive_timer (struct timer_list *t)</span><br><span class="line">	...</span><br><span class="line">	if (elapsed &gt;&#x3D; keepalive_time_when(tp)) &#123; &#x2F;&#x2F; 7200s</span><br><span class="line">			&#x2F;* If the TCP_USER_TIMEOUT option is enabled, use that</span><br><span class="line">			 * to determine when to timeout instead.</span><br><span class="line">			 *&#x2F;</span><br><span class="line">			if ((icsk-&gt;icsk_user_timeout !&#x3D; 0 &amp;&amp;</span><br><span class="line">				elapsed &gt;&#x3D; msecs_to_jiffies(icsk-&gt;icsk_user_timeout) &amp;&amp;</span><br><span class="line">				icsk-&gt;icsk_probes_out &gt; 0) ||</span><br><span class="line">				(icsk-&gt;icsk_user_timeout &#x3D;&#x3D; 0 &amp;&amp;</span><br><span class="line">				icsk-&gt;icsk_probes_out &gt;&#x3D; keepalive_probes(tp))) &#123; &#x2F;&#x2F;到达次数限制9</span><br><span class="line">					tcp_send_active_reset(sk, GFP_ATOMIC);</span><br><span class="line">					tcp_write_err(sk);</span><br><span class="line">					goto out;</span><br><span class="line">			&#125;</span><br><span class="line">			if (tcp_write_wakeup(sk, LINUX_MIB_TCPKEEPALIVE) &lt;&#x3D; 0) &#123; &#x2F;&#x2F;发送probe报文</span><br><span class="line">					icsk-&gt;icsk_probes_out++;</span><br><span class="line">					elapsed &#x3D; keepalive_intvl_when(tp);&#x2F;&#x2F; 75s</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">					&#x2F;* If keepalive was lost due to local congestion,</span><br><span class="line">					 * try harder.</span><br><span class="line">					 *&#x2F;</span><br><span class="line">					elapsed &#x3D; TCP_RESOURCE_PROBE_INTERVAL;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">			&#x2F;* It is tp-&gt;rcv_tstamp + keepalive_time_when(tp) *&#x2F;</span><br><span class="line">			elapsed &#x3D; keepalive_time_when(tp) - elapsed;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+
+<p>在上面代码中使用<strong>icsk_probes_out</strong>对probe次数进行统计。keepalive_probes缺省设置为9。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_keepalive_probes &#x3D; 9</span><br></pre></td></tr></table></figure>
+
+<p>使用上面的内核选项可以设置该值。</p>
+<p>tcp_write_wakeup负责发出probe报文，这个函数首先判断socket发送队列是否<br>有报文等待发送，如果有则发送sk-&gt;sk_send_head报文(注意这个指针总是指向下一个要<br>发送的报文)；如果发送队列空则发送probe报文(注意这个报文的序列号为out of date即无效)。</p>
+<p>如果报文能够到达接收测，则接收测回复ack消息。下面是收到ack报文的处理流程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static void tcp_ack_probe(struct sock *sk)</span><br><span class="line">&#123;</span><br><span class="line">        struct inet_connection_sock *icsk &#x3D; inet_csk(sk);</span><br><span class="line">        struct sk_buff *head &#x3D; tcp_send_head(sk);</span><br><span class="line">        const struct tcp_sock *tp &#x3D; tcp_sk(sk);</span><br><span class="line"></span><br><span class="line">        &#x2F;* Was it a usable window open? *&#x2F;</span><br><span class="line">        if (!head)</span><br><span class="line">                return;</span><br><span class="line">        if (!after(TCP_SKB_CB(head)-&gt;end_seq, tcp_wnd_end(tp))) &#123; &#x2F;&#x2F; normal window size</span><br><span class="line">                icsk-&gt;icsk_backoff &#x3D; 0;</span><br><span class="line">                inet_csk_clear_xmit_timer(sk, ICSK_TIME_PROBE0);</span><br><span class="line">                &#x2F;* Socket must be waked up by subsequent tcp_data_snd_check().</span><br><span class="line">                 * This function is not for random using!</span><br><span class="line">                 *&#x2F;</span><br><span class="line">        &#125; else &#123; &#x2F;&#x2F; zero-window-size</span><br><span class="line">                unsigned long when &#x3D; tcp_probe0_when(sk, TCP_RTO_MAX);</span><br><span class="line"></span><br><span class="line">                tcp_reset_xmit_timer(sk, ICSK_TIME_PROBE0,</span><br><span class="line">                                     when, TCP_RTO_MAX, NULL);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果接收测返回报文通知窗口大小为0则继续窗口探测过程，由于有接收到报文，<br>这时keepalive超时时判断距离上次报文时间不会超过7200s，这样keepalive定时器<br>重置为7200s超时。</p>
+<p>如果报文无法到达接收测，keepalive在75秒后超时，重新发送probe报文直到到达内核设置的<br>tcp_keepalive_probes次后终止该tcp连接。</p>
+<p>linux内核使用<strong>icsk_probes_out</strong>统计keepalive的探测次数和zero-window-size的探测次数。考虑下面的<br>一种情况：<br>keepalive定时器超时了3次后，才从接收测收到ack消息，这时开始窗口探测过程，这里并没有对<strong>icsk_probes_out</strong><br>清零，而是继续增加<strong>icsk_probes_out</strong>次数，这样处理有意简化窗口探测的过程。</p>
+<h2 id="icsk-retransmit-timer"><a href="#icsk-retransmit-timer" class="headerlink" title="icsk_retransmit_timer"></a>icsk_retransmit_timer</h2><p>即重传定时器，对应协议中的Time Out Timer和Persistent Timer。<br>内核使用一个定时器处理重传定时器和zero-window-size的探测定时器使用。    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_retries2 &#x3D; 15</span><br></pre></td></tr></table></figure>
+<p>内核设置重传次数和zero-window-size次数限制为上面的值。</p>
+<p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/zero-window-size.png" alt="zero-window-size机制"></p>
+<p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/retransmit.png" alt="retransmit机制"></p>
+<h3 id="icsk-delack-timer"><a href="#icsk-delack-timer" class="headerlink" title="icsk_delack_timer"></a>icsk_delack_timer</h3><p>待更新</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.gatevidyalay.com/tcp-timers-transmission-control-protocol/" target="_blank" rel="noopener">tcp协议中的timer</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/" target="_blank" rel="noopener">kernel source</a></li>
+</ol>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/tcp/" rel="tag"># tcp</a>
+              <a href="/tags/timer/" rel="tag"># timer</a>
+              <a href="/tags/keepalive/" rel="tag"># keepalive</a>
+              <a href="/tags/zero-window-size/" rel="tag"># zero-window-size</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/" rel="prev" title="分析一下目前linux内核栈的实现">
+      <i class="fa fa-chevron-left"></i> 分析一下目前linux内核栈的实现
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/" rel="next" title="关于kodi声音变小的问题">
+      关于kodi声音变小的问题 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"><span class="nav-number">1.</span> <span class="nav-text">从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TCP协议中的timer"><span class="nav-number">2.</span> <span class="nav-text">TCP协议中的timer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Persistent-Timer的作用"><span class="nav-number">2.1.</span> <span class="nav-text">Persistent Timer的作用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#linux内核中的timer"><span class="nav-number">3.</span> <span class="nav-text">linux内核中的timer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sk-timer"><span class="nav-number">3.1.</span> <span class="nav-text">sk_timer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#icsk-retransmit-timer"><span class="nav-number">4.</span> <span class="nav-text">icsk_retransmit_timer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#icsk-delack-timer"><span class="nav-number">4.1.</span> <span class="nav-text">icsk_delack_timer</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

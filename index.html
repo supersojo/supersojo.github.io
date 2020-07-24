@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"supersojo.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Linux&#39;s Notes">
+<meta property="og:url" content="https://supersojo.github.io/index.html">
+<meta property="og:site_name" content="Linux&#39;s Notes">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://supersojo.github.io/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : true,
+    isPost : false,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Linux's Notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Linux's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Linux's Notes</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">Say what you do and do what you say</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content index posts-expand">
+            
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">关于kodi声音变小的问题</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-22 21:18:10" itemprop="dateCreated datePublished" datetime="2020-07-22T21:18:10+00:00">2020-07-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/pc/" itemprop="url" rel="index"><span itemprop="name">pc</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>由于debian下使用kodi不是官方推荐的，所以更新发行版到ubuntu 20.04 lts版。<br>但是kodi经过HDMI连接电视后声音非常小，把电视上音量调到最大，勉强可以听清。</p>
+<h2 id="1、排除电视自身的问题"><a href="#1、排除电视自身的问题" class="headerlink" title="1、排除电视自身的问题"></a>1、排除电视自身的问题</h2><p>使用电视自带的系统播放视频，声音正常，可以排除电视的问题。</p>
+<h2 id="2、kodi设置的问题"><a href="#2、kodi设置的问题" class="headerlink" title="2、kodi设置的问题"></a>2、kodi设置的问题</h2><p>google搜索相关的问题得到以下信息。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;discourse.coreelec.org&#x2F;t&#x2F;solved-sound-volume-via-hdmi-suddenly-very-low&#x2F;6045&#x2F;4</span><br><span class="line"></span><br><span class="line">A couple of things that might help.</span><br><span class="line"></span><br><span class="line">One, plug a keyboard in and press the + key a few times. kodi’s volume indicator should popup to centre of the screen. It’s possible that kodi’s internal sound level ended up turned down some how. Use + and - keys to adjust volume level if this is the case.</span><br><span class="line"></span><br><span class="line">Two, check the audio device that you are using, Settings&#x2F;System&#x2F;Audio. Try changing it to one that mentions hdmi at the end of it. If it is not already on that one.</span><br><span class="line"></span><br><span class="line">The +&#x2F;- did the trick. Tbh, I didn’t even know Kodi had that key shortcuts.</span><br><span class="line">In all the years I’ve been using Kodi on several platforms, I’ve always used CEC.</span><br><span class="line"></span><br><span class="line">For some reason the volume was at one third. Putting it back to 100% and volume was back to normal (for me).</span><br><span class="line"></span><br><span class="line">Thanks for the replies!</span><br></pre></td></tr></table></figure>
+
+<p>解决方法是连接键盘，按+/-键，出现kodi音量调节项，设置到最大音量恢复正常。<br>但是还有点问题，每次电视关掉再打开声音又变小，必须重启kodi才恢复正常。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/" class="post-title-link" itemprop="url">从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-10 20:18:10" itemprop="dateCreated datePublished" datetime="2020-03-10T20:18:10+00:00">2020-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/" itemprop="url" rel="index"><span itemprop="name">network</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"><a href="#从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器" class="headerlink" title="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"></a>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</h2><p>这个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/ipv4/tcp_timer.c?id=3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188" target="_blank" rel="noopener">patch</a>的描述如下:</p>
+<blockquote>
+<p>Previously there is an off-by-one bug on determining when to abort<br>a stalled window-probing socket. This patch fixes that so it is<br>consistent with tcp_write_timeout().</p>
+</blockquote>
+<p>从描述看关于何时中止执行窗口探测的socket的。下面从协议规范中寻找定时器使用。</p>
+<h2 id="TCP协议中的timer"><a href="#TCP协议中的timer" class="headerlink" title="TCP协议中的timer"></a>TCP协议中的timer</h2><p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/TCP-Timers-1.png" alt="TCP协议中的定时器"></p>
+<p>协议中主要有4个定时器，注意这里每个TCP连接都有4个定时器。</p>
+<ol>
+<li>Time Out Timer<blockquote>
+<p>TCP uses a time out timer for retransmission of lost segments.</p>
+</blockquote>
+</li>
+<li>Time Wait Timer<blockquote>
+<p>TCP uses a time wait timer during connection termination.</p>
+</blockquote>
+</li>
+<li>Keep Alive Timer<blockquote>
+<p>TCP uses a keep alive timer to prevent long idle TCP connections.</p>
+</blockquote>
+</li>
+<li>Persistent Timer<blockquote>
+<p>TCP uses a persistent timer to deal with a zero-widow-size deadlock situation.<br>It keeps the window size information flowing even if the other end closes its receiver window.</p>
+</blockquote>
+</li>
+</ol>
+<p>从patch的描述看主要涉及窗口探测，即Persistent Timer。</p>
+<h3 id="Persistent-Timer的作用"><a href="#Persistent-Timer的作用" class="headerlink" title="Persistent Timer的作用"></a>Persistent Timer的作用</h3><p>Consider the following situation:</p>
+<ol>
+<li>Sender receives an acknowledgment from the receiver with zero window size.</li>
+<li>This indicates the sender to wait.</li>
+<li>Later, receiver updates the window size and and sends the segment with the update to the sender.</li>
+<li>This segment gets lost.</li>
+<li>Now, both sender and receiver keeps waiting for each other to do something. To deal with such a situation, TCP uses a persistent timer.</li>
+</ol>
+<p>发送测收到zero-window-size的ack报文后，发送测不能再发送报文，等待后续接收测更新窗口大小报文通知。为了防止该通知消息被丢的情况，使用<br>persistent timer，发送测会周期性的窗口探测报文消息，接收测回应该窗口探测消息。如果窗口大小为0，则继续窗口探测过程；非零则恢复数据传输过程。</p>
+<p>接下来分析下在linux内核中TCP协议栈所使用的定时器。</p>
+<h2 id="linux内核中的timer"><a href="#linux内核中的timer" class="headerlink" title="linux内核中的timer"></a>linux内核中的timer</h2><p>在linux内核中每条tcp连接使用一个inet_connection_sock的结构描述。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct inet_connection_sock &#123;</span><br><span class="line">	struct inet_sock &#123;</span><br><span class="line">		struct sock &#123;</span><br><span class="line">			struct timer_list	sk_timer; &#x2F;&#x2F;(1) keepalive timer</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> 	struct timer_list	  icsk_retransmit_timer; &#x2F;&#x2F;(2) time out timer</span><br><span class="line"> 	struct timer_list	  icsk_delack_timer; &#x2F;&#x2F;(3) delay ack timer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-timer"><a href="#sk-timer" class="headerlink" title="sk_timer"></a>sk_timer</h3><p>sk_timer作为keepalive timer使用，在socket设置SOCK_KEEPOPEN时才启用。</p>
+<p>keepalive timer流程如下:<br><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/keepalive.png" alt="keepalive机制"></p>
+<p>linux内核对keepalive的处理代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">static void tcp_keepalive_timer (struct timer_list *t)</span><br><span class="line">	...</span><br><span class="line">	if (elapsed &gt;&#x3D; keepalive_time_when(tp)) &#123; &#x2F;&#x2F; 7200s</span><br><span class="line">			&#x2F;* If the TCP_USER_TIMEOUT option is enabled, use that</span><br><span class="line">			 * to determine when to timeout instead.</span><br><span class="line">			 *&#x2F;</span><br><span class="line">			if ((icsk-&gt;icsk_user_timeout !&#x3D; 0 &amp;&amp;</span><br><span class="line">				elapsed &gt;&#x3D; msecs_to_jiffies(icsk-&gt;icsk_user_timeout) &amp;&amp;</span><br><span class="line">				icsk-&gt;icsk_probes_out &gt; 0) ||</span><br><span class="line">				(icsk-&gt;icsk_user_timeout &#x3D;&#x3D; 0 &amp;&amp;</span><br><span class="line">				icsk-&gt;icsk_probes_out &gt;&#x3D; keepalive_probes(tp))) &#123; &#x2F;&#x2F;到达次数限制9</span><br><span class="line">					tcp_send_active_reset(sk, GFP_ATOMIC);</span><br><span class="line">					tcp_write_err(sk);</span><br><span class="line">					goto out;</span><br><span class="line">			&#125;</span><br><span class="line">			if (tcp_write_wakeup(sk, LINUX_MIB_TCPKEEPALIVE) &lt;&#x3D; 0) &#123; &#x2F;&#x2F;发送probe报文</span><br><span class="line">					icsk-&gt;icsk_probes_out++;</span><br><span class="line">					elapsed &#x3D; keepalive_intvl_when(tp);&#x2F;&#x2F; 75s</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">					&#x2F;* If keepalive was lost due to local congestion,</span><br><span class="line">					 * try harder.</span><br><span class="line">					 *&#x2F;</span><br><span class="line">					elapsed &#x3D; TCP_RESOURCE_PROBE_INTERVAL;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">			&#x2F;* It is tp-&gt;rcv_tstamp + keepalive_time_when(tp) *&#x2F;</span><br><span class="line">			elapsed &#x3D; keepalive_time_when(tp) - elapsed;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+
+<p>在上面代码中使用<strong>icsk_probes_out</strong>对probe次数进行统计。keepalive_probes缺省设置为9。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_keepalive_probes &#x3D; 9</span><br></pre></td></tr></table></figure>
+
+<p>使用上面的内核选项可以设置该值。</p>
+<p>tcp_write_wakeup负责发出probe报文，这个函数首先判断socket发送队列是否<br>有报文等待发送，如果有则发送sk-&gt;sk_send_head报文(注意这个指针总是指向下一个要<br>发送的报文)；如果发送队列空则发送probe报文(注意这个报文的序列号为out of date即无效)。</p>
+<p>如果报文能够到达接收测，则接收测回复ack消息。下面是收到ack报文的处理流程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static void tcp_ack_probe(struct sock *sk)</span><br><span class="line">&#123;</span><br><span class="line">        struct inet_connection_sock *icsk &#x3D; inet_csk(sk);</span><br><span class="line">        struct sk_buff *head &#x3D; tcp_send_head(sk);</span><br><span class="line">        const struct tcp_sock *tp &#x3D; tcp_sk(sk);</span><br><span class="line"></span><br><span class="line">        &#x2F;* Was it a usable window open? *&#x2F;</span><br><span class="line">        if (!head)</span><br><span class="line">                return;</span><br><span class="line">        if (!after(TCP_SKB_CB(head)-&gt;end_seq, tcp_wnd_end(tp))) &#123; &#x2F;&#x2F; normal window size</span><br><span class="line">                icsk-&gt;icsk_backoff &#x3D; 0;</span><br><span class="line">                inet_csk_clear_xmit_timer(sk, ICSK_TIME_PROBE0);</span><br><span class="line">                &#x2F;* Socket must be waked up by subsequent tcp_data_snd_check().</span><br><span class="line">                 * This function is not for random using!</span><br><span class="line">                 *&#x2F;</span><br><span class="line">        &#125; else &#123; &#x2F;&#x2F; zero-window-size</span><br><span class="line">                unsigned long when &#x3D; tcp_probe0_when(sk, TCP_RTO_MAX);</span><br><span class="line"></span><br><span class="line">                tcp_reset_xmit_timer(sk, ICSK_TIME_PROBE0,</span><br><span class="line">                                     when, TCP_RTO_MAX, NULL);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果接收测返回报文通知窗口大小为0则继续窗口探测过程，由于有接收到报文，<br>这时keepalive超时时判断距离上次报文时间不会超过7200s，这样keepalive定时器<br>重置为7200s超时。</p>
+<p>如果报文无法到达接收测，keepalive在75秒后超时，重新发送probe报文直到到达内核设置的<br>tcp_keepalive_probes次后终止该tcp连接。</p>
+<p>linux内核使用<strong>icsk_probes_out</strong>统计keepalive的探测次数和zero-window-size的探测次数。考虑下面的<br>一种情况：<br>keepalive定时器超时了3次后，才从接收测收到ack消息，这时开始窗口探测过程，这里并没有对<strong>icsk_probes_out</strong><br>清零，而是继续增加<strong>icsk_probes_out</strong>次数，这样处理有意简化窗口探测的过程。</p>
+<h2 id="icsk-retransmit-timer"><a href="#icsk-retransmit-timer" class="headerlink" title="icsk_retransmit_timer"></a>icsk_retransmit_timer</h2><p>即重传定时器，对应协议中的Time Out Timer和Persistent Timer。<br>内核使用一个定时器处理重传定时器和zero-window-size的探测定时器使用。    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_retries2 &#x3D; 15</span><br></pre></td></tr></table></figure>
+<p>内核设置重传次数和zero-window-size次数限制为上面的值。</p>
+<p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/zero-window-size.png" alt="zero-window-size机制"></p>
+<p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/retransmit.png" alt="retransmit机制"></p>
+<h3 id="icsk-delack-timer"><a href="#icsk-delack-timer" class="headerlink" title="icsk_delack_timer"></a>icsk_delack_timer</h3><p>待更新</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.gatevidyalay.com/tcp-timers-transmission-control-protocol/" target="_blank" rel="noopener">tcp协议中的timer</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/" target="_blank" rel="noopener">kernel source</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">分析一下目前linux内核栈的实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-27 21:10:10" itemprop="dateCreated datePublished" datetime="2020-02-27T21:10:10+00:00">2020-02-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在看内核一个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/sunrpc/auth_gss/gss_krb5_seqnum.c?h=v5.6-rc3&id=e7afe6c1d486b516ed586dcc10b3e7e3e85a9c2b" target="_blank" rel="noopener">patch</a>的修改，这个patch的commit描述<br>如下:</p>
+<blockquote>
+<p>While trying to reproduce a reported kernel panic on arm64, I discovered<br>that AUTH_GSS basically doesn’t work at all with older enctypes on arm64<br>systems with CONFIG_VMAP_STACK enabled.  It turns out there still a few<br>places using stack memory with scatterlists, causing krb5_encrypt() and<br>krb5_decrypt() to produce incorrect results (or a BUG if CONFIG_DEBUG_SG<br>is enabled).<br>描述里边提到CONFIG_VMAP_STACK内核宏和scatterlist。下面对它们分析。</p>
+</blockquote>
+<h2 id="CONFIG-VMAP-STACK"><a href="#CONFIG-VMAP-STACK" class="headerlink" title="CONFIG_VMAP_STACK"></a>CONFIG_VMAP_STACK</h2><h3 id="CONFIG-VMAP-STACK的功能"><a href="#CONFIG-VMAP-STACK的功能" class="headerlink" title="CONFIG_VMAP_STACK的功能"></a>CONFIG_VMAP_STACK的功能</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:&#x2F;share&#x2F;linux# find . -name Kconfig | xargs grep -rsn VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:821:config HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:841:config VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:844:     depends on HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;arm64&#x2F;Kconfig:135:       select HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;s390&#x2F;Kconfig:133:        select HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;s390&#x2F;Kconfig:714:        depends on !VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;x86&#x2F;Kconfig:152: select HAVE_ARCH_VMAP_STACK             if X86_64</span><br></pre></td></tr></table></figure>
+<p>从搜索结果看，这个功能是和架构相关的。<br>再来看下该配置宏的具体描述：</p>
+<blockquote>
+<p>config VMAP_STACK<br>       default y<br>       bool “Use a virtually-mapped stack”<br>       depends on HAVE_ARCH_VMAP_STACK<br>       depends on !KASAN || KASAN_VMALLOC<br>       —help—<br>         Enable this if you want the use virtually-mapped kernel stacks<br>         with guard pages.  This causes kernel stack overflows to be<br>         caught immediately rather than causing difficult-to-diagnose<br>         corruption.</p>
+<pre><code>To use this with KASAN, the architecture must support backing
+virtual mappings with real shadow memory, and KASAN_VMALLOC must
+ be enabled.</code></pre></blockquote>
+<p>如果内核开启CONFIG_VMAP_STACK，内核可以快速检测内核栈overflow异常，比之前在内核栈溢出<br>访问时出问题难以诊断，内核栈溢出肯定访问垃圾数据，其结果不可预测的，难以排查，在有个guardpage后<br>只要内核栈溢出访问，内核可以快速捕获到。</p>
+<p>内核栈的申请通过alloc_thread_stack_node实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)</span><br><span class="line">&#123;</span><br><span class="line">#ifdef CONFIG_VMAP_STACK</span><br><span class="line">        void *stack;</span><br><span class="line">        int i;</span><br><span class="line"></span><br><span class="line">        for (i &#x3D; 0; i &lt; NR_CACHED_STACKS; i++) &#123;</span><br><span class="line">                struct vm_struct *s;</span><br><span class="line"></span><br><span class="line">                s &#x3D; this_cpu_xchg(cached_stacks[i], NULL);</span><br><span class="line"></span><br><span class="line">                if (!s)</span><br><span class="line">                        continue;</span><br><span class="line"></span><br><span class="line">                &#x2F;* Clear the KASAN shadow of the stack. *&#x2F;</span><br><span class="line">                kasan_unpoison_shadow(s-&gt;addr, THREAD_SIZE);</span><br><span class="line"></span><br><span class="line">                &#x2F;* Clear stale pointers from reused stack. *&#x2F;</span><br><span class="line">                memset(s-&gt;addr, 0, THREAD_SIZE);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                tsk-&gt;stack_vm_area &#x3D; s;</span><br><span class="line">                tsk-&gt;stack &#x3D; s-&gt;addr;</span><br><span class="line">                return s-&gt;addr;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;*</span><br><span class="line">         * Allocated stacks are cached and later reused by new threads,</span><br><span class="line">         * so memcg accounting is performed manually on assigning&#x2F;releasing</span><br><span class="line">         * stacks to tasks. Drop __GFP_ACCOUNT.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        stack &#x3D; __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,</span><br><span class="line">                                     VMALLOC_START, VMALLOC_END,</span><br><span class="line">                                     THREADINFO_GFP &amp; ~__GFP_ACCOUNT,</span><br><span class="line">                                     PAGE_KERNEL,</span><br><span class="line">                                     0, node, __builtin_return_address(0));</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * We can&#39;t call find_vm_area() in interrupt context, and</span><br><span class="line">         * free_thread_stack() can be called in interrupt context,</span><br><span class="line">         * so cache the vm_struct.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        if (stack) &#123;</span><br><span class="line">                tsk-&gt;stack_vm_area &#x3D; find_vm_area(stack);</span><br><span class="line">                tsk-&gt;stack &#x3D; stack;</span><br><span class="line">        &#125;</span><br><span class="line">        return stack;</span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line">        struct page *page &#x3D; alloc_pages_node(node, THREADINFO_GFP,</span><br><span class="line">                                             THREAD_SIZE_ORDER);</span><br><span class="line"></span><br><span class="line">        if (likely(page)) &#123;</span><br><span class="line">                tsk-&gt;stack &#x3D; page_address(page);</span><br><span class="line">                return tsk-&gt;stack;</span><br><span class="line">        &#125;</span><br><span class="line">        return NULL;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>为了避免vmalloc的频繁调用，内核使用cached_stacks本地缓存数组，保存进程退出时的内核栈指针。在<br>创建进程时可以直接从cached_stacks本地缓存数组获取可用的内核栈。</p>
+<p>如果cached_stacks本地缓存数组不可用，则通过vmalloc接口申请内核栈。vmalloc申请的空间并不保证是<br>物理连续的页。</p>
+<p>vmalloc申请的空间在使用上要注意：</p>
+<ol>
+<li>不能用于DMA操作<blockquote>
+<p>DMA硬件没有页面映射，需要物理上连续的空间。</p>
+</blockquote>
+</li>
+<li>不能用于scatterlist<blockquote>
+<p>后面分析</p>
+</blockquote>
+</li>
+</ol>
+<p>在不启用CONFIG_VMAP_STACK时，内核使用alloc_pages_node申请内核栈空间。这个接口申请连续的物理页<br>作为内核栈。</p>
+<h3 id="内核栈大小"><a href="#内核栈大小" class="headerlink" title="内核栈大小"></a>内核栈大小</h3><p>前面分析了内核栈的分配，那么内核栈占多少空间呢？</p>
+<blockquote>
+<p>THREAD_SIZE宏定义了内核栈的大小。</p>
+</blockquote>
+<p>THREAD_SIZE是架构相关的，在x86上定义为2个page的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define THREAD_SIZE_ORDER       1</span><br><span class="line">#define THREAD_SIZE             (PAGE_SIZE &lt;&lt; THREAD_SIZE_ORDER)</span><br></pre></td></tr></table></figure>
+
+<p>在x86_64上定义为如下大小，开启KASAN，则分配8个page的大小，不开启KSASAN则定义为4个page的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#ifdef CONFIG_KASAN</span><br><span class="line">#define KASAN_STACK_ORDER 1</span><br><span class="line">#else</span><br><span class="line">#define KASAN_STACK_ORDER 0</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#define THREAD_SIZE_ORDER       (2 + KASAN_STACK_ORDER)</span><br><span class="line">#define THREAD_SIZE  (PAGE_SIZE &lt;&lt; THREAD_SIZE_ORDER)</span><br></pre></td></tr></table></figure>
+
+<p>这里提高了KASAN功能，这个是什么功能呢？</p>
+<blockquote>
+<p>Kasan 是 Kernel Address Sanitizer 的缩写，它是一个动态检测内存错误的工具，主要功能是<br>检查内存越界访问和使用已释放的内存等问题。Kasan 集成在 Linux 内核中，随 Linux 内核<br>代码一起发布，并由内核社区维护和发展。</p>
+</blockquote>
+<p>这里不对KASAN功能进行分析，更多的可以参考下面的文档。<br>KASAN扩展阅读</p>
+<ol>
+<li><a href="https://www.kernel.org/doc/html/v4.14/dev-tools/kasan.html" target="_blank" rel="noopener">KASAN内核文档</a></li>
+<li><a href="https://www.ibm.com/developerworks/cn/linux/1608_tengr_kasan/index.html" target="_blank" rel="noopener">KASAN简单介绍</a></li>
+</ol>
+<h3 id="内核栈的布局"><a href="#内核栈的布局" class="headerlink" title="内核栈的布局"></a>内核栈的布局</h3><p>内核栈布局和架构相关，x86配置如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cat arch&#x2F;x86&#x2F;Kconfig</span><br><span class="line">config X86</span><br><span class="line">        def_bool y</span><br><span class="line">		...</span><br><span class="line">		select THREAD_INFO_IN_TASK</span><br><span class="line">		...</span><br><span class="line"></span><br><span class="line">$ cat include&#x2F;linux&#x2F;sched.h</span><br><span class="line">struct task_struct &#123;</span><br><span class="line">#ifdef CONFIG_THREAD_INFO_IN_TASK</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * For reasons of header soup (see current_thread_info()), this</span><br><span class="line">         * must be the first element of task_struct.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        struct thread_info              thread_info;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
+<p>由上可见在x86上，内核栈就是单纯的内核栈，thread_info结构不在内核栈的低端地址上，而是移到了task_struct结构中，这样好处是<br>内核栈溢出时不会破坏thread_info结构，更加安全。</p>
+<p>之前内核栈的布局是这样的，如下所示：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">high address                low address </span><br><span class="line">|----------------------|&lt;--------&gt;|</span><br><span class="line">                        thread_info</span><br></pre></td></tr></table></figure>
+
+<h2 id="scatterlist"><a href="#scatterlist" class="headerlink" title="scatterlist"></a>scatterlist</h2><p>scatterlist用来描述一内存段，其结构如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct scatterlist &#123;</span><br><span class="line">        unsigned long   page_link;</span><br><span class="line">        unsigned int    offset;</span><br><span class="line">        unsigned int    length;</span><br><span class="line">        dma_addr_t      dma_address;</span><br><span class="line">#ifdef CONFIG_NEED_SG_DMA_LENGTH</span><br><span class="line">        unsigned int    dma_length;</span><br><span class="line">#endif</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>page_link是page指针，这里复用该page指针使其支持<a href="https://lwn.net/Articles/234617/" target="_blank" rel="noopener">scatterlist chain</a>。<br>每个scatterlist描述一个物理页的内存片段。</p>
+<p>为何vmalloc空间不能用于scatterlist呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">         vmalloc buffer</span><br><span class="line">          |-------------|</span><br><span class="line">|-------------|-----------|</span><br><span class="line">        pageX	       pageY</span><br></pre></td></tr></table></figure>
+<p>如果vmalloc buffer跨page边界，看会发生什么。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">$ cat net&#x2F;sunrpc&#x2F;auth_gss&#x2F;gss_krb5_crypto.c</span><br><span class="line">u32</span><br><span class="line">krb5_encrypt(</span><br><span class="line">        struct crypto_sync_skcipher *tfm,</span><br><span class="line">        void * iv,</span><br><span class="line">        void * in,</span><br><span class="line">        void * out,</span><br><span class="line">        int length)</span><br><span class="line">&#123;</span><br><span class="line">        u32 ret &#x3D; -EINVAL;</span><br><span class="line">        struct scatterlist sg[1];</span><br><span class="line">		...</span><br><span class="line">		memcpy(out, in, length);</span><br><span class="line">        sg_init_one(sg, out, length);</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br><span class="line">$ cat lib&#x2F;scatterlist.c</span><br><span class="line">void sg_init_one(struct scatterlist *sg, const void *buf, unsigned int buflen)</span><br><span class="line">&#123;</span><br><span class="line">        sg_init_table(sg, 1);</span><br><span class="line">        sg_set_buf(sg, buf, buflen);</span><br><span class="line">&#125;</span><br><span class="line">$ cat include&#x2F;linux&#x2F;scatterlist.h</span><br><span class="line">static inline void sg_set_buf(struct scatterlist *sg, const void *buf,</span><br><span class="line">			      unsigned int buflen)</span><br><span class="line">&#123;</span><br><span class="line">#ifdef CONFIG_DEBUG_SG</span><br><span class="line">	BUG_ON(!virt_addr_valid(buf));</span><br><span class="line">#endif</span><br><span class="line">	sg_set_page(sg, virt_to_page(buf), buflen, offset_in_page(buf));</span><br><span class="line">&#125;</span><br><span class="line">$ cat include&#x2F;linux&#x2F;scatterlist.h</span><br><span class="line">static inline void sg_set_page(struct scatterlist *sg, struct page *page,</span><br><span class="line">			       unsigned int len, unsigned int offset)</span><br><span class="line">&#123;</span><br><span class="line">	sg_assign_page(sg, page);</span><br><span class="line">	sg-&gt;offset &#x3D; offset;</span><br><span class="line">	sg-&gt;length &#x3D; len;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在sg_set_page后，scatterlist只记录了pageX，后面的pageY是没有记录的，后面使用scatterlist时<br>可能访问到垃圾数据。可见vmalloc空间时不能用于scatterlist的。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文分析了CONFIG_VMAP_STACK和scatterlist的功能，在使能CONFIG_VMAP_STACK后，内核栈上分配的<br>空间是物理上不连续的，不能用于scatterlist，不能用于DMA。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">ubuntu清理磁盘空间</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-25 21:10:10" itemprop="dateCreated datePublished" datetime="2020-02-25T21:10:10+00:00">2020-02-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ubuntu/" itemprop="url" rel="index"><span itemprop="name">ubuntu</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>虽然linux不像windows那样需要碎片整理，随着时间的流逝，硬盘空间会<br>越来越小，有必要对硬件空间清理。以ubuntu为例说明如何清理硬盘空间。</p>
+<h2 id="查看硬盘占用"><a href="#查看硬盘占用" class="headerlink" title="查看硬盘占用"></a>查看硬盘占用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">udev            934M     0  934M   0% &#x2F;dev</span><br><span class="line">tmpfs           193M  2.6M  191M   2% &#x2F;run</span><br><span class="line">&#x2F;dev&#x2F;sda1       8.8G  6.5G  1.9G  78% &#x2F;</span><br><span class="line">tmpfs           965M     0  965M   0% &#x2F;dev&#x2F;shm</span><br><span class="line">tmpfs           5.0M     0  5.0M   0% &#x2F;run&#x2F;lock</span><br><span class="line">tmpfs           965M     0  965M   0% &#x2F;sys&#x2F;fs&#x2F;cgroup</span><br><span class="line">tmpfs           193M     0  193M   0% &#x2F;run&#x2F;user&#x2F;0</span><br><span class="line">tmpfs           193M     0  193M   0% &#x2F;run&#x2F;user&#x2F;1000</span><br><span class="line">&#x2F;dev&#x2F;sdb1       127G  3.0G  125G   3% &#x2F;share</span><br></pre></td></tr></table></figure>
+<p>这里根分区可用空间不足，需要对根分区下目录空间占用进行分析。</p>
+<h2 id="查看根分区目录空间占用"><a href="#查看根分区目录空间占用" class="headerlink" title="查看根分区目录空间占用"></a>查看根分区目录空间占用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ du -h --max-depth&#x3D;1 &#x2F;</span><br><span class="line">23M	&#x2F;opt</span><br><span class="line">0	&#x2F;dev</span><br><span class="line">236M	&#x2F;boot</span><br><span class="line">8.0K	&#x2F;snap</span><br><span class="line">5.8M	&#x2F;lib32</span><br><span class="line">3.1G	&#x2F;usr</span><br><span class="line">0	&#x2F;sys</span><br><span class="line">156M	&#x2F;root</span><br><span class="line">16K	&#x2F;lost+found</span><br><span class="line">0	&#x2F;proc</span><br><span class="line">12K	&#x2F;media</span><br><span class="line">4.0K	&#x2F;srv</span><br><span class="line">6.5M	&#x2F;libx32</span><br><span class="line">4.0K	&#x2F;lib64</span><br><span class="line">4.0K	&#x2F;mnt</span><br><span class="line">12M	&#x2F;etc</span><br><span class="line">1.1G	&#x2F;lib</span><br><span class="line">2.8G	&#x2F;share</span><br><span class="line">704M	&#x2F;var</span><br><span class="line">2.9M	&#x2F;run</span><br><span class="line">18M	&#x2F;bin</span><br><span class="line">1.1G	&#x2F;home</span><br><span class="line">19M	&#x2F;sbin</span><br><span class="line">48K	&#x2F;tmp</span><br><span class="line">4.0K	&#x2F;nextcloud</span><br><span class="line">9.2G	&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>随着时间的流逝，log目录会比较大，可以通过journalctl命令控制日志文件所占空<br>间的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ journalctl --vaccum-size&#x3D;100M</span><br></pre></td></tr></table></figure>
+
+<h1 id="清空安装的软件包备份"><a href="#清空安装的软件包备份" class="headerlink" title="清空安装的软件包备份"></a>清空安装的软件包备份</h1><p>ubuntu把安装的软件包缓存在如下目录:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ls &#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives&#x2F;</span><br><span class="line">lock partial</span><br></pre></td></tr></table></figure>
+
+<p>然后通过下面的命令删除缓存的安装包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt clean</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过以上步骤，硬盘空间大了许多。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/" class="post-title-link" itemprop="url">bpf入门系列-2</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-17 21:21:10" itemprop="dateCreated datePublished" datetime="2020-02-17T21:21:10+00:00">2020-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="头文件设置"><a href="#头文件设置" class="headerlink" title="头文件设置"></a>头文件设置</h2><p>要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。</p>
+<p>首先介绍下<a href="https://stackoverflow.com/questions/18858190/whats-in-include-uapi-of-kernel-source-project" target="_blank" rel="noopener">uapi</a>。<br>uapi主要是以下两个目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kernel_dir&#x2F;include&#x2F;uapi</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi</span><br></pre></td></tr></table></figure>
+
+<p>uapi的目的是让头文件更加清晰，只有上面的头文件是用户态可以使用的，其它的作为内核私有头文件使用。</p>
+<p>在编译bpf程序时我们要用到内核头文件，而不仅仅上上面的uapi的头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;generated</span><br><span class="line">kernel_dir&#x2F;include</span><br></pre></td></tr></table></figure>
+<p>关于<a href="https://blog.linote.cn/2020/03/27/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/" target="_blank" rel="noopener">这个例子</a>的编译，如果使用内核头文件会遇到问题，例子中带了include/types.h，这个头文件和内核头文件冲突，可行workaround方案是把自带include放到编译选项的最后。<br><strong>编译器在寻找头文件是总是按照编译选项中列出目录先后的顺序搜索</strong>。</p>
+<p>另外看下uapi/linux/types.h文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _UAPI_LINUX_TYPES_H</span><br><span class="line">#define _UAPI_LINUX_TYPES_H</span><br><span class="line"></span><br><span class="line">#include &lt;asm&#x2F;types.h&gt;</span><br><span class="line"></span><br><span class="line">#ifndef __ASSEMBLY__</span><br><span class="line">#ifndef __KERNEL__</span><br><span class="line">#ifndef __EXPORTED_HEADERS__</span><br><span class="line">#warning &quot;Attempt to use kernel headers from user space, see http:&#x2F;&#x2F;kernelnewbies.org&#x2F;KernelHeaders&quot;</span><br><span class="line">#endif &#x2F;* __EXPORTED_HEADERS__ *&#x2F;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#include &lt;linux&#x2F;posix_types.h&gt;</span><br></pre></td></tr></table></figure>
+<p>我们在使用时需要定义<strong>KERNEL</strong>宏。</p>
+<p>一个可用的头文件包含选项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">linuxhdrs ?&#x3D; &#x2F;usr&#x2F;src&#x2F;linux-headers-&#96;uname -r&#96;</span><br><span class="line">LINUXINCLUDE &#x3D;  -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;generated \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;generated&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include&#x2F;generated&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include&#x2F;uapi \</span><br><span class="line">                -include $(linuxhdrs)&#x2F;include&#x2F;linux&#x2F;kconfig.h</span><br></pre></td></tr></table></figure>
+
+<p>在头文件设置好后，还需要额外编译选项用于编译bpf程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CLANG ?&#x3D; clang</span><br><span class="line">INC_FLAGS &#x3D; -nostdinc -isystem $(shell $(CLANG) -print-file-name&#x3D;include)</span><br><span class="line">EXTRA_CFLAGS ?&#x3D; -O2 -g -Wall -emit-llvm</span><br><span class="line">LLC ?&#x3D; llc</span><br><span class="line">CLANG ?&#x3D; clang</span><br><span class="line">LLVM_OBJDUMP ?&#x3D; llvm-objdump</span><br><span class="line"></span><br><span class="line">$(KERNELOBJS):  %.o:%.c</span><br><span class="line">        $(CLANG) $(INC_FLAGS) \</span><br><span class="line">                -D__KERNEL__ -D__ASM_SYSREG_H \</span><br><span class="line">                $(DEBUG_FLAGS) \</span><br><span class="line">                -Wno-unused-value -Wno-pointer-sign \</span><br><span class="line">                -Wno-compare-distinct-pointer-types \</span><br><span class="line">                -Wno-gnu-variable-sized-type-not-at-end \</span><br><span class="line">                -Wno-address-of-packed-member -Wno-tautological-compare \</span><br><span class="line">                -Wno-unknown-warning-option \</span><br><span class="line">                $(LINUXINCLUDE) \</span><br><span class="line">                -I..&#x2F;include \</span><br><span class="line">                $(EXTRA_CFLAGS) -c $&lt; -o -| $(LLC) -march&#x3D;bpf -filetype&#x3D;obj -o $@</span><br></pre></td></tr></table></figure>
+
+<h2 id="一个bpf程序框架"><a href="#一个bpf程序框架" class="headerlink" title="一个bpf程序框架"></a>一个bpf程序框架</h2><p>这里是我整理的一个bpf框架，地址是<a href="https://github.com/supersojo/bpf_skeleton" target="_blank" rel="noopener">bpf_skeleton</a></p>
+<p>这里讲下遇到的问题。首先是内核部分，按照上面一节设置头文件后问题不大，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;bpf_skeleton# ls kern</span><br><span class="line">bitehist.c  bpf_endian.h  bpf_helpers.h  Makefile</span><br></pre></td></tr></table></figure>
+
+<p>可能对为何需要bpf_helpers.h有疑问，bpf程序最终是编译成bpf字节码，由bpf虚拟机执行，这里把bpf函数设置为整数标识，最后由llvm生成对bpf内核函数的调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static void *(*bpf_map_lookup_elem)(void *map, void *key) &#x3D;</span><br><span class="line">        (void *) BPF_FUNC_map_lookup_elem;</span><br><span class="line">static int (*bpf_map_update_elem)(void *map, void *key, void *value,</span><br><span class="line">                                  unsigned long long flags) &#x3D;</span><br><span class="line">        (void *) BPF_FUNC_map_update_elem;</span><br></pre></td></tr></table></figure>
+<p>上面只是对bpf函数赋值为bpf内核函数对应的整数标识</p>
+<p>为使用libbpf，这里通过在内核源码目录下编译安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd kernel_dir&#x2F;tools&#x2F;lib&#x2F;bpf</span><br><span class="line">make &amp;&amp; make install &amp;&amp; make install_headers</span><br></pre></td></tr></table></figure>
+<p>这样缺省头文件安装到/usr/local/include，库文件安装到/usr/local/lib64下面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;bpf_skeleton# ls user&#x2F;</span><br><span class="line">bitehist.c       bpf_load.c  linux     perf-sys.h</span><br><span class="line">bitehist_kern.o  bpf_load.h  Makefile</span><br></pre></td></tr></table></figure>
+<p>可能注意到为何有linux/types.h，uapi不是有对应头文件吗? 使用uapi下的types.h需要定义<strong>KERNEL</strong>，这里使用tools下自带的，可以不依赖内核头文件就可以编译用户态代码<br>bpf_load.c是从samples/bpf下拷贝过来的，里面是bpd加载的实用函数，非常方便。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上面步骤，我们拥有了一个可以使用的bpf框架，开始编写自己的bpf程序吧</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://github.com/brendangregg/BPF-tools/tree/master/new/2019-05-21" target="_blank" rel="noopener">BPF tools</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/" class="post-title-link" itemprop="url">bpf入门系列-1</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-13 21:21:10" itemprop="dateCreated datePublished" datetime="2020-02-13T21:21:10+00:00">2020-02-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="bpf的build环境"><a href="#bpf的build环境" class="headerlink" title="bpf的build环境"></a>bpf的build环境</h2><p>简单讲，bpf是内核内置的虚拟机，对bpf的支持，内核需要开启编译选项如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">CONFIG_BPF&#x3D;y</span><br><span class="line">CONFIG_BPF_SYSCALL&#x3D;y</span><br><span class="line">CONFIG_NET_CLS_BPF&#x3D;m</span><br><span class="line">CONFIG_NET_ACT_BPF&#x3D;m</span><br><span class="line">CONFIG_BPF_JIT&#x3D;y</span><br><span class="line">CONFIG_HAVE_BPF_JIT&#x3D;y</span><br><span class="line">CONFIG_BPF_EVENTS&#x3D;y</span><br></pre></td></tr></table></figure>
+<p>[1]中是在oracle linux上面的介绍，在ubuntu1804上遇到很多问题，这里把问题列举下。</p>
+<h2 id="build-environment"><a href="#build-environment" class="headerlink" title="build environment"></a>build environment</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Distro: ubuntu 1804</span><br><span class="line">Kernel: 5.3.0-42</span><br><span class="line">Packages:</span><br><span class="line">linux-image-5.3.0-42-generic</span><br><span class="line">linux-image-5.3.0-42-generic-dbgsym</span><br><span class="line">linux-headers-5.3.0-42-generic</span><br><span class="line">linux-headers-5.3.0-42</span><br><span class="line">linux-source-5.3.0</span><br><span class="line">llvm-9</span><br><span class="line">clang-9</span><br><span class="line">libelf-dev</span><br></pre></td></tr></table></figure>
+<p>在ubuntu1804上我安装了5.3.0的内核，llvm和clang都是安装的9的，另外要安装elf开发库。由于Makefile中使用clang和llc命令，这里建立软链接</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ln -s &#x2F;usr&#x2F;bin&#x2F;llc-9 &#x2F;usr&#x2F;bin&#x2F;llc</span><br><span class="line">ln -s &#x2F;usr&#x2F;bin&#x2F;clang-9 &#x2F;usr&#x2F;bin&#x2F;clang</span><br></pre></td></tr></table></figure>
+
+<p>把代码clone到本地</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;oracle&#x2F;linux-blog-sample-code.git</span><br></pre></td></tr></table></figure>
+
+<p>master分支只有README，源码文件在bpf-test分支上，所以切换分支</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git checkout -b bpf-test origin&#x2F;bpf-test</span><br></pre></td></tr></table></figure>
+
+<p>这时编译例子程序，有如下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ cd bpf-test</span><br><span class="line">$ make</span><br><span class="line">...</span><br><span class="line">LLVM ERROR: &#39;helper_test_init&#39; label emitted multiple times to assembly file</span><br><span class="line">Makefile:69: recipe for target &#39;test_bpf_helper_init_kern.o&#39; failed</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p><a href="https://patchwork.ozlabs.org/patch/808209/" target="_blank" rel="noopener">这里</a>提到如果section名字和函数名字一样，clang会报错。我们可以<br>修改一下函数名字。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bpf&#x2F;test_bpf_helper_init_kern.c</span><br><span class="line">helper_test_init &#x3D;&gt; helper_test_init_prog</span><br></pre></td></tr></table></figure>
+
+<p>继续编译发现还有类似错误，可以按照这种方式修改。由于其它地方使用了宏方式定义section，这里修改宏定义，在函数名后追加_prog</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">bpf&#x2F;test_bpf_helper_kern.h</span><br><span class="line"></span><br><span class="line">#define BPF_HELPER_TEST_FUNC(helper, name, direction)                   \</span><br><span class="line">SEC(BPF_HELPER_TEST_NAME(helper, name, direction))                      \</span><br><span class="line">static __always_inline int helper##_##name##_##direction##_prog(struct __sk_buff *skb)</span><br></pre></td></tr></table></figure>
+
+<p>这样bpf程序可以正确编译出来，后面开始运行例子程序。</p>
+<h2 id="run-problem"><a href="#run-problem" class="headerlink" title="run problem"></a>run problem</h2><p>在运行程序时有如下错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test# make test</span><br><span class="line">make  -C bpf test</span><br><span class="line">make[1]: Entering directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;bpf&#39;</span><br><span class="line">make[1]: &#39;test&#39; is up to date.</span><br><span class="line">make[1]: Leaving directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;bpf&#39;</span><br><span class="line">make  -C user test</span><br><span class="line">make[1]: Entering directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;user&#39;</span><br><span class="line">bash test_bpf_helper_run.sh</span><br><span class="line">before setup</span><br><span class="line">0 maps not supported in current map section!</span><br><span class="line">Error fixing up map structure, incompatible struct bpf_elf_map used?</span><br><span class="line">Error fetching ELF ancillary data!</span><br><span class="line">Unable to load program</span><br><span class="line">setup ok</span><br><span class="line">could not find map bpf_helper_test_map: No such file or directory</span><br><span class="line">Makefile:63: recipe for target &#39;test&#39; failed</span><br><span class="line">make[1]: *** [test] Error 1</span><br><span class="line">make[1]: Leaving directory &#39;&#x2F;root&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test&#x2F;user&#39;</span><br><span class="line">Makefile:69: recipe for target &#39;test-user&#39; failed</span><br><span class="line">make: *** [test-user] Error 2</span><br></pre></td></tr></table></figure>
+
+<p>大致是说在bpf程序中找不到map。</p>
+<p>测试命令执行的是以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tc filter add dev veth1 ingress bpf da \</span><br><span class="line">            obj ..&#x2F;bpf&#x2F;test_bpf_helper_init_kern.o \</span><br><span class="line">            sec helper_test_init</span><br></pre></td></tr></table></figure>
+<p>tc是iproute2包中的命令，这里是iproute2的<a href="https://github.com/shemminger/iproute2" target="_blank" rel="noopener">upstream</a>地址。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git clone https:&#x2F;&#x2F;github.com&#x2F;shemminger&#x2F;iproute2.git</span><br><span class="line">grep &quot;maps not supported&quot; -rsn .&#x2F;</span><br><span class="line">...</span><br><span class="line">.&#x2F;lib&#x2F;bpf.c:1886:               fprintf(stderr, &quot;struct bpf_elf_map too small, not supported!\n&quot;);</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>看下报错的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">static int bpf_fetch_maps_end(struct bpf_elf_ctx *ctx)</span><br><span class="line">&#123;</span><br><span class="line">        struct bpf_elf_map fixup[ARRAY_SIZE(ctx-&gt;maps)] &#x3D; &#123;&#125;;</span><br><span class="line">        int i, sym_num &#x3D; bpf_map_num_sym(ctx);</span><br><span class="line">        __u8 *buff;</span><br><span class="line"></span><br><span class="line">        if (sym_num &#x3D;&#x3D; 0 || sym_num &gt; ARRAY_SIZE(ctx-&gt;maps)) &#123;</span><br><span class="line">                fprintf(stderr, &quot;%u maps not supported in current map section!\n&quot;,</span><br><span class="line">                        sym_num);</span><br><span class="line">...</span><br><span class="line">static int bpf_map_num_sym(struct bpf_elf_ctx *ctx)</span><br><span class="line">&#123;</span><br><span class="line">	int i, num &#x3D; 0;</span><br><span class="line">	GElf_Sym sym;</span><br><span class="line"></span><br><span class="line">	for (i &#x3D; 0; i &lt; ctx-&gt;sym_num; i++) &#123;</span><br><span class="line">		int type;</span><br><span class="line"></span><br><span class="line">		if (gelf_getsym(ctx-&gt;sym_tab, i, &amp;sym) !&#x3D; &amp;sym)</span><br><span class="line">			continue;</span><br><span class="line"></span><br><span class="line">		type &#x3D; GELF_ST_TYPE(sym.st_info);</span><br><span class="line">		if (GELF_ST_BIND(sym.st_info) !&#x3D; STB_GLOBAL ||</span><br><span class="line">		    (type !&#x3D; STT_NOTYPE &amp;&amp; type !&#x3D; STT_OBJECT) ||</span><br><span class="line">		    sym.st_shndx !&#x3D; ctx-&gt;sec_maps)</span><br><span class="line">			continue;</span><br><span class="line">		num++;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	return num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可见bpf_map_num_sym返回了0。以上是iproute2的upstream代码，检查符号类型，如果不是STT_NOTYPE和STT_OBJECT则跳过，我们需要看下ubuntu中iproute2的代码。<br>安装ubuntu中iproute2源码包。</p>
+<p>下面命令会安装ubuntu仓库中最新的iproute2源码包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt source iproute2</span><br></pre></td></tr></table></figure>
+
+<p>可能你需要特定版本的源码包，这时需要检查系统iproute2的版本号。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;iproute2&#x2F;debian# dpkg -l | grep iproute2</span><br><span class="line">ii  iproute2                                     4.15.0-2ubuntu1                                 amd64        networking and traffic control tools</span><br><span class="line">root@ubuntu:~# apt source iproute2&#x3D;4.15.0</span><br></pre></td></tr></table></figure>
+
+<p>这样我们可以检查对应版本4.15.0的iproute2的中bpf_map_num_sym的实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">static int bpf_map_num_sym(struct bpf_elf_ctx *ctx)</span><br><span class="line">&#123;</span><br><span class="line">        int i, num &#x3D; 0;</span><br><span class="line">        GElf_Sym sym;</span><br><span class="line"></span><br><span class="line">        for (i &#x3D; 0; i &lt; ctx-&gt;sym_num; i++) &#123;</span><br><span class="line">                if (gelf_getsym(ctx-&gt;sym_tab, i, &amp;sym) !&#x3D; &amp;sym)</span><br><span class="line">                        continue;</span><br><span class="line"></span><br><span class="line">                if (GELF_ST_BIND(sym.st_info) !&#x3D; STB_GLOBAL ||</span><br><span class="line">                    GELF_ST_TYPE(sym.st_info) !&#x3D; STT_NOTYPE ||</span><br><span class="line">                    sym.st_shndx !&#x3D; ctx-&gt;sec_maps)</span><br><span class="line">                        continue;</span><br><span class="line">                num++;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return num;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>检查符号的类型，如果不是STT_NOTYPE则跳过。这里和upstream实现是有区别的，我们接下来需要确认我们生成的bpf程序中符号的类型。</p>
+<p>首先确认有maps段</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test# llvm-readelf-9 --sections bpf&#x2F;test_bpf_helper_init_kern.o</span><br><span class="line"></span><br><span class="line">There are 23 section headers, starting at offset 0x3068:</span><br><span class="line"></span><br><span class="line">Section Headers:</span><br><span class="line">  [Nr] Name              Type            Address          Off    Size   ES Flg Lk Inf Al</span><br><span class="line">  [ 0]                   NULL            0000000000000000 000000 000000 00      0   0  0</span><br><span class="line">  [ 1] .strtab           STRTAB          0000000000000000 002e10 000256 00      0   0  1</span><br><span class="line">  [ 2] .text             PROGBITS        0000000000000000 000040 000000 00  AX  0   0  4</span><br><span class="line">  [ 3] helper_test_init  PROGBITS        0000000000000000 000040 000010 00  AX  0   0  8</span><br><span class="line">  [ 4] .rodata.str1.1    PROGBITS        0000000000000000 000050 00025f 01 AMS  0   0  1</span><br><span class="line">  [ 5] .data             PROGBITS        0000000000000000 0002b0 0001c0 00  WA  0   0 16</span><br><span class="line">  [ 6] .rel.data         REL             0000000000000000 0023c0 000370 10     22   5  8</span><br><span class="line">  [ 7] maps              PROGBITS        0000000000000000 000470 00001c 00  WA  0   0  4</span><br><span class="line">  [ 8] license           PROGBITS        0000000000000000 00048c 000004 00  WA  0   0  1</span><br><span class="line">  [ 9] .debug_str        PROGBITS        0000000000000000 000490 0003c3 01  MS  0   0  1</span><br><span class="line">  [10] .debug_abbrev     PROGBITS        0000000000000000 000853 000103 00      0   0  1</span><br><span class="line">  [11] .debug_info       PROGBITS        0000000000000000 000956 000568 00      0   0  1</span><br><span class="line">  [12] .rel.debug_info   REL             0000000000000000 002730 000680 10     22  11  8</span><br><span class="line">  [13] .debug_macinfo    PROGBITS        0000000000000000 000ebe 000001 00      0   0  1</span><br><span class="line">  [14] .BTF              PROGBITS        0000000000000000 000ebf 0006b9 00      0   0  1</span><br><span class="line">  [15] .rel.BTF          REL             0000000000000000 002db0 000020 10     22  14  8</span><br><span class="line">  [16] .BTF.ext          PROGBITS        0000000000000000 001578 000058 00      0   0  1</span><br><span class="line">  [17] .rel.BTF.ext      REL             0000000000000000 002dd0 000020 10     22  16  8</span><br><span class="line">  [18] .eh_frame         PROGBITS        0000000000000000 0015d0 000030 00   A  0   0  8</span><br><span class="line">  [19] .rel.eh_frame     REL             0000000000000000 002df0 000010 10     22  18  8</span><br><span class="line">  [20] .debug_line       PROGBITS        0000000000000000 001600 000141 00      0   0  1</span><br><span class="line">  [21] .rel.debug_line   REL             0000000000000000 002e00 000010 10     22  20  8</span><br><span class="line">  [22] .symtab           SYMTAB          0000000000000000 001748 000c78 18      1 129  8</span><br><span class="line">Key to Flags:</span><br><span class="line">  W (write), A (alloc), X (execute), M (merge), S (strings), l (large)</span><br><span class="line">  I (info), L (link order), G (group), T (TLS), E (exclude), x (unknown)</span><br><span class="line">  O (extra OS processing required) o (OS specific), p (processor specific)</span><br></pre></td></tr></table></figure>
+
+<p>从上面的输出看有maps段，再看下maps段的符号</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;bpf&#x2F;test_bpf_helper_kern.h</span><br><span class="line">struct bpf_elf_map SEC(&quot;maps&quot;) bpf_helper_test_map &#x3D; &#123;</span><br><span class="line">        .type &#x3D; BPF_MAP_TYPE_HASH,</span><br><span class="line">        .size_key &#x3D; sizeof(long),</span><br><span class="line">        .size_value &#x3D; sizeof(long),</span><br><span class="line">        .pinning &#x3D; PIN_GLOBAL_NS,</span><br><span class="line">        .max_elem &#x3D; 256,</span><br><span class="line">&#125;;</span><br><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;linux-blog-sample-code&#x2F;bpf-test# llvm-readelf-9 -s bpf&#x2F;test_bpf_helper_init_kern.o | grep bpf_helper_test_map</span><br><span class="line">   130: 0000000000000000    28 OBJECT  GLOBAL DEFAULT    7 bpf_helper_test_map</span><br></pre></td></tr></table></figure>
+<p>哇，这里bpf_helper_test_map的类型是OBJECT，tc程序认为不是有效的符号而跳过了。我们需要修改iproute2的代码重新打包，注意有3个函数都需要修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">bpf_map_num_sym</span><br><span class="line">bpf_map_verify_all_offs</span><br><span class="line">bpf_map_fetch_name</span><br></pre></td></tr></table></figure>
+
+<p>关于debian下编译打包参考<a href="https://moeclub.org/2017/03/31/100/?spm=38.1" target="_blank" rel="noopener">这里</a><br>这里列下简单步骤</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">mkdir YourPackage</span><br><span class="line">cd YourPackage</span><br><span class="line">apt source -t bionic iproute2</span><br><span class="line">apt build-dep -y -t bionic iproute2</span><br><span class="line">vim lib&#x2F;bpf.c  &#x3D;&#x3D;&gt; modify the source code</span><br><span class="line">dpkg-buildpackge --commit</span><br><span class="line">dpkg-buildpackge </span><br><span class="line">dpkg -i ..&#x2F;iproute2*.deb</span><br></pre></td></tr></table></figure>
+
+<p>这时例子程序可以成功运行了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make test</span><br></pre></td></tr></table></figure>
+
+<h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><ol>
+<li><a href="https://blogs.oracle.com/linux/notes-on-bpf-4" target="_blank" rel="noopener">How to build bpf program out of the kernel tree</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/20/copy-file-range-problem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/20/copy-file-range-problem/" class="post-title-link" itemprop="url">copy_file_range problem</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-20 23:18:10" itemprop="dateCreated datePublished" datetime="2020-01-20T23:18:10+00:00">2020-01-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ext4/" itemprop="url" rel="index"><span itemprop="name">ext4</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="copy-file-range问题"><a href="#copy-file-range问题" class="headerlink" title="copy_file_range问题"></a>copy_file_range问题</h1><p>在使用3.10内核的过程中遇到一个关于copy_file_range的问题，<strong>拷贝后数据不对</strong>。有必要对这个系统调用分析一下。</p>
+<h1 id="copy-file-range"><a href="#copy-file-range" class="headerlink" title="copy_file_range"></a>copy_file_range</h1><p><strong>copy_file_range</strong>是最近新增的[2]syscall，在不需要内核和用户态缓存间的拷贝就可以高效实现文件间的拷贝。传统的文件拷贝流程涉及内核page cache到用户缓存，然后由用户缓存再拷贝到内核page cache，中间涉及两次拷贝，效率不高。copy_file_range正是对拷贝的优化，内部实现是通过pipe buffer的结构，在读取源文件时把涉及到的page cache内存页，页内offset，长度信息，保存到pipe buffer中，在向目标文件拷贝时直接读取pipe buffer信息，执行后续写操作，这样仅需要一次拷贝就完成了。</p>
+<p>copy_file_range的流程图如下<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4.png" alt="copy_file_range flow chart"><br>可以看到最终调用pipe_to_file。下面看下该函数的实现。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe_to_file</span><span class="params">(struct pipe_inode_info *pipe, struct pipe_buffer *buf,</span></span></span><br><span class="line"><span class="function"><span class="params">struct splice_desc *sd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">file</span> = <span class="title">sd</span>-&gt;<span class="title">u</span>.<span class="title">file</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">address_space</span> *<span class="title">mapping</span> = <span class="title">file</span>-&gt;<span class="title">f_mapping</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> offset, this_len;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span>;</span></span><br><span class="line">	<span class="keyword">void</span> *fsdata;</span><br><span class="line">	<span class="keyword">int</span> ret;</span><br><span class="line"></span><br><span class="line">	offset = sd-&gt;pos &amp; ~PAGE_CACHE_MASK;</span><br><span class="line"></span><br><span class="line">	this_len = sd-&gt;len;</span><br><span class="line">	<span class="keyword">if</span> (this_len + offset &gt; PAGE_CACHE_SIZE)</span><br><span class="line">		this_len = PAGE_CACHE_SIZE - offset;</span><br><span class="line"></span><br><span class="line">	ret = pagecache_write_begin(file, mapping, sd-&gt;pos, this_len,</span><br><span class="line">	AOP_FLAG_UNINTERRUPTIBLE, &amp;page, &amp;fsdata);</span><br><span class="line">	<span class="keyword">if</span> (unlikely(ret))</span><br><span class="line">		<span class="keyword">goto</span> out;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (buf-&gt;page != page) &#123;</span><br><span class="line">		<span class="keyword">char</span> *src = buf-&gt;ops-&gt;<span class="built_in">map</span>(pipe, buf, <span class="number">1</span>);</span><br><span class="line">		<span class="keyword">char</span> *dst = kmap_atomic(page);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">memcpy</span>(dst + offset, src + buf-&gt;offset, this_len);</span><br><span class="line">		flush_dcache_page(page);</span><br><span class="line">		kunmap_atomic(dst);</span><br><span class="line">		buf-&gt;ops-&gt;unmap(pipe, buf, src);</span><br><span class="line">	&#125;</span><br><span class="line">	ret = pagecache_write_end(file, mapping, sd-&gt;pos, this_len, this_len,</span><br><span class="line">		page, fsdata);</span><br><span class="line">out:</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面第22行判断如果不是同一page时才会执行数据拷贝操作，如果是同一page，则不执行数据操作。这样copy_file_range就不适用同一文件中拷贝。如果执行copy_file_range测试指定的是同一文件，在源偏移和目标偏移很小，即小于一个page大小时，pipe_to_file就不执行数据操作，从而导致拷贝数据不一致。</p>
+<p>内核upstream上的处理流程如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4_latest.png" alt="cop_file_range"></p>
+<blockquote>
+<p>最新版的内核已经抛弃对pipe_to_file的调用，该函数也已经从内核移除。最终的实现调用的是iov_iter_copy_from_user_atomic负责完成数据操作。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">size_t iov_iter_copy_from_user_atomic(struct page *page,</span><br><span class="line">struct iov_iter *i, unsigned long offset, size_t bytes)</span><br><span class="line">&#123;</span><br><span class="line">	char *kaddr &#x3D; kmap_atomic(page), *p &#x3D; kaddr + offset;</span><br><span class="line">	if (unlikely(!page_copy_sane(page, offset, bytes))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	if (unlikely(iov_iter_is_pipe(i) || iov_iter_is_discard(i))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		WARN_ON(1);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	iterate_all_kinds(i, bytes, v,</span><br><span class="line">		copyin((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len),</span><br><span class="line">		memcpy_from_page((p +&#x3D; v.bv_len) - v.bv_len, v.bv_page,v.bv_offset, v.bv_len),</span><br><span class="line">		memcpy((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len)</span><br><span class="line">	)</span><br><span class="line">	kunmap_atomic(kaddr);</span><br><span class="line">	return bytes;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(iov_iter_copy_from_user_atomic);</span><br></pre></td></tr></table></figure>
+<p>iov_iter_copy_from_user_atomic的流程图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_iov_iter.png" alt="iov_iter_copy_from_user_atomic"></p>
+<blockquote>
+<p>iov_iter_copy_from_user_atomic函数并不关心源和目标page是否是同一page，他们之间是否会出现覆盖的情&gt;况，仅仅是执行数据操作。如果数据源和数据目标有覆盖则copy_file_range的结果是有问题的。</p>
+</blockquote>
+<p>数据覆盖的情况如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_overlap.png" alt="iov_iter_copy_from_user_atomic"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在使用copy_file_range时一定要注意针对同一文件执行copy_file_range，结果有可能发生覆盖，导致结果并不是我们预期的。这个和memcpy一样，在有覆盖时结果时不可预期的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://lwn.net/Articles/659523/" target="_blank" rel="noopener">copy_file_range()</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/read_write.c" target="_blank" rel="noopener">read_write.c</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/20/about-dwarf/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/20/about-dwarf/" class="post-title-link" itemprop="url">about-dwarf</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-20 22:33:52" itemprop="dateCreated datePublished" datetime="2020-01-20T22:33:52+00:00">2020-01-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="关于dwarf"><a href="#关于dwarf" class="headerlink" title="关于dwarf"></a>关于dwarf</h1><p>一种调试文件格式，用于支持源码级调试功能。它通过树结构描述一个程序，每个节点有子节点或兄弟节点。节点可以表示<strong>类型</strong>、<strong>变量</strong>、或<strong>函数</strong>。<br>dwarf使用一系列的DIE(debugging information entries)表示源程序。每个<strong>DIE</strong>包含一个tag标签标识和一系列属性。每个或多个DIE组成一组标识程序中某个实体，或是程序或者变量等等。</p>
+<h1 id="readelf"><a href="#readelf" class="headerlink" title="readelf"></a>readelf</h1><p>readelf –debug-dump=info vmlinux</p>
+<blockquote>
+<p>输出.debug_info段中调试信息</p>
+</blockquote>
+<p>下面举个例子。<br><code>readelf --debug-dump=info vmlinux | grep dentry_open</code></p>
+<p>通过上面的命令可以得到如下信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">89773762- &lt;1&gt;&lt;aa9c983&gt;: Abbrev Number: 57 (DW_TAG_subprogram)</span><br><span class="line">89773763-    &lt;aa9c984&gt;   DW_AT_external    : 1</span><br><span class="line">89773764-    &lt;aa9c984&gt;   DW_AT_declaration : 1</span><br><span class="line">89773765:    &lt;aa9c984&gt;   DW_AT_linkage_name: (indirect string, offset: 0x105b80): dentry_open</span><br><span class="line">89773766:    &lt;aa9c988&gt;   DW_AT_name        : (indirect string, offset: 0x105b80): dentry_open</span><br><span class="line">89773767-    &lt;aa9c98c&gt;   DW_AT_decl_file   : 55</span><br><span class="line">89773768-    &lt;aa9c98d&gt;   DW_AT_decl_line   : 2493</span><br><span class="line">89773769-    &lt;aa9c98f&gt;   DW_AT_decl_column : 22</span><br></pre></td></tr></table></figure>
+<p>dentry_open是一个函数，在2493行被声明的。<br>可以用readelf查看各种信息。<br>在后面的参考中，[2]有对dwarf的详细介绍。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://developer.ibm.com/technologies/systems/articles/au-dwarf-debug-format/" target="_blank" rel="noopener">Exploring the DWARF debug format information</a></li>
+<li><a href="http://people.redhat.com/jkratoch/DeveloperConference2011-debug.pdf" target="_blank" rel="noopener">Debugging Tools Intro DWARF,ELF,GDB,build-id</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/" class="post-title-link" itemprop="url">非对称加密算法和签名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-20 22:10:10" itemprop="dateCreated datePublished" datetime="2020-01-20T22:10:10+00:00">2020-01-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AE%89%E5%85%A8/" itemprop="url" rel="index"><span itemprop="name">安全</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近有个需求是关于签名，这里借此对非对称加密和签名机制了解一下。</p>
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>RSA是一种重要的非对称加密算法，应用非常广泛。</p>
+<p>关于RSA的介绍可以参考<a href="https://zh.wikipedia.org/wiki/RSA%E5%8A%A0%E5%AF%86%E6%BC%94%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">wiki</a>。</p>
+<p>RSA算法基于大素数整数无法执行因子分解的，目前推荐的长度至少1024。</p>
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>这里以简单的示意图说明：</p>
+<p><img src="/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/%E5%85%AC%E9%92%A5%E5%8A%A0%E5%AF%86.png" alt="非对称加密示意"></p>
+<h2 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h2><p><img src="/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/%E5%85%AC%E9%92%A5%E7%AD%BE%E5%90%8D.png" alt="签名示意"></p>
+<p>如果遇到中间人攻击修改了消息内容，Bob对消息执行md5/sha1/sha256时得到的digist和解密得到的digist不同，从而知道消息被篡改。</p>
+<h2 id="openssl应用"><a href="#openssl应用" class="headerlink" title="openssl应用"></a>openssl应用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out my.key 1024</span><br></pre></td></tr></table></figure>
+<p>以上生成rsa私钥文件，注意这里时私钥文件，并不是说rsa私钥。rsa私钥文件有自己的格式，从里边内容可以推导出rsa私钥和rsa公钥。<br>关于rsa私钥文件格式参考<a href="https://www.shangyang.me/2017/05/24/encrypt-rsa-keyformat/" target="_blank" rel="noopener">这里</a>。</p>
+<h2 id="使用openssl的python接口编程"><a href="#使用openssl的python接口编程" class="headerlink" title="使用openssl的python接口编程"></a>使用openssl的python接口编程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">Certificate generation module.</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">from OpenSSL import crypto</span><br><span class="line"></span><br><span class="line">TYPE_RSA &#x3D; crypto.TYPE_RSA</span><br><span class="line">TYPE_DSA &#x3D; crypto.TYPE_DSA</span><br><span class="line"></span><br><span class="line">def createKeyPair(type, bits):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Create a public&#x2F;private key pair.</span><br><span class="line">    Arguments: type - Key type, must be one of TYPE_RSA and TYPE_DSA</span><br><span class="line">               bits - Number of bits to use in the key</span><br><span class="line">    Returns:   The public&#x2F;private key pair in a PKey object</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    pkey &#x3D; crypto.PKey()</span><br><span class="line">    pkey.generate_key(type, bits)</span><br><span class="line">    return pkey</span><br><span class="line"></span><br><span class="line">def createCertRequest(pkey, digest&#x3D;&quot;md5&quot;, **name):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Create a certificate request.</span><br><span class="line">    Arguments: pkey   - The key to associate with the request</span><br><span class="line">               digest - Digestion method to use for signing, default is md5</span><br><span class="line">               **name - The name of the subject of the request, possible</span><br><span class="line">                        arguments are:</span><br><span class="line">                          C     - Country name</span><br><span class="line">                          ST    - State or province name</span><br><span class="line">                          L     - Locality name</span><br><span class="line">                          O     - Organization name</span><br><span class="line">                          OU    - Organizational unit name</span><br><span class="line">                          CN    - Common name</span><br><span class="line">                          emailAddress - E-mail address</span><br><span class="line">    Returns:   The certificate request in an X509Req object</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    req &#x3D; crypto.X509Req()</span><br><span class="line">    subj &#x3D; req.get_subject()</span><br><span class="line"></span><br><span class="line">    for (key,value) in name.items():</span><br><span class="line">        setattr(subj, key, value)</span><br><span class="line"></span><br><span class="line">    req.set_pubkey(pkey)</span><br><span class="line">    req.sign(pkey, digest)</span><br><span class="line">    return req</span><br><span class="line"></span><br><span class="line">def createCertificate(req, (issuerCert, issuerKey), serial, (notBefore, notAfter), digest&#x3D;&quot;md5&quot;):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Generate a certificate given a certificate request.</span><br><span class="line">    Arguments: req        - Certificate reqeust to use</span><br><span class="line">               issuerCert - The certificate of the issuer</span><br><span class="line">               issuerKey  - The private key of the issuer</span><br><span class="line">               serial     - Serial number for the certificate</span><br><span class="line">               notBefore  - Timestamp (relative to now) when the certificate</span><br><span class="line">                            starts being valid</span><br><span class="line">               notAfter   - Timestamp (relative to now) when the certificate</span><br><span class="line">                            stops being valid</span><br><span class="line">               digest     - Digest method to use for signing, default is md5</span><br><span class="line">    Returns:   The signed certificate in an X509 object</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    cert &#x3D; crypto.X509()</span><br><span class="line">    cert.set_serial_number(serial)</span><br><span class="line">    cert.gmtime_adj_notBefore(notBefore)</span><br><span class="line">    cert.gmtime_adj_notAfter(notAfter)</span><br><span class="line">    cert.set_issuer(issuerCert.get_subject())</span><br><span class="line">    cert.set_subject(req.get_subject())</span><br><span class="line">    cert.set_pubkey(req.get_pubkey())</span><br><span class="line">    cert.sign(issuerKey, digest)</span><br><span class="line">	return cert</span><br><span class="line"></span><br><span class="line">cakey &#x3D; createKeyPair(TYPE_RSA, 1024)</span><br><span class="line">careq &#x3D; createCertRequest(cakey, CN&#x3D;&#39;Certificate Authority&#39;)</span><br><span class="line">cacert &#x3D; createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5)) # five years</span><br><span class="line">open(&#39;simple&#x2F;CA.pkey&#39;, &#39;w&#39;).write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))</span><br><span class="line">open(&#39;simple&#x2F;CA.cert&#39;, &#39;w&#39;).write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))</span><br><span class="line">for (fname, cname) in [(&#39;client&#39;, &#39;Simple Client&#39;), (&#39;server&#39;, &#39;Simple Server&#39;)]:</span><br><span class="line">    pkey &#x3D; createKeyPair(TYPE_RSA, 1024)</span><br><span class="line">    req &#x3D; createCertRequest(pkey, CN&#x3D;cname)</span><br><span class="line">    cert &#x3D; createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years</span><br><span class="line">    open(&#39;simple&#x2F;%s.pkey&#39; % (fname,), &#39;w&#39;).write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))</span><br><span class="line">    open(&#39;simple&#x2F;%s.cert&#39; % (fname,), &#39;w&#39;).write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对签名的简单理解：</p>
+<ol>
+<li><p>关于自签名证书，使用自己的私钥对证书签名。证书有很多内容，如有效期和commonName。</p>
+</li>
+<li><p>正常使用是通过可信的第三方CA机构签发证书，然后把私钥文件和证书文件发给客户。</p>
+</li>
+<li><p>注意私钥文件可以推导出公钥和私钥信息。证书文件中包含公钥信息，通过得到公钥信息就可以和客户安全通信。</p>
+</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">关于chacl的分析</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-01-13 22:10:10" itemprop="dateCreated datePublished" datetime="2020-01-13T22:10:10+00:00">2020-01-13</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-24 05:11:33" itemprop="dateModified" datetime="2020-07-24T05:11:33+00:00">2020-07-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/" itemprop="url" rel="index"><span itemprop="name">kernel</span></a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/nfs/" itemprop="url" rel="index"><span itemprop="name">nfs</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="关于chacl的分析"><a href="#关于chacl的分析" class="headerlink" title="关于chacl的分析"></a>关于chacl的分析</h2><p>最近在nfs上面遇到chacl问题，这里记录下分析过程。</p>
+<h2 id="ls命令"><a href="#ls命令" class="headerlink" title="ls命令"></a>ls命令</h2><p>ls命令根据系统调用getxattr的返回值判断是否要打印”+”</p>
+<p><a href="https://github.com/coreutils/coreutils/blob/master/src/ls.c" target="_blank" rel="noopener">https://github.com/coreutils/coreutils/blob/master/src/ls.c</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">			  </span><br><span class="line">  if (! any_has_acl)</span><br><span class="line">    modebuf[10] &#x3D; &#39;\0&#39;;</span><br><span class="line">  else if (f-&gt;acl_type &#x3D;&#x3D; ACL_T_LSM_CONTEXT_ONLY)</span><br><span class="line">    modebuf[10] &#x3D; &#39;.&#39;;</span><br><span class="line">  else if (f-&gt;acl_type &#x3D;&#x3D; ACL_T_YES)</span><br><span class="line">    modebuf[10] &#x3D; &#39;+&#39;; &#x2F;&#x2F; 有acl数据则打印&quot;+&quot;</span><br><span class="line">&#96;&#96;&#96;	</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;coreutils&#x2F;gnulib&#x2F;blob&#x2F;master&#x2F;lib&#x2F;file-has-acl.c</span><br></pre></td></tr></table></figure>
+<p>int file_has_acl (char const *name, struct stat const *sb)<br>{<br>#if USE_ACL<br>  if (! S_ISLNK (sb-&gt;st_mode))<br>    {</p>
+<h1 id="if-GETXATTR-WITH-POSIX-ACLS"><a href="#if-GETXATTR-WITH-POSIX-ACLS" class="headerlink" title="if GETXATTR_WITH_POSIX_ACLS"></a>if GETXATTR_WITH_POSIX_ACLS</h1><pre><code>  ssize_t ret;
+
+  ret = getxattr (name, XATTR_NAME_POSIX_ACL_ACCESS, NULL, 0); //是否有acl数据
+  if (ret &lt; 0 &amp;&amp; errno == ENODATA)
+    ret = 0;
+  else if (ret &gt; 0)
+    return 1;
+
+  if (ret == 0 &amp;&amp; S_ISDIR (sb-&gt;st_mode))
+    {
+      ret = getxattr (name, XATTR_NAME_POSIX_ACL_DEFAULT, NULL, 0);
+      if (ret &lt; 0 &amp;&amp; errno == ENODATA)
+        ret = 0;
+      else if (ret &gt; 0)
+        return 1;
+    }
+
+  if (ret &lt; 0)
+    return - acl_errno_valid (errno);
+  return ret;
+...</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 3.10内核中getxattr</span><br><span class="line"></span><br><span class="line">chacl会调用getxattr。</span><br></pre></td></tr></table></figure>
+<p>getxattr<br>  - vfs_getxattr<br>         - nfs3_getxattr</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">nfs3_getxattr@fs&#x2F;nfs&#x2F;nfs3acl.c</span><br></pre></td></tr></table></figure>
+<p>acl = nfs3_proc_getacl(inode, type);<br>if (IS_ERR(acl))<br>    return PTR_ERR(acl);<br>else if (acl) {<br>    if (type == ACL_TYPE_ACCESS &amp;&amp; acl-&gt;a_count == 0)<br>        error = -ENODATA;<br>    else<br>        error = posix_acl_to_xattr(&amp;init_user_ns, acl, buffer, size);<br>    posix_acl_release(acl);<br>} else<br>    error = -ENODATA;//如果nfs3_proc_getacl返回null则返回ENODATA</p>
+<p>nfs3_proc_getacl@fs/nfs/nfs3acl.c</p>
+<p>if (res.acl_access != NULL) {<br>        if (posix_acl_equiv_mode(res.acl_access, NULL) == 0) {//对于标准权限则置空acl<br>                posix_acl_release(res.acl_access);<br>                res.acl_access = NULL;<br>        }<br>}</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">nfs3_getxattr对于标准权限总是返回ENODATA，所以ls时不会出现&quot;+&quot;。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 4.18内核getxattr</span><br></pre></td></tr></table></figure>
+<p>getxattr<br> - vfs_getxattr<br>       - posix_acl_xattr_get</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">posix_acl_xattr_get@fs&#x2F;posix_acl.c</span><br></pre></td></tr></table></figure>
+<p>acl = get_acl(inode, handler-&gt;flags);<br>if (IS_ERR(acl))<br>        return PTR_ERR(acl);<br>if (acl == NULL)<br>        return -ENODATA;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_acl@fs&#x2F;posix_acl.c</span><br></pre></td></tr></table></figure>
+<p>acl = get_cached_acl(inode, type);<br>if (!is_uncached_acl(acl))<br>        return acl;</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">				</span><br><span class="line">如果inode-&gt;i_acl inode-&gt;i_default_acl有效则使用它,</span><br><span class="line">否则执行nfs3_get_acl，nfs3_get_acl对于标准权限总是返回NULL，从而getxattr返回ENODATA.</span><br><span class="line"></span><br><span class="line">nfs3_get_acl@fs&#x2F;nfs&#x2F;nfs3acl.c</span><br></pre></td></tr></table></figure>
+<p>if (res.acl_access != NULL) {<br>        if ((posix_acl_equiv_mode(res.acl_access, NULL) == 0) ||<br>            res.acl_access-&gt;a_count == 0) {<br>                posix_acl_release(res.acl_access);<br>                res.acl_access = NULL;<br>        }<br>}</p>
+<p>```</p>
+<p>在chacl之后如果inode-&gt;i_acl有效,getxattr返回acl数据。</p>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>出现问题的根本原因是4.18内核使用generic acl功能框架，缓存了错误的acl，导致出问题。</p>
+<p>最新的内核有<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/nfs/nfs3acl.c?h=v5.4&id=ded52fbe7020a5696b0b0a0fdbf234e37bf16f94" target="_blank" rel="noopener">patch</a>修正该问题。<br>即在setacl的时候总是置inode-&gt;i_acl无效。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+
+  
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">22</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">41</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
