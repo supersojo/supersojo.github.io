@@ -142,7 +142,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">42</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">43</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">23</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">24</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/08/25/nextcloud%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/08/25/nextcloud%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD/" class="post-title-link" itemprop="url">nextcloud离线下载</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-25 22:01:20" itemprop="dateCreated datePublished" datetime="2020-08-25T22:01:20+00:00">2020-08-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="install-nextcloud"><a href="#install-nextcloud" class="headerlink" title="install nextcloud"></a>install nextcloud</h2><h2 id="install-ocdownloader"><a href="#install-ocdownloader" class="headerlink" title="install ocdownloader"></a>install ocdownloader</h2><p>这里设置正确的路径否则报无法找到视频地址错误</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">controller&#x2F;ytdownloader.php</span><br><span class="line">$this-&gt;YTDLBinary &#x3D; &#39;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;youtube-dl&#39;; &#x2F;&#x2F; default path</span><br></pre></td></tr></table></figure>
+
+<h2 id="install-aria2"><a href="#install-aria2" class="headerlink" title="install aria2"></a>install aria2</h2><p>参考<a href="https://gist.github.com/GAS85/79849bfd09613067a2ac0c1a711120a6" target="_blank" rel="noopener">https://gist.github.com/GAS85/79849bfd09613067a2ac0c1a711120a6</a></p>
+<p>注意要想ocdownloader使用aria2，需要设置不加密方式，还是不太安全</p>
+<h2 id="install-youtube-dl"><a href="#install-youtube-dl" class="headerlink" title="install youtube-dl"></a>install youtube-dl</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">apt install python-pip</span><br><span class="line">pip install youtube-dl</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/07/25/%E5%85%B3%E4%BA%8EDMA%20API%E7%9A%84%E4%BD%BF%E7%94%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -231,10 +313,16 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-07-25 13:01:20 / 修改时间：05:28:35" itemprop="dateCreated datePublished" datetime="2020-07-25T13:01:20+00:00">2020-07-25</time>
+              <time title="创建时间：2020-07-25 13:01:20" itemprop="dateCreated datePublished" datetime="2020-07-25T13:01:20+00:00">2020-07-25</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
@@ -335,7 +423,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -416,7 +504,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -562,7 +650,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -700,7 +788,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -790,7 +878,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -898,7 +986,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1032,7 +1120,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1127,7 +1215,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
+                <time title="修改时间：2020-08-26 05:30:47" itemprop="dateModified" datetime="2020-08-26T05:30:47+00:00">2020-08-26</time>
               </span>
 
           
@@ -1153,102 +1241,6 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
 <li><a href="https://developer.ibm.com/technologies/systems/articles/au-dwarf-debug-format/" target="_blank" rel="noopener">Exploring the DWARF debug format information</a></li>
 <li><a href="http://people.redhat.com/jkratoch/DeveloperConference2011-debug.pdf" target="_blank" rel="noopener">Debugging Tools Intro DWARF,ELF,GDB,build-id</a></li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/" class="post-title-link" itemprop="url">非对称加密算法和签名</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-20 22:10:10" itemprop="dateCreated datePublished" datetime="2020-01-20T22:10:10+00:00">2020-01-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-07-25 05:28:35" itemprop="dateModified" datetime="2020-07-25T05:28:35+00:00">2020-07-25</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E5%AE%89%E5%85%A8/" itemprop="url" rel="index">
-                    <span itemprop="name">安全</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近有个需求是关于签名，这里借此对非对称加密和签名机制了解一下。</p>
-<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>RSA是一种重要的非对称加密算法，应用非常广泛。</p>
-<p>关于RSA的介绍可以参考<a href="https://zh.wikipedia.org/wiki/RSA%E5%8A%A0%E5%AF%86%E6%BC%94%E7%AE%97%E6%B3%95" target="_blank" rel="noopener">wiki</a>。</p>
-<p>RSA算法基于大素数整数无法执行因子分解的，目前推荐的长度至少1024。</p>
-<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><p>这里以简单的示意图说明：</p>
-<p><img src="/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/%E5%85%AC%E9%92%A5%E5%8A%A0%E5%AF%86.png" alt="非对称加密示意"></p>
-<h2 id="签名"><a href="#签名" class="headerlink" title="签名"></a>签名</h2><p><img src="/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/%E5%85%AC%E9%92%A5%E7%AD%BE%E5%90%8D.png" alt="签名示意"></p>
-<p>如果遇到中间人攻击修改了消息内容，Bob对消息执行md5/sha1/sha256时得到的digist和解密得到的digist不同，从而知道消息被篡改。</p>
-<h2 id="openssl应用"><a href="#openssl应用" class="headerlink" title="openssl应用"></a>openssl应用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl genrsa -out my.key 1024</span><br></pre></td></tr></table></figure>
-<p>以上生成rsa私钥文件，注意这里时私钥文件，并不是说rsa私钥。rsa私钥文件有自己的格式，从里边内容可以推导出rsa私钥和rsa公钥。<br>关于rsa私钥文件格式参考<a href="https://www.shangyang.me/2017/05/24/encrypt-rsa-keyformat/" target="_blank" rel="noopener">这里</a>。</p>
-<h2 id="使用openssl的python接口编程"><a href="#使用openssl的python接口编程" class="headerlink" title="使用openssl的python接口编程"></a>使用openssl的python接口编程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">Certificate generation module.</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">from OpenSSL import crypto</span><br><span class="line"></span><br><span class="line">TYPE_RSA &#x3D; crypto.TYPE_RSA</span><br><span class="line">TYPE_DSA &#x3D; crypto.TYPE_DSA</span><br><span class="line"></span><br><span class="line">def createKeyPair(type, bits):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Create a public&#x2F;private key pair.</span><br><span class="line">    Arguments: type - Key type, must be one of TYPE_RSA and TYPE_DSA</span><br><span class="line">               bits - Number of bits to use in the key</span><br><span class="line">    Returns:   The public&#x2F;private key pair in a PKey object</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    pkey &#x3D; crypto.PKey()</span><br><span class="line">    pkey.generate_key(type, bits)</span><br><span class="line">    return pkey</span><br><span class="line"></span><br><span class="line">def createCertRequest(pkey, digest&#x3D;&quot;md5&quot;, **name):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Create a certificate request.</span><br><span class="line">    Arguments: pkey   - The key to associate with the request</span><br><span class="line">               digest - Digestion method to use for signing, default is md5</span><br><span class="line">               **name - The name of the subject of the request, possible</span><br><span class="line">                        arguments are:</span><br><span class="line">                          C     - Country name</span><br><span class="line">                          ST    - State or province name</span><br><span class="line">                          L     - Locality name</span><br><span class="line">                          O     - Organization name</span><br><span class="line">                          OU    - Organizational unit name</span><br><span class="line">                          CN    - Common name</span><br><span class="line">                          emailAddress - E-mail address</span><br><span class="line">    Returns:   The certificate request in an X509Req object</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    req &#x3D; crypto.X509Req()</span><br><span class="line">    subj &#x3D; req.get_subject()</span><br><span class="line"></span><br><span class="line">    for (key,value) in name.items():</span><br><span class="line">        setattr(subj, key, value)</span><br><span class="line"></span><br><span class="line">    req.set_pubkey(pkey)</span><br><span class="line">    req.sign(pkey, digest)</span><br><span class="line">    return req</span><br><span class="line"></span><br><span class="line">def createCertificate(req, (issuerCert, issuerKey), serial, (notBefore, notAfter), digest&#x3D;&quot;md5&quot;):</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    Generate a certificate given a certificate request.</span><br><span class="line">    Arguments: req        - Certificate reqeust to use</span><br><span class="line">               issuerCert - The certificate of the issuer</span><br><span class="line">               issuerKey  - The private key of the issuer</span><br><span class="line">               serial     - Serial number for the certificate</span><br><span class="line">               notBefore  - Timestamp (relative to now) when the certificate</span><br><span class="line">                            starts being valid</span><br><span class="line">               notAfter   - Timestamp (relative to now) when the certificate</span><br><span class="line">                            stops being valid</span><br><span class="line">               digest     - Digest method to use for signing, default is md5</span><br><span class="line">    Returns:   The signed certificate in an X509 object</span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    cert &#x3D; crypto.X509()</span><br><span class="line">    cert.set_serial_number(serial)</span><br><span class="line">    cert.gmtime_adj_notBefore(notBefore)</span><br><span class="line">    cert.gmtime_adj_notAfter(notAfter)</span><br><span class="line">    cert.set_issuer(issuerCert.get_subject())</span><br><span class="line">    cert.set_subject(req.get_subject())</span><br><span class="line">    cert.set_pubkey(req.get_pubkey())</span><br><span class="line">    cert.sign(issuerKey, digest)</span><br><span class="line">	return cert</span><br><span class="line"></span><br><span class="line">cakey &#x3D; createKeyPair(TYPE_RSA, 1024)</span><br><span class="line">careq &#x3D; createCertRequest(cakey, CN&#x3D;&#39;Certificate Authority&#39;)</span><br><span class="line">cacert &#x3D; createCertificate(careq, (careq, cakey), 0, (0, 60*60*24*365*5)) # five years</span><br><span class="line">open(&#39;simple&#x2F;CA.pkey&#39;, &#39;w&#39;).write(crypto.dump_privatekey(crypto.FILETYPE_PEM, cakey))</span><br><span class="line">open(&#39;simple&#x2F;CA.cert&#39;, &#39;w&#39;).write(crypto.dump_certificate(crypto.FILETYPE_PEM, cacert))</span><br><span class="line">for (fname, cname) in [(&#39;client&#39;, &#39;Simple Client&#39;), (&#39;server&#39;, &#39;Simple Server&#39;)]:</span><br><span class="line">    pkey &#x3D; createKeyPair(TYPE_RSA, 1024)</span><br><span class="line">    req &#x3D; createCertRequest(pkey, CN&#x3D;cname)</span><br><span class="line">    cert &#x3D; createCertificate(req, (cacert, cakey), 1, (0, 60*60*24*365*5)) # five years</span><br><span class="line">    open(&#39;simple&#x2F;%s.pkey&#39; % (fname,), &#39;w&#39;).write(crypto.dump_privatekey(crypto.FILETYPE_PEM, pkey))</span><br><span class="line">    open(&#39;simple&#x2F;%s.cert&#39; % (fname,), &#39;w&#39;).write(crypto.dump_certificate(crypto.FILETYPE_PEM, cert))</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对签名的简单理解：</p>
-<ol>
-<li><p>关于自签名证书，使用自己的私钥对证书签名。证书有很多内容，如有效期和commonName。</p>
-</li>
-<li><p>正常使用是通过可信的第三方CA机构签发证书，然后把私钥文件和证书文件发给客户。</p>
-</li>
-<li><p>注意私钥文件可以推导出公钥和私钥信息。证书文件中包含公钥信息，通过得到公钥信息就可以和客户安全通信。</p>
-</li>
 </ol>
 
       
@@ -1335,7 +1327,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">23</span>
+          <span class="site-state-item-count">24</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1348,7 +1340,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">42</span>
+        <span class="site-state-item-count">43</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
