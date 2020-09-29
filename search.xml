@@ -336,62 +336,16 @@
   <entry>
     <title>openwrt设置ddns</title>
     <url>/2020/09/27/openwrt%E8%AE%BE%E7%BD%AEddns/</url>
-    <content><![CDATA[<p>随着IPv6的大面积普及，我们普通用户也可以拥有“外网”IP了。<br>有了外网IP，可以在任何支持IPv6的设备上访问我们的“服务”。</p>
-<p>现在有个问题，分配的IPv6地址不是固定的，可能过段时间就变了，<br>如果能自动把整个地址更新到域名提供商处，即DDNS。我们就可以<br>自由访问我们的服务了。</p>
+    <content><![CDATA[<p>随着IPv6的大面积普及，我们普通用户也可以拥有“外网”IP了。有了外网IP，可以在任何支持IPv6的设备上访问我们的“服务”。现在有个问题，分配的IPv6地址不是固定的，可能过段时间就变了，如果能自动把整个地址更新到域名提供商处，即DDNS。我们就可以自由访问我们的服务了。</p>
 <p>我的域名是在腾讯云处注册的，其它类似操作。</p>
 <p>我从外部找到并修改的脚本,xxxx自动替换成自己的配置。</p>
-<p>‘’’<br>#!/bin/ash</p>
-<p>domain=’xxxx’<br>subDomain=’xxxx’<br>recordId=’xxxx’</p>
-<p>sId=’xxxx’<br>sKey=’xxxx’<br>#</p>
-<h1 id="Get-record-list-first-then-find-out-record-id-whatever-you-want-to-update"><a href="#Get-record-list-first-then-find-out-record-id-whatever-you-want-to-update" class="headerlink" title="Get record list first, then find out record id whatever you want to update"></a>Get record list first, then find out record id whatever you want to update</h1><p>#<br>function get_record_list()<br>{</p>
-<pre><code>signatureMethod=&apos;HmacSHA1&apos;
-timestamp=`date +%s`
-nonce=`head -200 /dev/urandom | gnu-cksum | cut -f2 -d&quot; &quot;`
-region=bj
-url=&quot;https://cns.api.qcloud.com/v2/index.php&quot;
-action=&apos;RecordList&apos;
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;ash</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">domain&#x3D;&#39;xxxx&#39;</span><br><span class="line">subDomain&#x3D;&#39;xxxx&#39;</span><br><span class="line">recordId&#x3D;&#39;xxxx&#39;</span><br><span class="line"></span><br><span class="line">sId&#x3D;&#39;xxxx&#39;</span><br><span class="line">sKey&#x3D;&#39;xxxx&#39;</span><br><span class="line">#</span><br><span class="line"># Get record list first, then find out record id whatever you want to update</span><br><span class="line">#</span><br><span class="line">function get_record_list()</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">        signatureMethod&#x3D;&#39;HmacSHA1&#39;</span><br><span class="line">        timestamp&#x3D;&#96;date +%s&#96;</span><br><span class="line">        nonce&#x3D;&#96;head -200 &#x2F;dev&#x2F;urandom | gnu-cksum | cut -f2 -d&quot; &quot;&#96;</span><br><span class="line">        region&#x3D;bj</span><br><span class="line">        url&#x3D;&quot;https:&#x2F;&#x2F;cns.api.qcloud.com&#x2F;v2&#x2F;index.php&quot;</span><br><span class="line">        action&#x3D;&#39;RecordList&#39;</span><br><span class="line"></span><br><span class="line">        src&#x3D;&#96;printf &quot;GETcns.api.qcloud.com&#x2F;v2&#x2F;index.php?Action&#x3D;%s&amp;Nonce&#x3D;%s&amp;Region&#x3D;%s&amp;SecretId&#x3D;%s&amp;SignatureMethod&#x3D;%s&amp;Timestamp&#x3D;%s&amp;domain&#x3D;%s&quot; $action $nonce $region $sId $signatureMethod $timestamp $domain&#96;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        signature&#x3D;&#96;echo -n $src|openssl dgst -sha1 -hmac $sKey -binary |base64&#96;</span><br><span class="line"></span><br><span class="line">        params&#x3D;&#96;printf &quot;Action&#x3D;%s&amp;domain&#x3D;%s&amp;Nonce&#x3D;%s&amp;Region&#x3D;%s&amp;SecretId&#x3D;%s&amp;Signature&#x3D;%s&amp;SignatureMethod&#x3D;%s&amp;Timestamp&#x3D;%s&quot; $action $domain $nonce $region $sId &quot;$signature&quot; $signatureMethod $timestamp &#96;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        curl -G -s -d &quot;$params&quot; --data-urlencode &quot;Signature&#x3D;$signature&quot; &quot;$url&quot;</span><br><span class="line">&#125;</span><br><span class="line">#</span><br><span class="line"># $1 ipv6</span><br><span class="line"># You provide a new ipv6 address to update your subDomain record</span><br><span class="line">#</span><br><span class="line">function modify_record()</span><br><span class="line">&#123;</span><br><span class="line">        signatureMethod&#x3D;&#39;HmacSHA1&#39;</span><br><span class="line"></span><br><span class="line">        timestamp&#x3D;&#96;date +%s&#96;</span><br><span class="line">        nonce&#x3D;&#96;head -200 &#x2F;dev&#x2F;urandom | cksum | cut -f2 -d&quot; &quot;&#96;</span><br><span class="line">        region&#x3D;bj</span><br><span class="line"></span><br><span class="line">        url&#x3D;&quot;https:&#x2F;&#x2F;cns.api.qcloud.com&#x2F;v2&#x2F;index.php&quot;</span><br><span class="line">        #设置新ipv6</span><br><span class="line">        action&#x3D;&#39;RecordModify&#39;</span><br><span class="line">        recordType&#x3D;&#39;AAAA&#39;</span><br><span class="line">        recordLine&#x3D;&#39;默认&#39;</span><br><span class="line"></span><br><span class="line">        value&#x3D;$1</span><br><span class="line"></span><br><span class="line">        timestamp&#x3D;&#96;date +%s&#96;</span><br><span class="line">        nonce&#x3D;&#96;head -200 &#x2F;dev&#x2F;urandom | cksum | cut -f2 -d&quot; &quot;&#96;</span><br><span class="line"></span><br><span class="line">        src&#x3D;&#96;printf &quot;GETcns.api.qcloud.com&#x2F;v2&#x2F;index.php?Action&#x3D;%s&amp;Nonce&#x3D;%s&amp;Region&#x3D;%s&amp;SecretId&#x3D;%s&amp;SignatureMethod&#x3D;%s&amp;Timestamp&#x3D;%s&amp;domain&#x3D;%s&amp;recordId&#x3D;%s&amp;recordLine&#x3D;%s&amp;recordType&#x3D;%s&amp;subDomain&#x3D;%s&amp;value&#x3D;%s&quot; $action $nonce $region $sId $signatureMethod $timestamp $domain $recordId $recordLine $recordType $subDomain $value&#96;</span><br><span class="line"></span><br><span class="line">        signature&#x3D;&#96;echo -n $src|openssl dgst -sha1 -hmac $sKey -binary |base64&#96;</span><br><span class="line"></span><br><span class="line">        params&#x3D;&#96;printf &quot;Action&#x3D;%s&amp;Nonce&#x3D;%s&amp;Region&#x3D;%s&amp;SecretId&#x3D;%s&amp;SignatureMethod&#x3D;%s&amp;Timestamp&#x3D;%s&amp;domain&#x3D;%s&amp;recordId&#x3D;%s&amp;recordLine&#x3D;%s&amp;recordType&#x3D;%s&amp;subDomain&#x3D;%s&amp;value&#x3D;%s&quot; $action $nonce $region $sId $signatureMethod $timestamp $domain $recordId $recordLine $recordType $subDomain $value&#96;</span><br><span class="line"></span><br><span class="line">        result&#x3D;&#96;curl -G  -s -d &quot;$params&quot; --data-urlencode &quot;Signature&#x3D;$signature&quot; &quot;$url&quot;&#96;</span><br><span class="line">        echo $result</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line">#</span><br><span class="line"># we only get the first ipv6 address that owned by interface</span><br><span class="line">#</span><br><span class="line">get_ipv6()</span><br><span class="line">&#123;</span><br><span class="line">        ret&#x3D;&#96;ip a  | grep 2409 | tail -n1 | awk &#39;&#123;print $2&#125;&#39; | awk -F&#39;&#x2F;&#39; &#39;&#123;print $1&#125;&#39;&#96;</span><br><span class="line">        echo $ret</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">#</span><br><span class="line"># Main Entry</span><br><span class="line">#</span><br><span class="line">ipv6&#x3D;$(get_ipv6)</span><br><span class="line">echo &quot;Assign $ipv6 to xxxx&quot;</span><br><span class="line"></span><br><span class="line">modify_record &quot;$ipv6&quot;</span><br></pre></td></tr></table></figure>
 
-src=`printf &quot;GETcns.api.qcloud.com/v2/index.php?Action=%s&amp;Nonce=%s&amp;Region=%s&amp;SecretId=%s&amp;SignatureMethod=%s&amp;Timestamp=%s&amp;domain=%s&quot; $action $nonce $region $sId $signatureMethod $timestamp $domain`
-
-
-signature=`echo -n $src|openssl dgst -sha1 -hmac $sKey -binary |base64`
-
-params=`printf &quot;Action=%s&amp;domain=%s&amp;Nonce=%s&amp;Region=%s&amp;SecretId=%s&amp;Signature=%s&amp;SignatureMethod=%s&amp;Timestamp=%s&quot; $action $domain $nonce $region $sId &quot;$signature&quot; $signatureMethod $timestamp `
-
-
-curl -G -s -d &quot;$params&quot; --data-urlencode &quot;Signature=$signature&quot; &quot;$url&quot;</code></pre><p>}<br>#</p>
-<h1 id="1-ipv6"><a href="#1-ipv6" class="headerlink" title="$1 ipv6"></a>$1 ipv6</h1><h1 id="You-provide-a-new-ipv6-address-to-update-your-subDomain-record"><a href="#You-provide-a-new-ipv6-address-to-update-your-subDomain-record" class="headerlink" title="You provide a new ipv6 address to update your subDomain record"></a>You provide a new ipv6 address to update your subDomain record</h1><p>#<br>function modify_record()<br>{<br>        signatureMethod=’HmacSHA1’</p>
-<pre><code>timestamp=`date +%s`
-nonce=`head -200 /dev/urandom | cksum | cut -f2 -d&quot; &quot;`
-region=bj
-
-url=&quot;https://cns.api.qcloud.com/v2/index.php&quot;
-#设置新ipv6
-action=&apos;RecordModify&apos;
-recordType=&apos;AAAA&apos;
-recordLine=&apos;默认&apos;
-
-value=$1
-
-timestamp=`date +%s`
-nonce=`head -200 /dev/urandom | cksum | cut -f2 -d&quot; &quot;`
-
-src=`printf &quot;GETcns.api.qcloud.com/v2/index.php?Action=%s&amp;Nonce=%s&amp;Region=%s&amp;SecretId=%s&amp;SignatureMethod=%s&amp;Timestamp=%s&amp;domain=%s&amp;recordId=%s&amp;recordLine=%s&amp;recordType=%s&amp;subDomain=%s&amp;value=%s&quot; $action $nonce $region $sId $signatureMethod $timestamp $domain $recordId $recordLine $recordType $subDomain $value`
-
-signature=`echo -n $src|openssl dgst -sha1 -hmac $sKey -binary |base64`
-
-params=`printf &quot;Action=%s&amp;Nonce=%s&amp;Region=%s&amp;SecretId=%s&amp;SignatureMethod=%s&amp;Timestamp=%s&amp;domain=%s&amp;recordId=%s&amp;recordLine=%s&amp;recordType=%s&amp;subDomain=%s&amp;value=%s&quot; $action $nonce $region $sId $signatureMethod $timestamp $domain $recordId $recordLine $recordType $subDomain $value`
-
-result=`curl -G  -s -d &quot;$params&quot; --data-urlencode &quot;Signature=$signature&quot; &quot;$url&quot;`
-echo $result</code></pre><p>}</p>
-<p>#<br>#</p>
-<h1 id="we-only-get-the-first-ipv6-address-that-owned-by-interface"><a href="#we-only-get-the-first-ipv6-address-that-owned-by-interface" class="headerlink" title="we only get the first ipv6 address that owned by interface"></a>we only get the first ipv6 address that owned by interface</h1><p>#<br>get_ipv6()<br>{<br>        ret=<code>ip a  | grep 2409 | tail -n1 | awk &#39;{print $2}&#39; | awk -F&#39;/&#39; &#39;{print $1}&#39;</code><br>        echo $ret<br>}</p>
-<p>#</p>
-<h1 id="Main-Entry"><a href="#Main-Entry" class="headerlink" title="Main Entry"></a>Main Entry</h1><p>#<br>ipv6=$(get_ipv6)<br>echo “Assign $ipv6 to xxxx”</p>
-<p>modify_record “$ipv6”<br>‘’’</p>
 <p>获取IPv6的函数需要自己根据情况修改。</p>
 <p>给openwrt添加cron任务，让脚本每隔5分钟自动执行，实现DDNS功能。</p>
-<p>‘’’<br>root@OpenWrt:~# crontab -l<br>*/5 * * * * /root/ddns.sh<br>‘’’</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">root@OpenWrt:~# crontab -l</span><br><span class="line">*&#x2F;5 * * * * &#x2F;root&#x2F;ddns.sh</span><br></pre></td></tr></table></figure>
+
+
 ]]></content>
       <categories>
         <category>linux</category>
