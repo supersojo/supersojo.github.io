@@ -46,14 +46,19 @@
   };
 </script>
 
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Linux&#39;s Notes">
-<meta property="og:url" content="https://supersojo.github.io/categories/ext4/index.html">
+  <meta name="description" content="这个问题我已经遇到好几次，每次都要到晚上搜索一番，这里记录一下。 122020&#x2F;10&#x2F;26 01:01:33 tcp:127.0.0.1:50610 accepted tcp:beacons.gcp.gvt2.com:443 [proxy] 2020&#x2F;10&#x2F;26 01:01:35 [Warning] failed to handler mux client">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个v2ray连接失败问题">
+<meta property="og:url" content="https://supersojo.github.io/2020/10/22/%E4%B8%80%E4%B8%AAv2ray%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/index.html">
 <meta property="og:site_name" content="Linux&#39;s Notes">
+<meta property="og:description" content="这个问题我已经遇到好几次，每次都要到晚上搜索一番，这里记录一下。 122020&#x2F;10&#x2F;26 01:01:33 tcp:127.0.0.1:50610 accepted tcp:beacons.gcp.gvt2.com:443 [proxy] 2020&#x2F;10&#x2F;26 01:01:35 [Warning] failed to handler mux client">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-22T20:10:13.000Z">
+<meta property="article:modified_time" content="2020-10-26T01:10:09.349Z">
+<meta property="article:tag" content="v2ray">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://supersojo.github.io/categories/ext4/">
+<link rel="canonical" href="https://supersojo.github.io/2020/10/22/%E4%B8%80%E4%B8%AAv2ray%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
 
 
 <script id="page-configurations">
@@ -61,11 +66,11 @@
   CONFIG.page = {
     sidebar: "",
     isHome: false,
-    isPost: false
+    isPost: true
   };
 </script>
 
-  <title>分类: ext4 | Linux's Notes</title>
+  <title>一个v2ray连接失败问题 | Linux's Notes</title>
   
 
 
@@ -203,50 +208,117 @@
           <div class="content">
             
 
+  <div class="posts-expand">
+      
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h1 class="collection-header">ext4
-          <small>分类</small>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/10/22/%E4%B8%80%E4%B8%AAv2ray%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          一个v2ray连接失败问题
         </h1>
-      </div>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-22 20:10:13" itemprop="dateCreated datePublished" datetime="2020-10-22T20:10:13+00:00">2020-10-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-26 01:10:09" itemprop="dateModified" datetime="2020-10-26T01:10:09+00:00">2020-10-26</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2020</h1>
+        <p>这个问题我已经遇到好几次，每次都要到晚上搜索一番，这里记录一下。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">2020&#x2F;10&#x2F;26 01:01:33 tcp:127.0.0.1:50610 accepted tcp:beacons.gcp.gvt2.com:443 [proxy] </span><br><span class="line">2020&#x2F;10&#x2F;26 01:01:35 [Warning] failed to handler mux client connection &gt; v2ray.com&#x2F;core&#x2F;proxy&#x2F;vmess&#x2F;outbound: connection ends &gt; v2ray.com&#x2F;core&#x2F;proxy&#x2F;vmess&#x2F;outbound: failed to read header &gt; v2ray.com&#x2F;core&#x2F;proxy&#x2F;vmess&#x2F;encoding: failed to read response header &gt; websocket: close 1000 (normal)</span><br></pre></td></tr></table></figure>
+<p>v2ray报这个错主要是时间不同步问题，只要把客户端时间设置下就解决了。</p>
+
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
+        
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-01-20T23:18:10+00:00"
-              content="2020-01-20">
-          01-20
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://supersojo.github.io/2020/10/22/%E4%B8%80%E4%B8%AAv2ray%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" title="一个v2ray连接失败问题">https://supersojo.github.io/2020/10/22/一个v2ray连接失败问题/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h2 class="post-title">
-          <a class="post-title-link" href="/2020/01/20/copy-file-range-problem/" itemprop="url">
-            <span itemprop="name">copy_file_range problem</span>
-          </a>
-      </h2>
 
-    </header>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/v2ray/" rel="tag"># v2ray</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/09/27/openwrt%E8%AE%BE%E7%BD%AEddns/" rel="prev" title="openwrt设置ddns">
+      <i class="fa fa-chevron-left"></i> openwrt设置ddns
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
   </article>
+  
+  
+  
 
-    </div>
   </div>
-  
-  
-  
-
-  
-
 
 
           </div>
