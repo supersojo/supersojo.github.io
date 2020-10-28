@@ -870,6 +870,20 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </tags>
   </entry>
   <entry>
+    <title>文本搜索神器ag</title>
+    <url>/2020/10/24/%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8ag/</url>
+    <content><![CDATA[<p>ag类似于grep的工具，可以提供更快的搜索。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">The Silver Searcher is like grep or ack, except faster. It&#39;s written in super-optimized C (like grep) and it&#39;s intelligent about entirely skipping files that you don&#39;t want to waste time searching (like ack).</span><br><span class="line"></span><br><span class="line">ag源码</span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;ggreer&#x2F;the_silver_searcher</span><br><span class="line"></span><br><span class="line">ag非官方下载地址</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;blog.kowalczyk.info&#x2F;software&#x2F;the-silver-searcher-for-windows.html</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;k-takata&#x2F;the_silver_searcher-win32</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>ag</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>松散源路由发包失败问题</title>
     <url>/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</url>
     <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>近期遇到松散源路由报文通信失败，通过systemtap可以很快定位报文丢弃在何处。</p>
