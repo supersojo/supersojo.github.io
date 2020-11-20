@@ -142,7 +142,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">46</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">47</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">28</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">29</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,96 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/" class="post-title-link" itemprop="url">ubuntu清理磁盘空间</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-25 21:10:10" itemprop="dateCreated datePublished" datetime="2020-02-25T21:10:10+00:00">2020-02-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ubuntu/" itemprop="url" rel="index">
+                    <span itemprop="name">ubuntu</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>虽然linux不像windows那样需要碎片整理，随着时间的流逝，硬盘空间会<br>越来越小，有必要对硬件空间清理。以ubuntu为例说明如何清理硬盘空间。</p>
+<h2 id="查看硬盘占用"><a href="#查看硬盘占用" class="headerlink" title="查看硬盘占用"></a>查看硬盘占用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">$ df -h</span><br><span class="line">Filesystem      Size  Used Avail Use% Mounted on</span><br><span class="line">udev            934M     0  934M   0% &#x2F;dev</span><br><span class="line">tmpfs           193M  2.6M  191M   2% &#x2F;run</span><br><span class="line">&#x2F;dev&#x2F;sda1       8.8G  6.5G  1.9G  78% &#x2F;</span><br><span class="line">tmpfs           965M     0  965M   0% &#x2F;dev&#x2F;shm</span><br><span class="line">tmpfs           5.0M     0  5.0M   0% &#x2F;run&#x2F;lock</span><br><span class="line">tmpfs           965M     0  965M   0% &#x2F;sys&#x2F;fs&#x2F;cgroup</span><br><span class="line">tmpfs           193M     0  193M   0% &#x2F;run&#x2F;user&#x2F;0</span><br><span class="line">tmpfs           193M     0  193M   0% &#x2F;run&#x2F;user&#x2F;1000</span><br><span class="line">&#x2F;dev&#x2F;sdb1       127G  3.0G  125G   3% &#x2F;share</span><br></pre></td></tr></table></figure>
+<p>这里根分区可用空间不足，需要对根分区下目录空间占用进行分析。</p>
+<h2 id="查看根分区目录空间占用"><a href="#查看根分区目录空间占用" class="headerlink" title="查看根分区目录空间占用"></a>查看根分区目录空间占用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ du -h --max-depth&#x3D;1 &#x2F;</span><br><span class="line">23M	&#x2F;opt</span><br><span class="line">0	&#x2F;dev</span><br><span class="line">236M	&#x2F;boot</span><br><span class="line">8.0K	&#x2F;snap</span><br><span class="line">5.8M	&#x2F;lib32</span><br><span class="line">3.1G	&#x2F;usr</span><br><span class="line">0	&#x2F;sys</span><br><span class="line">156M	&#x2F;root</span><br><span class="line">16K	&#x2F;lost+found</span><br><span class="line">0	&#x2F;proc</span><br><span class="line">12K	&#x2F;media</span><br><span class="line">4.0K	&#x2F;srv</span><br><span class="line">6.5M	&#x2F;libx32</span><br><span class="line">4.0K	&#x2F;lib64</span><br><span class="line">4.0K	&#x2F;mnt</span><br><span class="line">12M	&#x2F;etc</span><br><span class="line">1.1G	&#x2F;lib</span><br><span class="line">2.8G	&#x2F;share</span><br><span class="line">704M	&#x2F;var</span><br><span class="line">2.9M	&#x2F;run</span><br><span class="line">18M	&#x2F;bin</span><br><span class="line">1.1G	&#x2F;home</span><br><span class="line">19M	&#x2F;sbin</span><br><span class="line">48K	&#x2F;tmp</span><br><span class="line">4.0K	&#x2F;nextcloud</span><br><span class="line">9.2G	&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>随着时间的流逝，log目录会比较大，可以通过journalctl命令控制日志文件所占空<br>间的大小。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ journalctl --vaccum-size&#x3D;100M</span><br></pre></td></tr></table></figure>
+
+<h1 id="清空安装的软件包备份"><a href="#清空安装的软件包备份" class="headerlink" title="清空安装的软件包备份"></a>清空安装的软件包备份</h1><p>ubuntu把安装的软件包缓存在如下目录:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ls &#x2F;var&#x2F;cache&#x2F;apt&#x2F;archives&#x2F;</span><br><span class="line">lock partial</span><br></pre></td></tr></table></figure>
+
+<p>然后通过下面的命令删除缓存的安装包。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ apt clean</span><br></pre></td></tr></table></figure>
+
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>通过以上步骤，硬盘空间大了许多。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +329,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -347,7 +437,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -481,7 +571,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -576,7 +666,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
 
           
@@ -653,7 +743,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -749,7 +839,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -873,7 +963,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -972,7 +1062,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1107,7 +1197,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
+                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1142,90 +1232,6 @@
 <p>在udplite_checksum_init的开始处:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">skb-&gt;len &#x3D; 61 + 8 &#x3D;69</span><br><span class="line">udphdr-&gt;len &#x3D; 64</span><br></pre></td></tr></table></figure>
 <p>UDPLITE协议中，udphdr中len表示对报文多少进行了校验。<br>即UDP_SKB_CB(skb)-&gt;partial_cov=1</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">松散源路由发包失败问题</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-20 20:10:10" itemprop="dateCreated datePublished" datetime="2019-06-20T20:10:10+00:00">2019-06-20</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 02:26:20" itemprop="dateModified" datetime="2020-10-30T02:26:20+00:00">2020-10-30</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/network/" itemprop="url" rel="index">
-                    <span itemprop="name">network</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>近期遇到松散源路由报文通信失败，通过systemtap可以很快定位报文丢弃在何处。</p>
-<p>直接上探测脚本:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">probe begin()</span><br><span class="line">&#123;</span><br><span class="line">  print(&quot;Begin probe..\n&quot;)</span><br><span class="line">&#125;</span><br><span class="line">probe end()</span><br><span class="line">&#123;</span><br><span class="line">  print(&quot;End probe.\n&quot;)</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.function(&quot;icmp_echo&quot;)</span><br><span class="line">&#123;</span><br><span class="line">  print_backtrace()&#x2F;&#x2F;调用栈回溯</span><br><span class="line">  printf(&quot;%s\n&quot;,pp())&#x2F;&#x2F;调用点</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.statement(&quot;*@net&#x2F;ipv4&#x2F;ip_input.c:341&quot;)</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;%s\n&quot;,pp())</span><br><span class="line">&#125;</span><br><span class="line">probe kernel.function(&quot;ip_options_compile&quot;).return</span><br><span class="line">&#123;</span><br><span class="line">  printf(&quot;ip_options_compile return:%d\n&quot;,$return)</span><br><span class="line">&#125;</span><br><span class="line">probe timer.ms(10000)</span><br><span class="line">&#123;</span><br><span class="line">  exit()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>在报文路径上增加探测点直接定位出丢包位置。</p>
-</blockquote>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这个具体问题是在函数static inline bool ip_rcv_options(struct sk_buff *skb)中如果源路由未打开则直接drop。</p>
-<p>打开内核中源路由选项，通信正常。</p>
 
       
     </div>
@@ -1311,7 +1317,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">28</span>
+          <span class="site-state-item-count">29</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1324,7 +1330,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">46</span>
+        <span class="site-state-item-count">47</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
