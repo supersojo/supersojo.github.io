@@ -6,17 +6,44 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://supersojo.github.io/"/>
-  <updated>2020-11-20T08:23:23.700Z</updated>
+  <updated>2020-11-23T06:39:47.244Z</updated>
   <id>https://supersojo.github.io/</id>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>arm64 armel armhf区别</title>
+    <link href="https://supersojo.github.io/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/"/>
+    <id>https://supersojo.github.io/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/</id>
+    <published>2020-11-20T22:10:10.000Z</published>
+    <updated>2020-11-23T06:39:47.244Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          
+        
+      
+    
+    </summary>
+    
+    
+      <category term="arm" scheme="https://supersojo.github.io/categories/arm/"/>
+    
+    
+      <category term="arm" scheme="https://supersojo.github.io/tags/arm/"/>
+    
+  </entry>
   
   <entry>
     <title>linux下systemd service的编写</title>
     <link href="https://supersojo.github.io/2020/10/25/%E7%BC%96%E5%86%99systemd-service/"/>
     <id>https://supersojo.github.io/2020/10/25/%E7%BC%96%E5%86%99systemd-service/</id>
     <published>2020-10-25T21:01:20.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -43,7 +70,7 @@
     <link href="https://supersojo.github.io/2020/10/24/%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8ag/"/>
     <id>https://supersojo.github.io/2020/10/24/%E6%90%9C%E7%B4%A2%E7%A5%9E%E5%99%A8ag/</id>
     <published>2020-10-24T21:11:15.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -70,7 +97,7 @@
     <link href="https://supersojo.github.io/2020/10/22/%E4%B8%80%E4%B8%AAv2ray%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"/>
     <id>https://supersojo.github.io/2020/10/22/%E4%B8%80%E4%B8%AAv2ray%E8%BF%9E%E6%8E%A5%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</id>
     <published>2020-10-22T20:10:13.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -97,7 +124,7 @@
     <link href="https://supersojo.github.io/2020/09/27/openwrt%E8%AE%BE%E7%BD%AEddns/"/>
     <id>https://supersojo.github.io/2020/09/27/openwrt%E8%AE%BE%E7%BD%AEddns/</id>
     <published>2020-09-27T20:10:13.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -124,7 +151,7 @@
     <link href="https://supersojo.github.io/2020/09/25/kodi_refresh_problem/"/>
     <id>https://supersojo.github.io/2020/09/25/kodi_refresh_problem/</id>
     <published>2020-09-25T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -151,7 +178,7 @@
     <link href="https://supersojo.github.io/2020/08/25/nextcloud%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD/"/>
     <id>https://supersojo.github.io/2020/08/25/nextcloud%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD/</id>
     <published>2020-08-25T22:01:20.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -178,7 +205,7 @@
     <link href="https://supersojo.github.io/2020/07/25/%E5%85%B3%E4%BA%8EDMA%20API%E7%9A%84%E4%BD%BF%E7%94%A8/"/>
     <id>https://supersojo.github.io/2020/07/25/%E5%85%B3%E4%BA%8EDMA%20API%E7%9A%84%E4%BD%BF%E7%94%A8/</id>
     <published>2020-07-25T13:01:20.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -205,7 +232,7 @@
     <link href="https://supersojo.github.io/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/"/>
     <id>https://supersojo.github.io/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/</id>
     <published>2020-07-22T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -232,7 +259,7 @@
     <link href="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/"/>
     <id>https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/</id>
     <published>2020-03-10T20:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -267,7 +294,7 @@
     <link href="https://supersojo.github.io/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/"/>
     <id>https://supersojo.github.io/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/</id>
     <published>2020-02-27T21:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -298,7 +325,7 @@
     <link href="https://supersojo.github.io/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/"/>
     <id>https://supersojo.github.io/2020/02/25/ubuntu%E6%B8%85%E7%90%86%E7%A3%81%E7%9B%98%E7%A9%BA%E9%97%B4/</id>
     <published>2020-02-25T21:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -325,7 +352,7 @@
     <link href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/"/>
     <id>https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/</id>
     <published>2020-02-17T21:21:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.244Z</updated>
     
     <summary type="html">
     
@@ -352,7 +379,7 @@
     <link href="https://supersojo.github.io/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/"/>
     <id>https://supersojo.github.io/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/</id>
     <published>2020-02-13T21:21:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.244Z</updated>
     
     <summary type="html">
     
@@ -379,7 +406,7 @@
     <link href="https://supersojo.github.io/2020/01/20/copy-file-range-problem/"/>
     <id>https://supersojo.github.io/2020/01/20/copy-file-range-problem/</id>
     <published>2020-01-20T23:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.244Z</updated>
     
     <summary type="html">
     
@@ -410,7 +437,7 @@
     <link href="https://supersojo.github.io/2020/01/20/about-dwarf/"/>
     <id>https://supersojo.github.io/2020/01/20/about-dwarf/</id>
     <published>2020-01-20T22:33:52.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.244Z</updated>
     
     <summary type="html">
     
@@ -433,7 +460,7 @@
     <link href="https://supersojo.github.io/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/"/>
     <id>https://supersojo.github.io/2020/01/20/%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95%E5%92%8C%E7%AD%BE%E5%90%8D/</id>
     <published>2020-01-20T22:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -462,7 +489,7 @@
     <link href="https://supersojo.github.io/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/"/>
     <id>https://supersojo.github.io/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/</id>
     <published>2020-01-13T22:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -493,7 +520,7 @@
     <link href="https://supersojo.github.io/2020/01/10/NAND%20Flash%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D/"/>
     <id>https://supersojo.github.io/2020/01/10/NAND%20Flash%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D/</id>
     <published>2020-01-10T21:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.244Z</updated>
     
     <summary type="html">
     
@@ -524,7 +551,7 @@
     <link href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/"/>
     <id>https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/</id>
     <published>2019-08-01T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -551,7 +578,7 @@
     <link href="https://supersojo.github.io/2019/07/16/udplite-checksum-problem/"/>
     <id>https://supersojo.github.io/2019/07/16/udplite-checksum-problem/</id>
     <published>2019-07-16T22:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -580,7 +607,7 @@
     <link href="https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/"/>
     <id>https://supersojo.github.io/2019/06/20/%E6%9D%BE%E6%95%A3%E6%BA%90%E8%B7%AF%E7%94%B1%E5%8F%91%E5%8C%85%E5%A4%B1%E8%B4%A5%E9%97%AE%E9%A2%98/</id>
     <published>2019-06-20T20:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -609,7 +636,7 @@
     <link href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/"/>
     <id>https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/</id>
     <published>2019-06-10T21:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -638,7 +665,7 @@
     <link href="https://supersojo.github.io/2019/06/04/sctp%E4%B8%AD%E4%B8%80%E4%B8%AAbug%E7%9A%84%E5%88%86%E6%9E%90/"/>
     <id>https://supersojo.github.io/2019/06/04/sctp%E4%B8%AD%E4%B8%80%E4%B8%AAbug%E7%9A%84%E5%88%86%E6%9E%90/</id>
     <published>2019-06-04T22:01:20.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -667,7 +694,7 @@
     <link href="https://supersojo.github.io/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/"/>
     <id>https://supersojo.github.io/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/</id>
     <published>2019-05-13T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -694,7 +721,7 @@
     <link href="https://supersojo.github.io/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/"/>
     <id>https://supersojo.github.io/2019/05/08/%E7%BC%96%E8%AF%91%E5%99%A8%E4%B8%AD%E7%9A%84%E7%AC%A6%E5%8F%B7%E8%A1%A8%E4%BB%8B%E7%BB%8D/</id>
     <published>2019-05-08T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -721,7 +748,7 @@
     <link href="https://supersojo.github.io/2019/05/01/BIOS%E5%92%8CUEFI/"/>
     <id>https://supersojo.github.io/2019/05/01/BIOS%E5%92%8CUEFI/</id>
     <published>2019-05-01T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.244Z</updated>
     
     <summary type="html">
     
@@ -750,7 +777,7 @@
     <link href="https://supersojo.github.io/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/"/>
     <id>https://supersojo.github.io/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/</id>
     <published>2019-05-01T21:18:10.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -777,7 +804,7 @@
     <link href="https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/"/>
     <id>https://supersojo.github.io/2019/03/01/%E5%88%86%E6%9E%90%E4%B8%8Bmutter%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8%E7%9A%84%E4%B8%80%E4%B8%AA%E9%97%AE%E9%A2%98/</id>
     <published>2019-03-01T23:01:20.000Z</published>
-    <updated>2020-11-20T08:23:23.700Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     
@@ -806,7 +833,7 @@
     <link href="https://supersojo.github.io/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/"/>
     <id>https://supersojo.github.io/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/</id>
     <published>2017-04-12T22:10:10.000Z</published>
-    <updated>2020-11-20T08:23:23.696Z</updated>
+    <updated>2020-11-23T06:39:47.248Z</updated>
     
     <summary type="html">
     

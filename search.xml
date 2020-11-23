@@ -105,6 +105,33 @@
 ]]></content>
   </entry>
   <entry>
+    <title>arm64 armel armhf区别</title>
+    <url>/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>ARM嵌入式开发，必定涉及到交叉编译工具链问题，下载交叉编译<br>工具链时总会有多个选择，我们该选择哪个工具链呢?</p>
+<p>我们需要区分armel armhf arm64。</p>
+<ol>
+<li><p>armel<br>ARM EABI(armel)支持老的32位arm。</p>
+</li>
+<li><p>armhf<br>较新的arm hard-float(armhf)支持新一点的32位arm，FPU没有标准化。</p>
+</li>
+<li><p>arm64<br>64位的arm支最新的64位arm，默认都带FPU了，已经标准化了。</p>
+</li>
+</ol>
+<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>为何会有如此多种类的工具链需要选择呢？这有arm的历史背景有关。</p>
+<p>其实最开始的只有一种arm，后来由于诸多原因如端模式到浮点的支持，它已经被被废弃了，后来的arm EABI (armel)取代了它。</p>
+<p>armel（arm eabi little endian）仅仅是个名字而已，用于和老的版本做区分，可以认为它仅仅是对arm最基本的支持，可以被任何硬件运行。</p>
+<p>armhf支持硬件FPU，计算更快，而armel则需要对浮点数模拟计算。</p>
+<p>arm64默认就支持FPU。</p>
+<p>gcc编译的时候，使用-mfloat-abi选项来指定浮点运算使用的<br>是哪种，soft不使用fpu，armel使用fpu，使用普通寄存器，armhf<br>使用fpu，使用fpu的寄存器。</p>
+]]></content>
+      <categories>
+        <category>arm</category>
+      </categories>
+      <tags>
+        <tag>arm</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>bpf入门系列-1</title>
     <url>/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/</url>
     <content><![CDATA[<h2 id="bpf的build环境"><a href="#bpf的build环境" class="headerlink" title="bpf的build环境"></a>bpf的build环境</h2><p>简单讲，bpf是内核内置的虚拟机，对bpf的支持，内核需要开启编译选项如下</p>

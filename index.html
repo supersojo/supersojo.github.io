@@ -142,17 +142,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">47</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">48</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">14</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">15</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">29</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">30</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/" class="post-title-link" itemprop="url">arm64 armel armhf区别</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-20 22:10:10" itemprop="dateCreated datePublished" datetime="2020-11-20T22:10:10+00:00">2020-11-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/arm/" itemprop="url" rel="index">
+                    <span itemprop="name">arm</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>ARM嵌入式开发，必定涉及到交叉编译工具链问题，下载交叉编译<br>工具链时总会有多个选择，我们该选择哪个工具链呢?</p>
+<p>我们需要区分armel armhf arm64。</p>
+<ol>
+<li><p>armel<br>ARM EABI(armel)支持老的32位arm。</p>
+</li>
+<li><p>armhf<br>较新的arm hard-float(armhf)支持新一点的32位arm，FPU没有标准化。</p>
+</li>
+<li><p>arm64<br>64位的arm支最新的64位arm，默认都带FPU了，已经标准化了。</p>
+</li>
+</ol>
+<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>为何会有如此多种类的工具链需要选择呢？这有arm的历史背景有关。</p>
+<p>其实最开始的只有一种arm，后来由于诸多原因如端模式到浮点的支持，它已经被被废弃了，后来的arm EABI (armel)取代了它。</p>
+<p>armel（arm eabi little endian）仅仅是个名字而已，用于和老的版本做区分，可以认为它仅仅是对arm最基本的支持，可以被任何硬件运行。</p>
+<p>armhf支持硬件FPU，计算更快，而armel则需要对浮点数模拟计算。</p>
+<p>arm64默认就支持FPU。</p>
+<p>gcc编译的时候，使用-mfloat-abi选项来指定浮点运算使用的<br>是哪种，soft不使用fpu，armel使用fpu，使用普通寄存器，armhf<br>使用fpu，使用fpu的寄存器。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/10/25/%E7%BC%96%E5%86%99systemd-service/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +330,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -318,7 +409,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -396,7 +487,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -474,7 +565,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -559,7 +650,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -635,7 +726,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -717,7 +808,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -819,7 +910,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -900,7 +991,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
+                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1011,144 +1102,6 @@
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/" class="post-title-link" itemprop="url">分析一下目前linux内核栈的实现</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-02-27 21:10:10" itemprop="dateCreated datePublished" datetime="2020-02-27T21:10:10+00:00">2020-02-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-20 08:23:23" itemprop="dateModified" datetime="2020-11-20T08:23:23+00:00">2020-11-20</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kernel/" itemprop="url" rel="index">
-                    <span itemprop="name">kernel</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>最近在看内核一个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/sunrpc/auth_gss/gss_krb5_seqnum.c?h=v5.6-rc3&id=e7afe6c1d486b516ed586dcc10b3e7e3e85a9c2b" target="_blank" rel="noopener">patch</a>的修改，这个patch的commit描述<br>如下:</p>
-<blockquote>
-<p>While trying to reproduce a reported kernel panic on arm64, I discovered<br>that AUTH_GSS basically doesn’t work at all with older enctypes on arm64<br>systems with CONFIG_VMAP_STACK enabled.  It turns out there still a few<br>places using stack memory with scatterlists, causing krb5_encrypt() and<br>krb5_decrypt() to produce incorrect results (or a BUG if CONFIG_DEBUG_SG<br>is enabled).<br>描述里边提到CONFIG_VMAP_STACK内核宏和scatterlist。下面对它们分析。</p>
-</blockquote>
-<h2 id="CONFIG-VMAP-STACK"><a href="#CONFIG-VMAP-STACK" class="headerlink" title="CONFIG_VMAP_STACK"></a>CONFIG_VMAP_STACK</h2><h3 id="CONFIG-VMAP-STACK的功能"><a href="#CONFIG-VMAP-STACK的功能" class="headerlink" title="CONFIG_VMAP_STACK的功能"></a>CONFIG_VMAP_STACK的功能</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:&#x2F;share&#x2F;linux# find . -name Kconfig | xargs grep -rsn VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:821:config HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:841:config VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;Kconfig:844:     depends on HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;arm64&#x2F;Kconfig:135:       select HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;s390&#x2F;Kconfig:133:        select HAVE_ARCH_VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;s390&#x2F;Kconfig:714:        depends on !VMAP_STACK</span><br><span class="line">.&#x2F;arch&#x2F;x86&#x2F;Kconfig:152: select HAVE_ARCH_VMAP_STACK             if X86_64</span><br></pre></td></tr></table></figure>
-<p>从搜索结果看，这个功能是和架构相关的。<br>再来看下该配置宏的具体描述：</p>
-<blockquote>
-<p>config VMAP_STACK<br>       default y<br>       bool “Use a virtually-mapped stack”<br>       depends on HAVE_ARCH_VMAP_STACK<br>       depends on !KASAN || KASAN_VMALLOC<br>       —help—<br>         Enable this if you want the use virtually-mapped kernel stacks<br>         with guard pages.  This causes kernel stack overflows to be<br>         caught immediately rather than causing difficult-to-diagnose<br>         corruption.</p>
-<pre><code>To use this with KASAN, the architecture must support backing
-virtual mappings with real shadow memory, and KASAN_VMALLOC must
- be enabled.</code></pre></blockquote>
-<p>如果内核开启CONFIG_VMAP_STACK，内核可以快速检测内核栈overflow异常，比之前在内核栈溢出<br>访问时出问题难以诊断，内核栈溢出肯定访问垃圾数据，其结果不可预测的，难以排查，在有个guardpage后<br>只要内核栈溢出访问，内核可以快速捕获到。</p>
-<p>内核栈的申请通过alloc_thread_stack_node实现。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">static unsigned long *alloc_thread_stack_node(struct task_struct *tsk, int node)</span><br><span class="line">&#123;</span><br><span class="line">#ifdef CONFIG_VMAP_STACK</span><br><span class="line">        void *stack;</span><br><span class="line">        int i;</span><br><span class="line"></span><br><span class="line">        for (i &#x3D; 0; i &lt; NR_CACHED_STACKS; i++) &#123;</span><br><span class="line">                struct vm_struct *s;</span><br><span class="line"></span><br><span class="line">                s &#x3D; this_cpu_xchg(cached_stacks[i], NULL);</span><br><span class="line"></span><br><span class="line">                if (!s)</span><br><span class="line">                        continue;</span><br><span class="line"></span><br><span class="line">                &#x2F;* Clear the KASAN shadow of the stack. *&#x2F;</span><br><span class="line">                kasan_unpoison_shadow(s-&gt;addr, THREAD_SIZE);</span><br><span class="line"></span><br><span class="line">                &#x2F;* Clear stale pointers from reused stack. *&#x2F;</span><br><span class="line">                memset(s-&gt;addr, 0, THREAD_SIZE);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">                tsk-&gt;stack_vm_area &#x3D; s;</span><br><span class="line">                tsk-&gt;stack &#x3D; s-&gt;addr;</span><br><span class="line">                return s-&gt;addr;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        &#x2F;*</span><br><span class="line">         * Allocated stacks are cached and later reused by new threads,</span><br><span class="line">         * so memcg accounting is performed manually on assigning&#x2F;releasing</span><br><span class="line">         * stacks to tasks. Drop __GFP_ACCOUNT.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        stack &#x3D; __vmalloc_node_range(THREAD_SIZE, THREAD_ALIGN,</span><br><span class="line">                                     VMALLOC_START, VMALLOC_END,</span><br><span class="line">                                     THREADINFO_GFP &amp; ~__GFP_ACCOUNT,</span><br><span class="line">                                     PAGE_KERNEL,</span><br><span class="line">                                     0, node, __builtin_return_address(0));</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * We can&#39;t call find_vm_area() in interrupt context, and</span><br><span class="line">         * free_thread_stack() can be called in interrupt context,</span><br><span class="line">         * so cache the vm_struct.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        if (stack) &#123;</span><br><span class="line">                tsk-&gt;stack_vm_area &#x3D; find_vm_area(stack);</span><br><span class="line">                tsk-&gt;stack &#x3D; stack;</span><br><span class="line">        &#125;</span><br><span class="line">        return stack;</span><br><span class="line"></span><br><span class="line">#else</span><br><span class="line">        struct page *page &#x3D; alloc_pages_node(node, THREADINFO_GFP,</span><br><span class="line">                                             THREAD_SIZE_ORDER);</span><br><span class="line"></span><br><span class="line">        if (likely(page)) &#123;</span><br><span class="line">                tsk-&gt;stack &#x3D; page_address(page);</span><br><span class="line">                return tsk-&gt;stack;</span><br><span class="line">        &#125;</span><br><span class="line">        return NULL;</span><br><span class="line">#endif</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>为了避免vmalloc的频繁调用，内核使用cached_stacks本地缓存数组，保存进程退出时的内核栈指针。在<br>创建进程时可以直接从cached_stacks本地缓存数组获取可用的内核栈。</p>
-<p>如果cached_stacks本地缓存数组不可用，则通过vmalloc接口申请内核栈。vmalloc申请的空间并不保证是<br>物理连续的页。</p>
-<p>vmalloc申请的空间在使用上要注意：</p>
-<ol>
-<li>不能用于DMA操作<blockquote>
-<p>DMA硬件没有页面映射，需要物理上连续的空间。</p>
-</blockquote>
-</li>
-<li>不能用于scatterlist<blockquote>
-<p>后面分析</p>
-</blockquote>
-</li>
-</ol>
-<p>在不启用CONFIG_VMAP_STACK时，内核使用alloc_pages_node申请内核栈空间。这个接口申请连续的物理页<br>作为内核栈。</p>
-<h3 id="内核栈大小"><a href="#内核栈大小" class="headerlink" title="内核栈大小"></a>内核栈大小</h3><p>前面分析了内核栈的分配，那么内核栈占多少空间呢？</p>
-<blockquote>
-<p>THREAD_SIZE宏定义了内核栈的大小。</p>
-</blockquote>
-<p>THREAD_SIZE是架构相关的，在x86上定义为2个page的大小。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#define THREAD_SIZE_ORDER       1</span><br><span class="line">#define THREAD_SIZE             (PAGE_SIZE &lt;&lt; THREAD_SIZE_ORDER)</span><br></pre></td></tr></table></figure>
-
-<p>在x86_64上定义为如下大小，开启KASAN，则分配8个page的大小，不开启KSASAN则定义为4个page的大小。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#ifdef CONFIG_KASAN</span><br><span class="line">#define KASAN_STACK_ORDER 1</span><br><span class="line">#else</span><br><span class="line">#define KASAN_STACK_ORDER 0</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#define THREAD_SIZE_ORDER       (2 + KASAN_STACK_ORDER)</span><br><span class="line">#define THREAD_SIZE  (PAGE_SIZE &lt;&lt; THREAD_SIZE_ORDER)</span><br></pre></td></tr></table></figure>
-
-<p>这里提高了KASAN功能，这个是什么功能呢？</p>
-<blockquote>
-<p>Kasan 是 Kernel Address Sanitizer 的缩写，它是一个动态检测内存错误的工具，主要功能是<br>检查内存越界访问和使用已释放的内存等问题。Kasan 集成在 Linux 内核中，随 Linux 内核<br>代码一起发布，并由内核社区维护和发展。</p>
-</blockquote>
-<p>这里不对KASAN功能进行分析，更多的可以参考下面的文档。<br>KASAN扩展阅读</p>
-<ol>
-<li><a href="https://www.kernel.org/doc/html/v4.14/dev-tools/kasan.html" target="_blank" rel="noopener">KASAN内核文档</a></li>
-<li><a href="https://www.ibm.com/developerworks/cn/linux/1608_tengr_kasan/index.html" target="_blank" rel="noopener">KASAN简单介绍</a></li>
-</ol>
-<h3 id="内核栈的布局"><a href="#内核栈的布局" class="headerlink" title="内核栈的布局"></a>内核栈的布局</h3><p>内核栈布局和架构相关，x86配置如下</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">$ cat arch&#x2F;x86&#x2F;Kconfig</span><br><span class="line">config X86</span><br><span class="line">        def_bool y</span><br><span class="line">		...</span><br><span class="line">		select THREAD_INFO_IN_TASK</span><br><span class="line">		...</span><br><span class="line"></span><br><span class="line">$ cat include&#x2F;linux&#x2F;sched.h</span><br><span class="line">struct task_struct &#123;</span><br><span class="line">#ifdef CONFIG_THREAD_INFO_IN_TASK</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * For reasons of header soup (see current_thread_info()), this</span><br><span class="line">         * must be the first element of task_struct.</span><br><span class="line">         *&#x2F;</span><br><span class="line">        struct thread_info              thread_info;</span><br><span class="line">#endif</span><br></pre></td></tr></table></figure>
-<p>由上可见在x86上，内核栈就是单纯的内核栈，thread_info结构不在内核栈的低端地址上，而是移到了task_struct结构中，这样好处是<br>内核栈溢出时不会破坏thread_info结构，更加安全。</p>
-<p>之前内核栈的布局是这样的，如下所示：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">high address                low address </span><br><span class="line">|----------------------|&lt;--------&gt;|</span><br><span class="line">                        thread_info</span><br></pre></td></tr></table></figure>
-
-<h2 id="scatterlist"><a href="#scatterlist" class="headerlink" title="scatterlist"></a>scatterlist</h2><p>scatterlist用来描述一内存段，其结构如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct scatterlist &#123;</span><br><span class="line">        unsigned long   page_link;</span><br><span class="line">        unsigned int    offset;</span><br><span class="line">        unsigned int    length;</span><br><span class="line">        dma_addr_t      dma_address;</span><br><span class="line">#ifdef CONFIG_NEED_SG_DMA_LENGTH</span><br><span class="line">        unsigned int    dma_length;</span><br><span class="line">#endif</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>page_link是page指针，这里复用该page指针使其支持<a href="https://lwn.net/Articles/234617/" target="_blank" rel="noopener">scatterlist chain</a>。<br>每个scatterlist描述一个物理页的内存片段。</p>
-<p>为何vmalloc空间不能用于scatterlist呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">         vmalloc buffer</span><br><span class="line">          |-------------|</span><br><span class="line">|-------------|-----------|</span><br><span class="line">        pageX	       pageY</span><br></pre></td></tr></table></figure>
-<p>如果vmalloc buffer跨page边界，看会发生什么。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">$ cat net&#x2F;sunrpc&#x2F;auth_gss&#x2F;gss_krb5_crypto.c</span><br><span class="line">u32</span><br><span class="line">krb5_encrypt(</span><br><span class="line">        struct crypto_sync_skcipher *tfm,</span><br><span class="line">        void * iv,</span><br><span class="line">        void * in,</span><br><span class="line">        void * out,</span><br><span class="line">        int length)</span><br><span class="line">&#123;</span><br><span class="line">        u32 ret &#x3D; -EINVAL;</span><br><span class="line">        struct scatterlist sg[1];</span><br><span class="line">		...</span><br><span class="line">		memcpy(out, in, length);</span><br><span class="line">        sg_init_one(sg, out, length);</span><br><span class="line">		...</span><br><span class="line">&#125;</span><br><span class="line">$ cat lib&#x2F;scatterlist.c</span><br><span class="line">void sg_init_one(struct scatterlist *sg, const void *buf, unsigned int buflen)</span><br><span class="line">&#123;</span><br><span class="line">        sg_init_table(sg, 1);</span><br><span class="line">        sg_set_buf(sg, buf, buflen);</span><br><span class="line">&#125;</span><br><span class="line">$ cat include&#x2F;linux&#x2F;scatterlist.h</span><br><span class="line">static inline void sg_set_buf(struct scatterlist *sg, const void *buf,</span><br><span class="line">			      unsigned int buflen)</span><br><span class="line">&#123;</span><br><span class="line">#ifdef CONFIG_DEBUG_SG</span><br><span class="line">	BUG_ON(!virt_addr_valid(buf));</span><br><span class="line">#endif</span><br><span class="line">	sg_set_page(sg, virt_to_page(buf), buflen, offset_in_page(buf));</span><br><span class="line">&#125;</span><br><span class="line">$ cat include&#x2F;linux&#x2F;scatterlist.h</span><br><span class="line">static inline void sg_set_page(struct scatterlist *sg, struct page *page,</span><br><span class="line">			       unsigned int len, unsigned int offset)</span><br><span class="line">&#123;</span><br><span class="line">	sg_assign_page(sg, page);</span><br><span class="line">	sg-&gt;offset &#x3D; offset;</span><br><span class="line">	sg-&gt;length &#x3D; len;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>在sg_set_page后，scatterlist只记录了pageX，后面的pageY是没有记录的，后面使用scatterlist时<br>可能访问到垃圾数据。可见vmalloc空间时不能用于scatterlist的。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文分析了CONFIG_VMAP_STACK和scatterlist的功能，在使能CONFIG_VMAP_STACK后，内核栈上分配的<br>空间是物理上不连续的，不能用于scatterlist，不能用于DMA。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
@@ -1219,20 +1172,20 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">29</span>
+          <span class="site-state-item-count">30</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">15</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">47</span>
+        <span class="site-state-item-count">48</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
