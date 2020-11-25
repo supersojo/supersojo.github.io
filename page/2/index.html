@@ -142,7 +142,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">48</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">49</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">30</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">31</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,152 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/" class="post-title-link" itemprop="url">从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-03-10 20:18:10" itemprop="dateCreated datePublished" datetime="2020-03-10T20:18:10+00:00">2020-03-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/" itemprop="url" rel="index">
+                    <span itemprop="name">network</span>
+                  </a>
+                </span>
+                  ，
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/network/kernel/" itemprop="url" rel="index">
+                    <span itemprop="name">kernel</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"><a href="#从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器" class="headerlink" title="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"></a>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</h2><p>这个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/ipv4/tcp_timer.c?id=3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188" target="_blank" rel="noopener">patch</a>的描述如下:</p>
+<blockquote>
+<p>Previously there is an off-by-one bug on determining when to abort<br>a stalled window-probing socket. This patch fixes that so it is<br>consistent with tcp_write_timeout().</p>
+</blockquote>
+<p>从描述看关于何时中止执行窗口探测的socket的。下面从协议规范中寻找定时器使用。</p>
+<h2 id="TCP协议中的timer"><a href="#TCP协议中的timer" class="headerlink" title="TCP协议中的timer"></a>TCP协议中的timer</h2><p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/TCP-Timers-1.png" alt="TCP协议中的定时器"></p>
+<p>协议中主要有4个定时器，注意这里每个TCP连接都有4个定时器。</p>
+<ol>
+<li>Time Out Timer<blockquote>
+<p>TCP uses a time out timer for retransmission of lost segments.</p>
+</blockquote>
+</li>
+<li>Time Wait Timer<blockquote>
+<p>TCP uses a time wait timer during connection termination.</p>
+</blockquote>
+</li>
+<li>Keep Alive Timer<blockquote>
+<p>TCP uses a keep alive timer to prevent long idle TCP connections.</p>
+</blockquote>
+</li>
+<li>Persistent Timer<blockquote>
+<p>TCP uses a persistent timer to deal with a zero-widow-size deadlock situation.<br>It keeps the window size information flowing even if the other end closes its receiver window.</p>
+</blockquote>
+</li>
+</ol>
+<p>从patch的描述看主要涉及窗口探测，即Persistent Timer。</p>
+<h3 id="Persistent-Timer的作用"><a href="#Persistent-Timer的作用" class="headerlink" title="Persistent Timer的作用"></a>Persistent Timer的作用</h3><p>Consider the following situation:</p>
+<ol>
+<li>Sender receives an acknowledgment from the receiver with zero window size.</li>
+<li>This indicates the sender to wait.</li>
+<li>Later, receiver updates the window size and and sends the segment with the update to the sender.</li>
+<li>This segment gets lost.</li>
+<li>Now, both sender and receiver keeps waiting for each other to do something. To deal with such a situation, TCP uses a persistent timer.</li>
+</ol>
+<p>发送测收到zero-window-size的ack报文后，发送测不能再发送报文，等待后续接收测更新窗口大小报文通知。为了防止该通知消息被丢的情况，使用<br>persistent timer，发送测会周期性的窗口探测报文消息，接收测回应该窗口探测消息。如果窗口大小为0，则继续窗口探测过程；非零则恢复数据传输过程。</p>
+<p>接下来分析下在linux内核中TCP协议栈所使用的定时器。</p>
+<h2 id="linux内核中的timer"><a href="#linux内核中的timer" class="headerlink" title="linux内核中的timer"></a>linux内核中的timer</h2><p>在linux内核中每条tcp连接使用一个inet_connection_sock的结构描述。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">struct inet_connection_sock &#123;</span><br><span class="line">	struct inet_sock &#123;</span><br><span class="line">		struct sock &#123;</span><br><span class="line">			struct timer_list	sk_timer; &#x2F;&#x2F;(1) keepalive timer</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"> 	struct timer_list	  icsk_retransmit_timer; &#x2F;&#x2F;(2) time out timer</span><br><span class="line"> 	struct timer_list	  icsk_delack_timer; &#x2F;&#x2F;(3) delay ack timer</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sk-timer"><a href="#sk-timer" class="headerlink" title="sk_timer"></a>sk_timer</h3><p>sk_timer作为keepalive timer使用，在socket设置SOCK_KEEPOPEN时才启用。</p>
+<p>keepalive timer流程如下:<br><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/keepalive.png" alt="keepalive机制"></p>
+<p>linux内核对keepalive的处理代码如下:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">static void tcp_keepalive_timer (struct timer_list *t)</span><br><span class="line">	...</span><br><span class="line">	if (elapsed &gt;&#x3D; keepalive_time_when(tp)) &#123; &#x2F;&#x2F; 7200s</span><br><span class="line">			&#x2F;* If the TCP_USER_TIMEOUT option is enabled, use that</span><br><span class="line">			 * to determine when to timeout instead.</span><br><span class="line">			 *&#x2F;</span><br><span class="line">			if ((icsk-&gt;icsk_user_timeout !&#x3D; 0 &amp;&amp;</span><br><span class="line">				elapsed &gt;&#x3D; msecs_to_jiffies(icsk-&gt;icsk_user_timeout) &amp;&amp;</span><br><span class="line">				icsk-&gt;icsk_probes_out &gt; 0) ||</span><br><span class="line">				(icsk-&gt;icsk_user_timeout &#x3D;&#x3D; 0 &amp;&amp;</span><br><span class="line">				icsk-&gt;icsk_probes_out &gt;&#x3D; keepalive_probes(tp))) &#123; &#x2F;&#x2F;到达次数限制9</span><br><span class="line">					tcp_send_active_reset(sk, GFP_ATOMIC);</span><br><span class="line">					tcp_write_err(sk);</span><br><span class="line">					goto out;</span><br><span class="line">			&#125;</span><br><span class="line">			if (tcp_write_wakeup(sk, LINUX_MIB_TCPKEEPALIVE) &lt;&#x3D; 0) &#123; &#x2F;&#x2F;发送probe报文</span><br><span class="line">					icsk-&gt;icsk_probes_out++;</span><br><span class="line">					elapsed &#x3D; keepalive_intvl_when(tp);&#x2F;&#x2F; 75s</span><br><span class="line">			&#125; else &#123;</span><br><span class="line">					&#x2F;* If keepalive was lost due to local congestion,</span><br><span class="line">					 * try harder.</span><br><span class="line">					 *&#x2F;</span><br><span class="line">					elapsed &#x3D; TCP_RESOURCE_PROBE_INTERVAL;</span><br><span class="line">			&#125;</span><br><span class="line">	&#125; else &#123;</span><br><span class="line">			&#x2F;* It is tp-&gt;rcv_tstamp + keepalive_time_when(tp) *&#x2F;</span><br><span class="line">			elapsed &#x3D; keepalive_time_when(tp) - elapsed;</span><br><span class="line">	&#125;</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+
+<p>在上面代码中使用<strong>icsk_probes_out</strong>对probe次数进行统计。keepalive_probes缺省设置为9。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_keepalive_probes &#x3D; 9</span><br></pre></td></tr></table></figure>
+
+<p>使用上面的内核选项可以设置该值。</p>
+<p>tcp_write_wakeup负责发出probe报文，这个函数首先判断socket发送队列是否<br>有报文等待发送，如果有则发送sk-&gt;sk_send_head报文(注意这个指针总是指向下一个要<br>发送的报文)；如果发送队列空则发送probe报文(注意这个报文的序列号为out of date即无效)。</p>
+<p>如果报文能够到达接收测，则接收测回复ack消息。下面是收到ack报文的处理流程:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">static void tcp_ack_probe(struct sock *sk)</span><br><span class="line">&#123;</span><br><span class="line">        struct inet_connection_sock *icsk &#x3D; inet_csk(sk);</span><br><span class="line">        struct sk_buff *head &#x3D; tcp_send_head(sk);</span><br><span class="line">        const struct tcp_sock *tp &#x3D; tcp_sk(sk);</span><br><span class="line"></span><br><span class="line">        &#x2F;* Was it a usable window open? *&#x2F;</span><br><span class="line">        if (!head)</span><br><span class="line">                return;</span><br><span class="line">        if (!after(TCP_SKB_CB(head)-&gt;end_seq, tcp_wnd_end(tp))) &#123; &#x2F;&#x2F; normal window size</span><br><span class="line">                icsk-&gt;icsk_backoff &#x3D; 0;</span><br><span class="line">                inet_csk_clear_xmit_timer(sk, ICSK_TIME_PROBE0);</span><br><span class="line">                &#x2F;* Socket must be waked up by subsequent tcp_data_snd_check().</span><br><span class="line">                 * This function is not for random using!</span><br><span class="line">                 *&#x2F;</span><br><span class="line">        &#125; else &#123; &#x2F;&#x2F; zero-window-size</span><br><span class="line">                unsigned long when &#x3D; tcp_probe0_when(sk, TCP_RTO_MAX);</span><br><span class="line"></span><br><span class="line">                tcp_reset_xmit_timer(sk, ICSK_TIME_PROBE0,</span><br><span class="line">                                     when, TCP_RTO_MAX, NULL);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果接收测返回报文通知窗口大小为0则继续窗口探测过程，由于有接收到报文，<br>这时keepalive超时时判断距离上次报文时间不会超过7200s，这样keepalive定时器<br>重置为7200s超时。</p>
+<p>如果报文无法到达接收测，keepalive在75秒后超时，重新发送probe报文直到到达内核设置的<br>tcp_keepalive_probes次后终止该tcp连接。</p>
+<p>linux内核使用<strong>icsk_probes_out</strong>统计keepalive的探测次数和zero-window-size的探测次数。考虑下面的<br>一种情况：<br>keepalive定时器超时了3次后，才从接收测收到ack消息，这时开始窗口探测过程，这里并没有对<strong>icsk_probes_out</strong><br>清零，而是继续增加<strong>icsk_probes_out</strong>次数，这样处理有意简化窗口探测的过程。</p>
+<h2 id="icsk-retransmit-timer"><a href="#icsk-retransmit-timer" class="headerlink" title="icsk_retransmit_timer"></a>icsk_retransmit_timer</h2><p>即重传定时器，对应协议中的Time Out Timer和Persistent Timer。<br>内核使用一个定时器处理重传定时器和zero-window-size的探测定时器使用。    </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net.ipv4.tcp_retries2 &#x3D; 15</span><br></pre></td></tr></table></figure>
+<p>内核设置重传次数和zero-window-size次数限制为上面的值。</p>
+<p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/zero-window-size.png" alt="zero-window-size机制"></p>
+<p><img src="/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/retransmit.png" alt="retransmit机制"></p>
+<h3 id="icsk-delack-timer"><a href="#icsk-delack-timer" class="headerlink" title="icsk_delack_timer"></a>icsk_delack_timer</h3><p>待更新</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://www.gatevidyalay.com/tcp-timers-transmission-control-protocol/" target="_blank" rel="noopener">tcp协议中的timer</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/" target="_blank" rel="noopener">kernel source</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/27/%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B%E7%9B%AE%E5%89%8Dlinux%E5%86%85%E6%A0%B8%E6%A0%88%E7%9A%84%E5%AE%9E%E7%8E%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +385,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -377,7 +523,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -467,7 +613,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -575,7 +721,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -709,7 +855,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -804,7 +950,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
 
           
@@ -881,7 +1027,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -977,7 +1123,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1101,7 +1247,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
+                <time title="修改时间：2020-11-25 08:38:55" itemprop="dateModified" datetime="2020-11-25T08:38:55+00:00">2020-11-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1165,146 +1311,11 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
   
   
 
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/08/01/x86_64%E4%B8%8A%E5%AE%89%E8%A3%85aarch64%E8%99%9A%E6%8B%9F%E6%9C%BA/" class="post-title-link" itemprop="url">x86_64上安装aarch64架构的centos发行版</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-08-01 21:18:10" itemprop="dateCreated datePublished" datetime="2019-08-01T21:18:10+00:00">2019-08-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-23 06:39:47" itemprop="dateModified" datetime="2020-11-23T06:39:47+00:00">2020-11-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/linux/" itemprop="url" rel="index">
-                    <span itemprop="name">linux</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="host上编译安装qemu"><a href="#host上编译安装qemu" class="headerlink" title="host上编译安装qemu"></a>host上编译安装qemu</h2><ul>
-<li><p>host: centos 8.0 x86_64</p>
-</li>
-<li><p>下载qemu-4.0.0.tar.gz<br><a href="https://download.qemu.org/" target="_blank" rel="noopener">https://download.qemu.org/</a></p>
-</li>
-<li><p>编译qemu</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;configure --target-list&#x3D;aarch64-softmmu</span><br><span class="line">make</span><br><span class="line">make install</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>在编译qemu需要安装glibc和glib2的等开发包，请安装相应的开发包。</p>
-</blockquote>
-<h2 id="下载-UEFI-firmware"><a href="#下载-UEFI-firmware" class="headerlink" title="下载 UEFI firmware"></a>下载 UEFI firmware</h2><ul>
-<li>uefi地址<br><a href="http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm" target="_blank" rel="noopener">http://mirror.centos.org/centos/8/AppStream/aarch64/os/Packages/edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm</a></li>
-</ul>
-<blockquote>
-<p>我们需要支持aarch64的UEFI固件，上面的rpm在x86_64上无法直接安装，可以通过下面的命令获取UEFI固件。</p>
-</blockquote>
-<ul>
-<li>解压uefi固件</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ rpm2cpio edk2-aarch64-20190308git89910a39dcfd-6.el8.noarch.rpm | cpio -div </span><br><span class="line">$ tree usr</span><br><span class="line">usr</span><br><span class="line">└── share</span><br><span class="line">    ├── AAVMF</span><br><span class="line">    │   ├── AAVMF_CODE.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │   ├── AAVMF_CODE.verbose.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;QEMU_EFI-pflash.raw</span><br><span class="line">    │   └── AAVMF_VARS.fd -&gt; ..&#x2F;edk2&#x2F;aarch64&#x2F;vars-template-pflash.raw</span><br><span class="line">    ├── edk2</span><br><span class="line">    │   └── aarch64</span><br><span class="line">    │       ├── QEMU_EFI.fd</span><br><span class="line">    │       ├── QEMU_EFI-pflash.raw</span><br><span class="line">    │       ├── QEMU_EFI.silent.fd</span><br><span class="line">    │       ├── QEMU_EFI-silent-pflash.raw</span><br><span class="line">    │       ├── QEMU_VARS.fd</span><br><span class="line">    │       └── vars-template-pflash.raw</span><br><span class="line">    ├── licenses</span><br><span class="line">    │   └── edk2-aarch64</span><br><span class="line">    │       ├── License.edk2.txt</span><br><span class="line">    │       ├── LICENSE.openssl</span><br><span class="line">    │       └── License.txt</span><br><span class="line">    └── qemu</span><br><span class="line">        └── firmware</span><br><span class="line">            ├── 60-edk2-aarch64.json</span><br><span class="line">            └── 70-edk2-aarch64-verbose.json</span><br><span class="line"></span><br><span class="line">8 directories, 14 files</span><br></pre></td></tr></table></figure>
-<blockquote>
-<p>使用上面解压出来的UEFI固件:QEMU_EFI.fd</p>
-</blockquote>
-<h2 id="运行虚拟机-安装centos发行版"><a href="#运行虚拟机-安装centos发行版" class="headerlink" title="运行虚拟机 安装centos发行版"></a>运行虚拟机 安装centos发行版</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 2 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>上面的命令没有给VM配置网络接口，仅仅用来安装操作系统！！</li>
-<li>centos的安装完全是基于命令行界面的，按照提示安装就可以了</li>
-</ul>
-<h2 id="配置网络"><a href="#配置网络" class="headerlink" title="配置网络"></a>配置网络</h2><p>网络参照<a href="https://wzt.ac.cn/2019/09/10/QEMU-networking/" target="_blank" rel="noopener">这个文档</a>，配置tap接口给aarch64虚拟机使用。</p>
-<ul>
-<li><p>配置接口<br>如果由brctl命令则使用brctl命令。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">brctl addbr br0</span><br><span class="line">ifconfig br0 up</span><br><span class="line">tunctl -t tap0 -u root              # 创建一个 tap0 接口，只允许 root 用户访问</span><br><span class="line">brctl addif br0 tap0                # 在虚拟网桥中增加一个 tap0 接口</span><br><span class="line">ifconfig tap0 0.0.0.0 promisc up    # 启用 tap0 接口</span><br></pre></td></tr></table></figure>
-<p>如果没有brctl命令，可以使用ip命令代替。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ip tuntap add tap0 mode tap</span><br><span class="line">ip link set dev tap0 up</span><br><span class="line">ip link add br0 type bridge</span><br><span class="line">ip link set tap0 master br0</span><br><span class="line">ip link set eth0 master br0</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>VM使用网络接口</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
-<p>使用上面的参数让qemu使用tap接口作为vm的网络接口。<br>完整的命令如下：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-aarch64 -m 4096 -cpu cortex-a57 -smp 4 -M virt -bios QEMU_EFI.fd -nographic -drive if&#x3D;none,file&#x3D;centos-aarch64.img,id&#x3D;hd0 -device virtio-blk-device,drive&#x3D;hd0 -drive if&#x3D;none,file&#x3D;CentOS-7-aarch64-Everything-1908.iso,id&#x3D;cdrom,media&#x3D;cdrom -device virtio-scsi-device -device scsi-cd,drive&#x3D;cdrom -net nic -net tap,ifname&#x3D;tap0,script&#x3D;no,downscript&#x3D;no</span><br></pre></td></tr></table></figure>
-
-</li>
-</ul>
-<blockquote>
-<p>-boot c参数指定硬盘启动无效，原因不明，规避方法是启动中按esc进入UEFI的bootmgr选择硬盘启动。</p>
-</blockquote>
-<h2 id="配置ssh访问"><a href="#配置ssh访问" class="headerlink" title="配置ssh访问"></a>配置ssh访问</h2><p>登录aarch64 centos后，设置网络接口。这里VM使用的tap接口时桥接到外部网络的，配置地址后就可以访问。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>安装aarch64的centos后，登录发现虚拟机效率很低。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ cat &#x2F;proc&#x2F;cpuinfo</span><br><span class="line">processor       : 0</span><br><span class="line">BogoMIPS        : 125.00</span><br><span class="line">Features        : fp asimd evtstrm aes pmull sha1 sha2 crc32 cpuid</span><br><span class="line">CPU implementer : 0x41</span><br><span class="line">CPU architecture: 8</span><br><span class="line">CPU variant     : 0x1</span><br><span class="line">CPU part        : 0xd07</span><br><span class="line">CPU revision    : 0</span><br></pre></td></tr></table></figure>
-
-<p>这里可见模拟cpu的<a href="https://zh.wikipedia.org/wiki/BogoMips" target="_blank" rel="noopener">BogoMIPS</a>为125，即每秒125M指令，实际CPU的主频在250M左右。<br>host上cpu主频在2.2G，执行效率仅为<strong>10%</strong>，有着<strong>90%</strong>的性能损失。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><p><a href="https://marcin.juszkiewicz.com.pl/2015/04/17/running-vms-on-fedoraaarch64/" target="_blank" rel="noopener">Running VMs on Fedora/AArch64</a></p>
-</li>
-<li><p><a href="https://www.cnblogs.com/linuxxl/p/11658387.html" target="_blank" rel="noopener">x86 平台安装arm虚拟机</a></p>
-</li>
-</ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
   </div>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -1370,7 +1381,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">30</span>
+          <span class="site-state-item-count">31</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1383,7 +1394,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">48</span>
+        <span class="site-state-item-count">49</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
