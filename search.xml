@@ -281,8 +281,7 @@
   <entry>
     <title>embedded system building</title>
     <url>/2020/11/21/embedded_system_building/</url>
-    <content><![CDATA[<p>[TOC]</p>
-<h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-arm-linux-gnueabi</span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h2 id="Preparation"><a href="#Preparation" class="headerlink" title="Preparation"></a>Preparation</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt install gcc-arm-linux-gnueabi</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">su@ubuntu2004:&#x2F;sdb1&#x2F;buildroot-2020.02.8$ dpkg -l | grep armel</span><br><span class="line">ii  cpp-arm-linux-gnueabi                      4:9.3.0-1ubuntu2                      amd64        GNU C preprocessor (cpp) for the armel architecture</span><br><span class="line">ii  gcc-9-arm-linux-gnueabi                    9.3.0-17ubuntu1~20.04cross2           amd64        GNU C compiler (cross compiler for armel architecture)</span><br><span class="line">ii  gcc-arm-linux-gnueabi                      4:9.3.0-1ubuntu2                      amd64        GNU C compiler for the armel architecture</span><br><span class="line">ii  libasan5-armel-cross                       9.3.0-17ubuntu1~20.04cross2           all          AddressSanitizer -- a fast memory error detector</span><br><span class="line">ii  libatomic1-armel-cross                     10.2.0-5ubuntu1~20.04cross1           all          support library providing __atomic built-in functions</span><br><span class="line">ii  libc6-armel-cross                          2.31-0ubuntu7cross1                   all          GNU C Library: Shared libraries (for cross-compiling)</span><br><span class="line">ii  libc6-dev-armel-cross                      2.31-0ubuntu7cross1                   all          GNU C Library: Development Libraries and Header Files (for cross-compiling)</span><br><span class="line">ii  libgcc-9-dev-armel-cross                   9.3.0-17ubuntu1~20.04cross2           all          GCC support library (development files)</span><br><span class="line">ii  libgcc-s1-armel-cross                      10.2.0-5ubuntu1~20.04cross1           all          GCC support library (armel)</span><br><span class="line">ii  libgomp1-armel-cross                       10.2.0-5ubuntu1~20.04cross1           all          GCC OpenMP (GOMP) support library</span><br><span class="line">ii  libstdc++6-armel-cross                     10.2.0-5ubuntu1~20.04cross1           all          GNU Standard C++ Library v3 (armel)</span><br><span class="line">ii  libubsan1-armel-cross                      10.2.0-5ubuntu1~20.04cross1           all          UBSan -- undefined behaviour sanitizer (runtime)</span><br><span class="line">ii  linux-libc-dev-armel-cross                 5.4.0-21.25cross1                     all          Linux Kernel Headers for development (for cross-compiling)</span><br></pre></td></tr></table></figure>
 
@@ -431,7 +430,9 @@
         <category>linux</category>
       </categories>
       <tags>
-        <tag>uboot, uclibc, gcc</tag>
+        <tag>uboot</tag>
+        <tag>uclibc</tag>
+        <tag>gcc</tag>
       </tags>
   </entry>
   <entry>
