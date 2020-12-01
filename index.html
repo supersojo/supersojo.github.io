@@ -142,7 +142,7 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">51</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">53</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">31</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">32</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,93 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/11/26/vmware%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/11/26/vmware%E7%BD%91%E7%BB%9C/" class="post-title-link" itemprop="url">vmware网络</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-26 20:11:23" itemprop="dateCreated datePublished" datetime="2020-11-26T20:11:23+00:00">2020-11-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/linux/" itemprop="url" rel="index">
+                    <span itemprop="name">linux</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="vmware支持三种网络"><a href="#vmware支持三种网络" class="headerlink" title="vmware支持三种网络"></a>vmware支持三种网络</h2><ul>
+<li><p>vmnet0 - 桥接网络模式</p>
+<p>虚拟机和物理网口通过桥接方式互联</p>
+</li>
+<li><p>vmnet1 - host-only网络模式</p>
+<p>虚拟交换机和外部接口无任何连接</p>
+</li>
+<li><p>vmnet8 - nat网络模式</p>
+<p>虚拟机连接到nat网络，虚拟机发出的报文经NAT后从外部接口出去</p>
+</li>
+</ul>
+<h2 id="多虚拟机方案"><a href="#多虚拟机方案" class="headerlink" title="多虚拟机方案"></a>多虚拟机方案</h2><p>openwrt虚拟机两个接口一个连接nat网络作为WAN口，一个连接host-only网络作为LAN口，其它虚拟机仅连接host-only网络。可以开启openwrt的dhcp，这样虚拟机地址自动配置，无需再设置网关。所有虚拟机流量都是经过加密的。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/11/21/embedded_system_building/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +326,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -525,7 +612,7 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-arm -M vexpress-a9 -nographic -m 512M -kernel u-boot -pflash ../firmware.bin</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2020/11/21/embedded_system_building/u-boo-kernel-jffs2.gif" alt="u-boo-kernel-jffs2"></p>
-<h2 id="Using-uftp"><a href="#Using-uftp" class="headerlink" title="Using uftp"></a>Using uftp</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-arm -M vexpress-a9 -nographic -m 512M -kernel u-boot -pflash ../firmware.bin -net nic,model=lan9118 -net tap,ifname=tap0</span><br></pre></td></tr></table></figure>
+<h2 id="Using-tftp"><a href="#Using-tftp" class="headerlink" title="Using tftp"></a>Using tftp</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-system-arm -M vexpress-a9 -nographic -m 512M -kernel u-boot -pflash ../firmware.bin -net nic,model=lan9118 -net tap,ifname=tap0</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>“-net nic,model=lan9118 -net tap,ifname=tap0” for qemu. It’ll use tap0 as it’s simulated nic.</p>
@@ -598,7 +685,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -689,7 +776,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -768,7 +855,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -846,7 +933,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -924,7 +1011,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1009,7 +1096,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1085,7 +1172,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1167,7 +1254,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1219,87 +1306,6 @@
 <p>常用例子是外设的发送接收buffer，scsi外设读写的buffer。</p>
 <p>注意dma地址是共享资源，流式dma会比较节省。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1 <a href="https://www.kernel.org/doc/Documentation/DMA-API-HOWTO.txt" target="_blank" rel="noopener">DMA API</a></p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-title-link" itemprop="url">关于kodi声音变小的问题</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-07-22 21:18:10" itemprop="dateCreated datePublished" datetime="2020-07-22T21:18:10+00:00">2020-07-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 04:26:02" itemprop="dateModified" datetime="2020-12-01T04:26:02+00:00">2020-12-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/pc/" itemprop="url" rel="index">
-                    <span itemprop="name">pc</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>由于debian下使用kodi不是官方推荐的，所以更新发行版到ubuntu 20.04 lts版。<br>但是kodi经过HDMI连接电视后声音非常小，把电视上音量调到最大，勉强可以听清。</p>
-<h2 id="1、排除电视自身的问题"><a href="#1、排除电视自身的问题" class="headerlink" title="1、排除电视自身的问题"></a>1、排除电视自身的问题</h2><p>使用电视自带的系统播放视频，声音正常，可以排除电视的问题。</p>
-<h2 id="2、kodi设置的问题"><a href="#2、kodi设置的问题" class="headerlink" title="2、kodi设置的问题"></a>2、kodi设置的问题</h2><p>google搜索相关的问题得到以下信息。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;discourse.coreelec.org&#x2F;t&#x2F;solved-sound-volume-via-hdmi-suddenly-very-low&#x2F;6045&#x2F;4</span><br><span class="line"></span><br><span class="line">A couple of things that might help.</span><br><span class="line"></span><br><span class="line">One, plug a keyboard in and press the + key a few times. kodi’s volume indicator should popup to centre of the screen. It’s possible that kodi’s internal sound level ended up turned down some how. Use + and - keys to adjust volume level if this is the case.</span><br><span class="line"></span><br><span class="line">Two, check the audio device that you are using, Settings&#x2F;System&#x2F;Audio. Try changing it to one that mentions hdmi at the end of it. If it is not already on that one.</span><br><span class="line"></span><br><span class="line">The +&#x2F;- did the trick. Tbh, I didn’t even know Kodi had that key shortcuts.</span><br><span class="line">In all the years I’ve been using Kodi on several platforms, I’ve always used CEC.</span><br><span class="line"></span><br><span class="line">For some reason the volume was at one third. Putting it back to 100% and volume was back to normal (for me).</span><br><span class="line"></span><br><span class="line">Thanks for the replies!</span><br></pre></td></tr></table></figure>
-
-<p>解决方法是连接键盘，按+/-键，出现kodi音量调节项，设置到最大音量恢复正常。<br>但是还有点问题，每次电视关掉再打开声音又变小，必须重启kodi才恢复正常。</p>
 
       
     </div>
@@ -1385,7 +1391,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">32</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1398,7 +1404,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
