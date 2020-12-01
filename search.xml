@@ -202,6 +202,39 @@
       </tags>
   </entry>
   <entry>
+    <title>copy_file_range problem</title>
+    <url>/2020/01/20/copy-file-range-problem/</url>
+    <content><![CDATA[<h1 id="copy-file-range问题"><a href="#copy-file-range问题" class="headerlink" title="copy_file_range问题"></a>copy_file_range问题</h1><p>在使用3.10内核的过程中遇到一个关于copy_file_range的问题，<strong>拷贝后数据不对</strong>。有必要对这个系统调用分析一下。</p>
+<h1 id="copy-file-range"><a href="#copy-file-range" class="headerlink" title="copy_file_range"></a>copy_file_range</h1><p><strong>copy_file_range</strong>是最近新增的[2]syscall，在不需要内核和用户态缓存间的拷贝就可以高效实现文件间的拷贝。传统的文件拷贝流程涉及内核page cache到用户缓存，然后由用户缓存再拷贝到内核page cache，中间涉及两次拷贝，效率不高。copy_file_range正是对拷贝的优化，内部实现是通过pipe buffer的结构，在读取源文件时把涉及到的page cache内存页，页内offset，长度信息，保存到pipe buffer中，在向目标文件拷贝时直接读取pipe buffer信息，执行后续写操作，这样仅需要一次拷贝就完成了。</p>
+<p>copy_file_range的流程图如下<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4.png" alt="copy_file_range flow chart"><br>可以看到最终调用pipe_to_file。下面看下该函数的实现。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe_to_file</span><span class="params">(struct pipe_inode_info *pipe, struct pipe_buffer *buf,</span></span></span><br><span class="line"><span class="function"><span class="params">struct splice_desc *sd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">file</span> = <span class="title">sd</span>-&gt;<span class="title">u</span>.<span class="title">file</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">address_space</span> *<span class="title">mapping</span> = <span class="title">file</span>-&gt;<span class="title">f_mapping</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> offset, this_len;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span>;</span></span><br><span class="line">	<span class="keyword">void</span> *fsdata;</span><br><span class="line">	<span class="keyword">int</span> ret;</span><br><span class="line"></span><br><span class="line">	offset = sd-&gt;pos &amp; ~PAGE_CACHE_MASK;</span><br><span class="line"></span><br><span class="line">	this_len = sd-&gt;len;</span><br><span class="line">	<span class="keyword">if</span> (this_len + offset &gt; PAGE_CACHE_SIZE)</span><br><span class="line">		this_len = PAGE_CACHE_SIZE - offset;</span><br><span class="line"></span><br><span class="line">	ret = pagecache_write_begin(file, mapping, sd-&gt;pos, this_len,</span><br><span class="line">	AOP_FLAG_UNINTERRUPTIBLE, &amp;page, &amp;fsdata);</span><br><span class="line">	<span class="keyword">if</span> (unlikely(ret))</span><br><span class="line">		<span class="keyword">goto</span> out;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (buf-&gt;page != page) &#123;</span><br><span class="line">		<span class="keyword">char</span> *src = buf-&gt;ops-&gt;<span class="built_in">map</span>(pipe, buf, <span class="number">1</span>);</span><br><span class="line">		<span class="keyword">char</span> *dst = kmap_atomic(page);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">memcpy</span>(dst + offset, src + buf-&gt;offset, this_len);</span><br><span class="line">		flush_dcache_page(page);</span><br><span class="line">		kunmap_atomic(dst);</span><br><span class="line">		buf-&gt;ops-&gt;unmap(pipe, buf, src);</span><br><span class="line">	&#125;</span><br><span class="line">	ret = pagecache_write_end(file, mapping, sd-&gt;pos, this_len, this_len,</span><br><span class="line">		page, fsdata);</span><br><span class="line">out:</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面第22行判断如果不是同一page时才会执行数据拷贝操作，如果是同一page，则不执行数据操作。这样copy_file_range就不适用同一文件中拷贝。如果执行copy_file_range测试指定的是同一文件，在源偏移和目标偏移很小，即小于一个page大小时，pipe_to_file就不执行数据操作，从而导致拷贝数据不一致。</p>
+<p>内核upstream上的处理流程如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4_latest.png" alt="cop_file_range"></p>
+<blockquote>
+<p>最新版的内核已经抛弃对pipe_to_file的调用，该函数也已经从内核移除。最终的实现调用的是iov_iter_copy_from_user_atomic负责完成数据操作。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">size_t iov_iter_copy_from_user_atomic(struct page *page,</span><br><span class="line">struct iov_iter *i, unsigned long offset, size_t bytes)</span><br><span class="line">&#123;</span><br><span class="line">	char *kaddr &#x3D; kmap_atomic(page), *p &#x3D; kaddr + offset;</span><br><span class="line">	if (unlikely(!page_copy_sane(page, offset, bytes))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	if (unlikely(iov_iter_is_pipe(i) || iov_iter_is_discard(i))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		WARN_ON(1);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	iterate_all_kinds(i, bytes, v,</span><br><span class="line">		copyin((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len),</span><br><span class="line">		memcpy_from_page((p +&#x3D; v.bv_len) - v.bv_len, v.bv_page,v.bv_offset, v.bv_len),</span><br><span class="line">		memcpy((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len)</span><br><span class="line">	)</span><br><span class="line">	kunmap_atomic(kaddr);</span><br><span class="line">	return bytes;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(iov_iter_copy_from_user_atomic);</span><br></pre></td></tr></table></figure>
+<p>iov_iter_copy_from_user_atomic的流程图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_iov_iter.png" alt="iov_iter_copy_from_user_atomic"></p>
+<blockquote>
+<p>iov_iter_copy_from_user_atomic函数并不关心源和目标page是否是同一page，他们之间是否会出现覆盖的情&gt;况，仅仅是执行数据操作。如果数据源和数据目标有覆盖则copy_file_range的结果是有问题的。</p>
+</blockquote>
+<p>数据覆盖的情况如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_overlap.png" alt="iov_iter_copy_from_user_atomic"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在使用copy_file_range时一定要注意针对同一文件执行copy_file_range，结果有可能发生覆盖，导致结果并不是我们预期的。这个和memcpy一样，在有覆盖时结果时不可预期的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
+<li><a href="https://lwn.net/Articles/659523/" target="_blank" rel="noopener">copy_file_range()</a></li>
+<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/read_write.c" target="_blank" rel="noopener">read_write.c</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>ext4</category>
+      </categories>
+      <tags>
+        <tag>fs</tag>
+        <tag>ext4</tag>
+        <tag>copy_file_range</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>bpf入门系列-2</title>
     <url>/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/</url>
     <content><![CDATA[<h2 id="头文件设置"><a href="#头文件设置" class="headerlink" title="头文件设置"></a>头文件设置</h2><p>要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。</p>
@@ -246,36 +279,85 @@
       </tags>
   </entry>
   <entry>
-    <title>copy_file_range problem</title>
-    <url>/2020/01/20/copy-file-range-problem/</url>
-    <content><![CDATA[<h1 id="copy-file-range问题"><a href="#copy-file-range问题" class="headerlink" title="copy_file_range问题"></a>copy_file_range问题</h1><p>在使用3.10内核的过程中遇到一个关于copy_file_range的问题，<strong>拷贝后数据不对</strong>。有必要对这个系统调用分析一下。</p>
-<h1 id="copy-file-range"><a href="#copy-file-range" class="headerlink" title="copy_file_range"></a>copy_file_range</h1><p><strong>copy_file_range</strong>是最近新增的[2]syscall，在不需要内核和用户态缓存间的拷贝就可以高效实现文件间的拷贝。传统的文件拷贝流程涉及内核page cache到用户缓存，然后由用户缓存再拷贝到内核page cache，中间涉及两次拷贝，效率不高。copy_file_range正是对拷贝的优化，内部实现是通过pipe buffer的结构，在读取源文件时把涉及到的page cache内存页，页内offset，长度信息，保存到pipe buffer中，在向目标文件拷贝时直接读取pipe buffer信息，执行后续写操作，这样仅需要一次拷贝就完成了。</p>
-<p>copy_file_range的流程图如下<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4.png" alt="copy_file_range flow chart"><br>可以看到最终调用pipe_to_file。下面看下该函数的实现。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pipe_to_file</span><span class="params">(struct pipe_inode_info *pipe, struct pipe_buffer *buf,</span></span></span><br><span class="line"><span class="function"><span class="params">struct splice_desc *sd)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">file</span> *<span class="title">file</span> = <span class="title">sd</span>-&gt;<span class="title">u</span>.<span class="title">file</span>;</span></span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">address_space</span> *<span class="title">mapping</span> = <span class="title">file</span>-&gt;<span class="title">f_mapping</span>;</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">int</span> offset, this_len;</span><br><span class="line">	<span class="class"><span class="keyword">struct</span> <span class="title">page</span> *<span class="title">page</span>;</span></span><br><span class="line">	<span class="keyword">void</span> *fsdata;</span><br><span class="line">	<span class="keyword">int</span> ret;</span><br><span class="line"></span><br><span class="line">	offset = sd-&gt;pos &amp; ~PAGE_CACHE_MASK;</span><br><span class="line"></span><br><span class="line">	this_len = sd-&gt;len;</span><br><span class="line">	<span class="keyword">if</span> (this_len + offset &gt; PAGE_CACHE_SIZE)</span><br><span class="line">		this_len = PAGE_CACHE_SIZE - offset;</span><br><span class="line"></span><br><span class="line">	ret = pagecache_write_begin(file, mapping, sd-&gt;pos, this_len,</span><br><span class="line">	AOP_FLAG_UNINTERRUPTIBLE, &amp;page, &amp;fsdata);</span><br><span class="line">	<span class="keyword">if</span> (unlikely(ret))</span><br><span class="line">		<span class="keyword">goto</span> out;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">if</span> (buf-&gt;page != page) &#123;</span><br><span class="line">		<span class="keyword">char</span> *src = buf-&gt;ops-&gt;<span class="built_in">map</span>(pipe, buf, <span class="number">1</span>);</span><br><span class="line">		<span class="keyword">char</span> *dst = kmap_atomic(page);</span><br><span class="line"></span><br><span class="line">		<span class="built_in">memcpy</span>(dst + offset, src + buf-&gt;offset, this_len);</span><br><span class="line">		flush_dcache_page(page);</span><br><span class="line">		kunmap_atomic(dst);</span><br><span class="line">		buf-&gt;ops-&gt;unmap(pipe, buf, src);</span><br><span class="line">	&#125;</span><br><span class="line">	ret = pagecache_write_end(file, mapping, sd-&gt;pos, this_len, this_len,</span><br><span class="line">		page, fsdata);</span><br><span class="line">out:</span><br><span class="line">	<span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>上面第22行判断如果不是同一page时才会执行数据拷贝操作，如果是同一page，则不执行数据操作。这样copy_file_range就不适用同一文件中拷贝。如果执行copy_file_range测试指定的是同一文件，在源偏移和目标偏移很小，即小于一个page大小时，pipe_to_file就不执行数据操作，从而导致拷贝数据不一致。</p>
-<p>内核upstream上的处理流程如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_ext4_latest.png" alt="cop_file_range"></p>
-<blockquote>
-<p>最新版的内核已经抛弃对pipe_to_file的调用，该函数也已经从内核移除。最终的实现调用的是iov_iter_copy_from_user_atomic负责完成数据操作。</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">size_t iov_iter_copy_from_user_atomic(struct page *page,</span><br><span class="line">struct iov_iter *i, unsigned long offset, size_t bytes)</span><br><span class="line">&#123;</span><br><span class="line">	char *kaddr &#x3D; kmap_atomic(page), *p &#x3D; kaddr + offset;</span><br><span class="line">	if (unlikely(!page_copy_sane(page, offset, bytes))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	if (unlikely(iov_iter_is_pipe(i) || iov_iter_is_discard(i))) &#123;</span><br><span class="line">		kunmap_atomic(kaddr);</span><br><span class="line">		WARN_ON(1);</span><br><span class="line">		return 0;</span><br><span class="line">	&#125;</span><br><span class="line">	iterate_all_kinds(i, bytes, v,</span><br><span class="line">		copyin((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len),</span><br><span class="line">		memcpy_from_page((p +&#x3D; v.bv_len) - v.bv_len, v.bv_page,v.bv_offset, v.bv_len),</span><br><span class="line">		memcpy((p +&#x3D; v.iov_len) - v.iov_len, v.iov_base, v.iov_len)</span><br><span class="line">	)</span><br><span class="line">	kunmap_atomic(kaddr);</span><br><span class="line">	return bytes;</span><br><span class="line">&#125;</span><br><span class="line">EXPORT_SYMBOL(iov_iter_copy_from_user_atomic);</span><br></pre></td></tr></table></figure>
-<p>iov_iter_copy_from_user_atomic的流程图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_iov_iter.png" alt="iov_iter_copy_from_user_atomic"></p>
-<blockquote>
-<p>iov_iter_copy_from_user_atomic函数并不关心源和目标page是否是同一page，他们之间是否会出现覆盖的情&gt;况，仅仅是执行数据操作。如果数据源和数据目标有覆盖则copy_file_range的结果是有问题的。</p>
-</blockquote>
-<p>数据覆盖的情况如下图:<br><img src="/2020/01/20/copy-file-range-problem/copy_file_range_overlap.png" alt="iov_iter_copy_from_user_atomic"></p>
-<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>在使用copy_file_range时一定要注意针对同一文件执行copy_file_range，结果有可能发生覆盖，导致结果并不是我们预期的。这个和memcpy一样，在有覆盖时结果时不可预期的。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><ol>
-<li><a href="https://lwn.net/Articles/659523/" target="_blank" rel="noopener">copy_file_range()</a></li>
-<li><a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/fs/read_write.c" target="_blank" rel="noopener">read_write.c</a></li>
-</ol>
+    <title>关于kodi连接电视PVR刷新率问题</title>
+    <url>/2020/09/25/kodi_refresh_problem/</url>
+    <content><![CDATA[<p>使用kodi的PVR观看iptv时，画面刷新率不够，到PVR设置页面，把刷新率设置选项关闭，这样电视的刷新率就和系统设置的刷新率一致，不会出现画观看电视面刷新率不够的问题。</p>
 ]]></content>
       <categories>
-        <category>ext4</category>
+        <category>pc</category>
       </categories>
       <tags>
-        <tag>fs</tag>
-        <tag>ext4</tag>
-        <tag>copy_file_range</tag>
+        <tag>kodi</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>linux发行版DVD安装机制分析</title>
+    <url>/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/</url>
+    <content><![CDATA[<h2 id="linux发行版DVD安装机制分析"><a href="#linux发行版DVD安装机制分析" class="headerlink" title="linux发行版DVD安装机制分析"></a>linux发行版DVD安装机制分析</h2><p>想知道linux发行版究竟是怎么启动安装的吗，下面简单的分析下dvd光盘启动linux机制。</p>
+<h2 id="ISO-9660-标准"><a href="#ISO-9660-标准" class="headerlink" title="ISO 9660 标准"></a>ISO 9660 标准</h2><p>如果系统支持DVD启动，CD/DVD镜像格式必须满足标准，目前主要是采用<a href="http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-119.pdf" target="_blank" rel="noopener">ISO 9660标准</a>。</p>
+<p>ISO 9660是CD-ROM的标准文件系统。它还广泛用于DVD和BD介质上，也可能存在于USB sticks或硬盘上。</p>
+<p>ISO 9660基本信息：</p>
+<ol>
+<li>扇区大小<br>ISO 9660扇区正常都是2KB，尽管规范说可选，但是很难找到不是2K扇区大小的DVD</li>
+<li>数字编码<br>支持大段和小端模式   </li>
+<li>字符串编码<br>采用ASCII编码，但并不是所有字符都可用。但并不是所有DVD遵循这个规范。</li>
+<li>大小限制<br>最大2^32的block，即8TB。</li>
+<li>系统区域<br>前32KB(16个扇区)可以存储任意数据。如果ISO 9660文件系统存放在usb sticks或者硬盘，则一般用于存放boot代码(MBR)。</li>
+</ol>
+<h2 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h2><p>BIOS/EFI固件支持CD/DVD启动，根据ISO 9660标准寻找光盘上的boot record记录，根据boot record进而找到boot image(isolinux.bin)，<br>执行bootimage代码，根据isolinux.cfg的配置加载内核(vmlinuz)和RAM DISK(initrd)，加载完后跳转到<br>内核执行。</p>
+<p>这个initrd在内核启动时作为内存根文件系统使用，加载必要的驱动，然后内核切换到真正的根文件系统上面。<br>对于RHEL系就是光盘LiveOS下的squashfs.img。内核会挂载squashfs镜像，然后切换到其中的根文件系统。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# file squashfs.img</span><br><span class="line">squashfs.img: Squashfs filesystem, little endian, version 4.0, 433674553 bytes, 3 inodes, blocksize: 131072 bytes, created: Wed Mar 18 13:21:34 2020</span><br></pre></td></tr></table></figure>
+<p>挂载该squashfs镜像后可得到里边是一个rootfs.img(ext4文件系统镜像)。<br>这个rootfs.img就是内核在安装发行版时使用的根文件系统。</p>
+<h3 id="vmlinuz的生成"><a href="#vmlinuz的生成" class="headerlink" title="vmlinuz的生成"></a>vmlinuz的生成</h3><p>vmlinuz是内核文件，如果是自己编译内核，可以到<a href="https://www.kernel.org/" target="_blank" rel="noopener">官网</a>下载对应版本的<br>源码，编译。对于RHEL系发行版，一般有对应版本的源码包，如RPM源码包，安装后可以使用<br><a href="https://fedoraproject.org/wiki/Building_a_custom_kernel/Source_RPM" target="_blank" rel="noopener">rpmbuild编译内核</a>。<br>对于debian系发行版，可以参考<a href="https://blog.lpxin.com/2019/05/15/%E4%BD%BF%E7%94%A8make-kpkg%E7%BC%96%E8%AF%91deb%E5%86%85%E6%A0%B8%E5%AE%89%E8%A3%85%E5%8C%85/" target="_blank" rel="noopener">这里</a>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# file vmlinuz</span><br><span class="line">vmlinuz: Linux kernel x86 boot executable bzImage, version 3.10.0-514.el7.x86_64 (root@RX300S8-1) #1 SMP Wed Mar 18 15:05:, RO-rootFS, swap_dev 0x5, Normal VGA</span><br></pre></td></tr></table></figure>
+
+<h3 id="initrd的解压和打包"><a href="#initrd的解压和打包" class="headerlink" title="initrd的解压和打包"></a>initrd的解压和打包</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# file initrd.img</span><br><span class="line">initrd.img: LZMA compressed data, streamed</span><br></pre></td></tr></table></figure>
+
+<p>一般initrd都是经过压缩的，如上是采用lzma压缩的。需要lzma解压，完成后得到cpio包。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cpio -idmv &lt;initrd.img</span><br></pre></td></tr></table></figure>
+
+<p>经过cpio命令可以解压得到里边的内容。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# ls</span><br><span class="line">bin  etc   lib    proc  run   shutdown  sysroot  usr</span><br><span class="line">dev  init  lib64  root  sbin  sys       tmp      var</span><br></pre></td></tr></table></figure>
+<p>这时可以对里边的内容修改，如替换成自己的内核驱动等等。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">find . | cpio -c -o ..&#x2F;initrd.img</span><br></pre></td></tr></table></figure>
+<p>上面用于打包cpio，然后经过lzma压缩就可以得到可用的initrd。</p>
+<p>这里注意如果使用自己的lib/modules/xxxx替换，需要depmod一下，生成<br>对应的modules.alias等文件，这样系统才能正常工作。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depmod -a -b &lt;lib&#x2F;modules&#x2F;xxxx中lib的父目录&gt;  -F &lt;Your System.map文件&gt;  -E &lt;Your symvers文件&gt; &lt;lib&#x2F;modules&#x2F;xxxx中的xxxx字符串即内核版本号&gt;</span><br></pre></td></tr></table></figure>
+<p>经过上述步骤后打包成的initrd是可以正常工作的。</p>
+<h3 id="squashfs镜像的解压和打包"><a href="#squashfs镜像的解压和打包" class="headerlink" title="squashfs镜像的解压和打包"></a>squashfs镜像的解压和打包</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir tmp_squashfs</span><br><span class="line">mount squashfs.img tmp_squashfs</span><br><span class="line">[root@vm tmp_squashfs]# tree</span><br><span class="line">.</span><br><span class="line">└── LiveOS</span><br><span class="line">    └── rootfs.img</span><br><span class="line"></span><br><span class="line">1 directory, 1 file</span><br></pre></td></tr></table></figure>
+<p>如果需要修改其中的rootfs.img需要拷贝出来，然后挂载该rootfs镜像，修改完直接卸载。<br>然后重新做成squashfs镜像。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mksquashfs &lt;Your squashfs目录&gt; squashfs.img</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上述步骤可以详细了解linux发行版启动安装机制。<br>简单讲首先运行一个linux内核(CD/DVD上面)，然后执行发行版的安装程序完成具体的安装。<br>安装程序负责对硬盘分区，挂载，使用CD/DVD上的目录作为安装源安装软件，最好配置重启完成安装。</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>CD</tag>
+        <tag>DVD</tag>
+        <tag>initrd</tag>
+        <tag>vmlinuz</tag>
+        <tag>squashfs</tag>
+        <tag>ISO 9660</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>nextcloud离线下载</title>
+    <url>/2020/08/25/nextcloud%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD/</url>
+    <content><![CDATA[<h2 id="install-nextcloud"><a href="#install-nextcloud" class="headerlink" title="install nextcloud"></a>install nextcloud</h2><h2 id="install-ocdownloader"><a href="#install-ocdownloader" class="headerlink" title="install ocdownloader"></a>install ocdownloader</h2><p>这里设置正确的路径否则报无法找到视频地址错误</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">controller&#x2F;ytdownloader.php</span><br><span class="line">$this-&gt;YTDLBinary &#x3D; &#39;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;youtube-dl&#39;; &#x2F;&#x2F; default path</span><br></pre></td></tr></table></figure>
+
+<h2 id="install-aria2"><a href="#install-aria2" class="headerlink" title="install aria2"></a>install aria2</h2><p>参考<a href="https://gist.github.com/GAS85/79849bfd09613067a2ac0c1a711120a6" target="_blank" rel="noopener">https://gist.github.com/GAS85/79849bfd09613067a2ac0c1a711120a6</a></p>
+<p>注意要想ocdownloader使用aria2，需要设置不加密方式，还是不太安全</p>
+<h2 id="install-youtube-dl"><a href="#install-youtube-dl" class="headerlink" title="install youtube-dl"></a>install youtube-dl</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt install python-pip</span><br><span class="line">pip install youtube-dl</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>nextcloud</tag>
       </tags>
   </entry>
   <entry>
@@ -542,6 +624,18 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">qemu-system-arm -M vexpress-a9 -nographic -m 512M -kernel u-boot -pflash ../firmware.bin</span><br></pre></td></tr></table></figure>
 
 <p><img src="/2020/11/21/embedded_system_building/u-boo-kernel-jffs2.gif" alt="u-boo-kernel-jffs2"></p>
+<h2 id="Using-uftp"><a href="#Using-uftp" class="headerlink" title="Using uftp"></a>Using uftp</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">qemu-system-arm -M vexpress-a9 -nographic -m 512M -kernel u-boot -pflash ../firmware.bin -net nic,model=lan9118 -net tap,ifname=tap0</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>“-net nic,model=lan9118 -net tap,ifname=tap0” for qemu. It’ll use tap0 as it’s simulated nic.</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> create tap0</span></span><br><span class="line">sudo tunctl -u $(whoami) -t tap0</span><br><span class="line"><span class="meta">#</span><span class="bash"> create br0</span></span><br><span class="line">sudo brctl addbr br0</span><br><span class="line"><span class="meta">#</span><span class="bash"> add tap0 to br0</span></span><br><span class="line">sudo brctl addif br0 tap0</span><br><span class="line"><span class="meta">#</span><span class="bash"> bring up br0</span></span><br><span class="line">sudo ifconfig br0 up</span><br><span class="line"><span class="meta">#</span><span class="bash"> bring up tap0</span></span><br><span class="line">sudo ifconfig tap0 up</span><br><span class="line"><span class="meta">#</span><span class="bash"> setting ip of br0</span></span><br><span class="line">sudo ifconfig br0 192.168.100.1/24</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2020/11/21/embedded_system_building/u-boot-with-nic-0.png" alt="u-boot-with-nic-0"></p>
+<p><img src="/2020/11/21/embedded_system_building/u-boot-ip-settings.png" alt="u-boot-ip-settings"></p>
+<p><img src="/2020/11/21/embedded_system_building/u-boot-tftp-files.png" alt="u-boot-tftp-files"></p>
+<p><img src="/2020/11/21/embedded_system_building/u-boot-set-bootargs.png" alt="u-boot-set-bootargs"></p>
+<p>So we can update kernel or rootfs by network now!</p>
 <h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><ol>
 <li><a href="https://cjhackerz.net/posts/understanding-how-bootloader-works-by-creating-your-own-firmware/" target="_blank" rel="noopener">understanding-how-bootloader-works-by-creating-your-own-firmware</a></li>
 <li><a href="https://cjhackerz.net/posts/arm-emulated-environment-iotsec-qemu/" target="_blank" rel="noopener">arm-emulated-environment-iotsec-qemu</a></li>
@@ -561,88 +655,6 @@
         <tag>uboot</tag>
         <tag>uclibc</tag>
         <tag>gcc</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>关于kodi连接电视PVR刷新率问题</title>
-    <url>/2020/09/25/kodi_refresh_problem/</url>
-    <content><![CDATA[<p>使用kodi的PVR观看iptv时，画面刷新率不够，到PVR设置页面，把刷新率设置选项关闭，这样电视的刷新率就和系统设置的刷新率一致，不会出现画观看电视面刷新率不够的问题。</p>
-]]></content>
-      <categories>
-        <category>pc</category>
-      </categories>
-      <tags>
-        <tag>kodi</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>linux发行版DVD安装机制分析</title>
-    <url>/2017/04/12/linux%E5%8F%91%E8%A1%8C%E7%89%88DVD%E5%AE%89%E8%A3%85%E6%9C%BA%E5%88%B6%E5%88%86%E6%9E%90/</url>
-    <content><![CDATA[<h2 id="linux发行版DVD安装机制分析"><a href="#linux发行版DVD安装机制分析" class="headerlink" title="linux发行版DVD安装机制分析"></a>linux发行版DVD安装机制分析</h2><p>想知道linux发行版究竟是怎么启动安装的吗，下面简单的分析下dvd光盘启动linux机制。</p>
-<h2 id="ISO-9660-标准"><a href="#ISO-9660-标准" class="headerlink" title="ISO 9660 标准"></a>ISO 9660 标准</h2><p>如果系统支持DVD启动，CD/DVD镜像格式必须满足标准，目前主要是采用<a href="http://www.ecma-international.org/publications/files/ECMA-ST/Ecma-119.pdf" target="_blank" rel="noopener">ISO 9660标准</a>。</p>
-<p>ISO 9660是CD-ROM的标准文件系统。它还广泛用于DVD和BD介质上，也可能存在于USB sticks或硬盘上。</p>
-<p>ISO 9660基本信息：</p>
-<ol>
-<li>扇区大小<br>ISO 9660扇区正常都是2KB，尽管规范说可选，但是很难找到不是2K扇区大小的DVD</li>
-<li>数字编码<br>支持大段和小端模式   </li>
-<li>字符串编码<br>采用ASCII编码，但并不是所有字符都可用。但并不是所有DVD遵循这个规范。</li>
-<li>大小限制<br>最大2^32的block，即8TB。</li>
-<li>系统区域<br>前32KB(16个扇区)可以存储任意数据。如果ISO 9660文件系统存放在usb sticks或者硬盘，则一般用于存放boot代码(MBR)。</li>
-</ol>
-<h2 id="启动过程"><a href="#启动过程" class="headerlink" title="启动过程"></a>启动过程</h2><p>BIOS/EFI固件支持CD/DVD启动，根据ISO 9660标准寻找光盘上的boot record记录，根据boot record进而找到boot image(isolinux.bin)，<br>执行bootimage代码，根据isolinux.cfg的配置加载内核(vmlinuz)和RAM DISK(initrd)，加载完后跳转到<br>内核执行。</p>
-<p>这个initrd在内核启动时作为内存根文件系统使用，加载必要的驱动，然后内核切换到真正的根文件系统上面。<br>对于RHEL系就是光盘LiveOS下的squashfs.img。内核会挂载squashfs镜像，然后切换到其中的根文件系统。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# file squashfs.img</span><br><span class="line">squashfs.img: Squashfs filesystem, little endian, version 4.0, 433674553 bytes, 3 inodes, blocksize: 131072 bytes, created: Wed Mar 18 13:21:34 2020</span><br></pre></td></tr></table></figure>
-<p>挂载该squashfs镜像后可得到里边是一个rootfs.img(ext4文件系统镜像)。<br>这个rootfs.img就是内核在安装发行版时使用的根文件系统。</p>
-<h3 id="vmlinuz的生成"><a href="#vmlinuz的生成" class="headerlink" title="vmlinuz的生成"></a>vmlinuz的生成</h3><p>vmlinuz是内核文件，如果是自己编译内核，可以到<a href="https://www.kernel.org/" target="_blank" rel="noopener">官网</a>下载对应版本的<br>源码，编译。对于RHEL系发行版，一般有对应版本的源码包，如RPM源码包，安装后可以使用<br><a href="https://fedoraproject.org/wiki/Building_a_custom_kernel/Source_RPM" target="_blank" rel="noopener">rpmbuild编译内核</a>。<br>对于debian系发行版，可以参考<a href="https://blog.lpxin.com/2019/05/15/%E4%BD%BF%E7%94%A8make-kpkg%E7%BC%96%E8%AF%91deb%E5%86%85%E6%A0%B8%E5%AE%89%E8%A3%85%E5%8C%85/" target="_blank" rel="noopener">这里</a>。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# file vmlinuz</span><br><span class="line">vmlinuz: Linux kernel x86 boot executable bzImage, version 3.10.0-514.el7.x86_64 (root@RX300S8-1) #1 SMP Wed Mar 18 15:05:, RO-rootFS, swap_dev 0x5, Normal VGA</span><br></pre></td></tr></table></figure>
-
-<h3 id="initrd的解压和打包"><a href="#initrd的解压和打包" class="headerlink" title="initrd的解压和打包"></a>initrd的解压和打包</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# file initrd.img</span><br><span class="line">initrd.img: LZMA compressed data, streamed</span><br></pre></td></tr></table></figure>
-
-<p>一般initrd都是经过压缩的，如上是采用lzma压缩的。需要lzma解压，完成后得到cpio包。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">cpio -idmv &lt;initrd.img</span><br></pre></td></tr></table></figure>
-
-<p>经过cpio命令可以解压得到里边的内容。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[root@vm]# ls</span><br><span class="line">bin  etc   lib    proc  run   shutdown  sysroot  usr</span><br><span class="line">dev  init  lib64  root  sbin  sys       tmp      var</span><br></pre></td></tr></table></figure>
-<p>这时可以对里边的内容修改，如替换成自己的内核驱动等等。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">find . | cpio -c -o ..&#x2F;initrd.img</span><br></pre></td></tr></table></figure>
-<p>上面用于打包cpio，然后经过lzma压缩就可以得到可用的initrd。</p>
-<p>这里注意如果使用自己的lib/modules/xxxx替换，需要depmod一下，生成<br>对应的modules.alias等文件，这样系统才能正常工作。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">depmod -a -b &lt;lib&#x2F;modules&#x2F;xxxx中lib的父目录&gt;  -F &lt;Your System.map文件&gt;  -E &lt;Your symvers文件&gt; &lt;lib&#x2F;modules&#x2F;xxxx中的xxxx字符串即内核版本号&gt;</span><br></pre></td></tr></table></figure>
-<p>经过上述步骤后打包成的initrd是可以正常工作的。</p>
-<h3 id="squashfs镜像的解压和打包"><a href="#squashfs镜像的解压和打包" class="headerlink" title="squashfs镜像的解压和打包"></a>squashfs镜像的解压和打包</h3><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mkdir tmp_squashfs</span><br><span class="line">mount squashfs.img tmp_squashfs</span><br><span class="line">[root@vm tmp_squashfs]# tree</span><br><span class="line">.</span><br><span class="line">└── LiveOS</span><br><span class="line">    └── rootfs.img</span><br><span class="line"></span><br><span class="line">1 directory, 1 file</span><br></pre></td></tr></table></figure>
-<p>如果需要修改其中的rootfs.img需要拷贝出来，然后挂载该rootfs镜像，修改完直接卸载。<br>然后重新做成squashfs镜像。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">mksquashfs &lt;Your squashfs目录&gt; squashfs.img</span><br></pre></td></tr></table></figure>
-
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上述步骤可以详细了解linux发行版启动安装机制。<br>简单讲首先运行一个linux内核(CD/DVD上面)，然后执行发行版的安装程序完成具体的安装。<br>安装程序负责对硬盘分区，挂载，使用CD/DVD上的目录作为安装源安装软件，最好配置重启完成安装。</p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>CD</tag>
-        <tag>DVD</tag>
-        <tag>initrd</tag>
-        <tag>vmlinuz</tag>
-        <tag>squashfs</tag>
-        <tag>ISO 9660</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>nextcloud离线下载</title>
-    <url>/2020/08/25/nextcloud%E7%A6%BB%E7%BA%BF%E4%B8%8B%E8%BD%BD/</url>
-    <content><![CDATA[<h2 id="install-nextcloud"><a href="#install-nextcloud" class="headerlink" title="install nextcloud"></a>install nextcloud</h2><h2 id="install-ocdownloader"><a href="#install-ocdownloader" class="headerlink" title="install ocdownloader"></a>install ocdownloader</h2><p>这里设置正确的路径否则报无法找到视频地址错误</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">controller&#x2F;ytdownloader.php</span><br><span class="line">$this-&gt;YTDLBinary &#x3D; &#39;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;youtube-dl&#39;; &#x2F;&#x2F; default path</span><br></pre></td></tr></table></figure>
-
-<h2 id="install-aria2"><a href="#install-aria2" class="headerlink" title="install aria2"></a>install aria2</h2><p>参考<a href="https://gist.github.com/GAS85/79849bfd09613067a2ac0c1a711120a6" target="_blank" rel="noopener">https://gist.github.com/GAS85/79849bfd09613067a2ac0c1a711120a6</a></p>
-<p>注意要想ocdownloader使用aria2，需要设置不加密方式，还是不太安全</p>
-<h2 id="install-youtube-dl"><a href="#install-youtube-dl" class="headerlink" title="install youtube-dl"></a>install youtube-dl</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">apt install python-pip</span><br><span class="line">pip install youtube-dl</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>nextcloud</tag>
       </tags>
   </entry>
   <entry>
@@ -1220,6 +1232,21 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </tags>
   </entry>
   <entry>
+    <title>linux下systemd service的编写</title>
+    <url>/2020/10/25/%E7%BC%96%E5%86%99systemd-service/</url>
+    <content><![CDATA[<h2 id="编写service"><a href="#编写service" class="headerlink" title="编写service"></a>编写service</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">After&#x3D;network.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;forking</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;mystart.sh</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;default.target</span><br></pre></td></tr></table></figure>
+<p>设置service类型为forking。</p>
+<h2 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">echo &#39;my start script start to run&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo &#39;my start script run done&#39;</span><br><span class="line"></span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
+<p>由于设置了service类型为forking，需要在我们的脚本的最后执行exit退出systemd<br>为我们fork的进程。</p>
+]]></content>
+      <categories>
+        <category>linux</category>
+      </categories>
+      <tags>
+        <tag>systemd</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>编写python扩展模块</title>
     <url>/2019/05/01/%E7%BC%96%E5%86%99python%E6%89%A9%E5%B1%95%E6%A8%A1%E5%9D%97/</url>
     <content><![CDATA[<p>一直以来更多的是使用c语言，看到python语言在云计算时代广泛运用，<br>想着如何用c编写模块供python调用。python的官方实现就是c语言实现的，<br>即cpython。python提供了运行时接口供我们编写c扩展模块。</p>
@@ -1233,21 +1260,6 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       </categories>
       <tags>
         <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>linux下systemd service的编写</title>
-    <url>/2020/10/25/%E7%BC%96%E5%86%99systemd-service/</url>
-    <content><![CDATA[<h2 id="编写service"><a href="#编写service" class="headerlink" title="编写service"></a>编写service</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">After&#x3D;network.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type&#x3D;forking</span><br><span class="line">ExecStart&#x3D;&#x2F;usr&#x2F;local&#x2F;bin&#x2F;mystart.sh</span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy&#x3D;default.target</span><br></pre></td></tr></table></figure>
-<p>设置service类型为forking。</p>
-<h2 id="编写脚本"><a href="#编写脚本" class="headerlink" title="编写脚本"></a>编写脚本</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#!&#x2F;bin&#x2F;bash</span><br><span class="line">echo &#39;my start script start to run&#39;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">echo &#39;my start script run done&#39;</span><br><span class="line"></span><br><span class="line">exit 0</span><br></pre></td></tr></table></figure>
-<p>由于设置了service类型为forking，需要在我们的脚本的最后执行exit退出systemd<br>为我们fork的进程。</p>
-]]></content>
-      <categories>
-        <category>linux</category>
-      </categories>
-      <tags>
-        <tag>systemd</tag>
       </tags>
   </entry>
   <entry>
