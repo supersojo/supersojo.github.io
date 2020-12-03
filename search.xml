@@ -50,6 +50,19 @@
       </tags>
   </entry>
   <entry>
+    <title>Integerate all iptvs from network</title>
+    <url>/2020/12/03/Integerate%20all%20iptvs%20from%20network/</url>
+    <content><![CDATA[<h1 id="Integerate-all-iptvs-from-network"><a href="#Integerate-all-iptvs-from-network" class="headerlink" title="Integerate all iptvs from network"></a>Integerate all iptvs from network</h1><h2 id="iptv-source"><a href="#iptv-source" class="headerlink" title="iptv source"></a>iptv source</h2><p><a href="https://github.com/imDazui/Tvlist-awesome-m3u-m3u8" target="_blank" rel="noopener">https://github.com/imDazui/Tvlist-awesome-m3u-m3u8</a></p>
+<p><a href="https://github.com/EvilCult/iptv-m3u-maker" target="_blank" rel="noopener">https://github.com/EvilCult/iptv-m3u-maker</a></p>
+<h2 id="iptv-software"><a href="#iptv-software" class="headerlink" title="iptv software"></a>iptv software</h2><ul>
+<li><p>kodi</p>
+</li>
+<li><p>vlc</p>
+</li>
+</ul>
+]]></content>
+  </entry>
+  <entry>
     <title>NAND Flash接口介绍</title>
     <url>/2020/01/10/NAND%20Flash%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D/</url>
     <content><![CDATA[<h2 id="NAND-Flash接口介绍"><a href="#NAND-Flash接口介绍" class="headerlink" title="NAND Flash接口介绍"></a>NAND Flash接口介绍</h2><p>Nand Flash以廉价，高密度得到了广泛应用，这里介绍下Nand相关接口。目前<br>Nand Flash有两类接口，一类是三星和东芝主导的Toggle NAND接口，一类是其它<br>Flash厂商包括Cypress主导的ONFI接口。</p>
@@ -103,33 +116,6 @@
 <li><a href="http://people.redhat.com/jkratoch/DeveloperConference2011-debug.pdf" target="_blank" rel="noopener">Debugging Tools Intro DWARF,ELF,GDB,build-id</a></li>
 </ol>
 ]]></content>
-  </entry>
-  <entry>
-    <title>arm64 armel armhf区别</title>
-    <url>/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/</url>
-    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>ARM嵌入式开发，必定涉及到交叉编译工具链问题，下载交叉编译<br>工具链时总会有多个选择，我们该选择哪个工具链呢?</p>
-<p>我们需要区分armel armhf arm64。</p>
-<ol>
-<li><p>armel<br>ARM EABI(armel)支持老的32位arm。</p>
-</li>
-<li><p>armhf<br>较新的arm hard-float(armhf)支持新一点的32位arm，FPU没有标准化。</p>
-</li>
-<li><p>arm64<br>64位的arm支最新的64位arm，默认都带FPU了，已经标准化了。</p>
-</li>
-</ol>
-<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>为何会有如此多种类的工具链需要选择呢？这有arm的历史背景有关。</p>
-<p>其实最开始的只有一种arm，后来由于诸多原因如端模式到浮点的支持，它已经被被废弃了，后来的arm EABI (armel)取代了它。</p>
-<p>armel（arm eabi little endian）仅仅是个名字而已，用于和老的版本做区分，可以认为它仅仅是对arm最基本的支持，可以被任何硬件运行。</p>
-<p>armhf支持硬件FPU，计算更快，而armel则需要对浮点数模拟计算。</p>
-<p>arm64默认就支持FPU。</p>
-<p>gcc编译的时候，使用-mfloat-abi选项来指定浮点运算使用的<br>是哪种，soft不使用fpu，armel使用fpu，使用普通寄存器，armhf<br>使用fpu，使用fpu的寄存器。</p>
-]]></content>
-      <categories>
-        <category>arm</category>
-      </categories>
-      <tags>
-        <tag>arm</tag>
-      </tags>
   </entry>
   <entry>
     <title>bpf入门系列-1</title>
@@ -199,6 +185,33 @@
       </categories>
       <tags>
         <tag>bpf</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>arm64 armel armhf区别</title>
+    <url>/2020/11/20/arm%E4%BA%A4%E5%8F%89%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9B%B8%E5%85%B3/</url>
+    <content><![CDATA[<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>ARM嵌入式开发，必定涉及到交叉编译工具链问题，下载交叉编译<br>工具链时总会有多个选择，我们该选择哪个工具链呢?</p>
+<p>我们需要区分armel armhf arm64。</p>
+<ol>
+<li><p>armel<br>ARM EABI(armel)支持老的32位arm。</p>
+</li>
+<li><p>armhf<br>较新的arm hard-float(armhf)支持新一点的32位arm，FPU没有标准化。</p>
+</li>
+<li><p>arm64<br>64位的arm支最新的64位arm，默认都带FPU了，已经标准化了。</p>
+</li>
+</ol>
+<h2 id="背景知识"><a href="#背景知识" class="headerlink" title="背景知识"></a>背景知识</h2><p>为何会有如此多种类的工具链需要选择呢？这有arm的历史背景有关。</p>
+<p>其实最开始的只有一种arm，后来由于诸多原因如端模式到浮点的支持，它已经被被废弃了，后来的arm EABI (armel)取代了它。</p>
+<p>armel（arm eabi little endian）仅仅是个名字而已，用于和老的版本做区分，可以认为它仅仅是对arm最基本的支持，可以被任何硬件运行。</p>
+<p>armhf支持硬件FPU，计算更快，而armel则需要对浮点数模拟计算。</p>
+<p>arm64默认就支持FPU。</p>
+<p>gcc编译的时候，使用-mfloat-abi选项来指定浮点运算使用的<br>是哪种，soft不使用fpu，armel使用fpu，使用普通寄存器，armhf<br>使用fpu，使用fpu的寄存器。</p>
+]]></content>
+      <categories>
+        <category>arm</category>
+      </categories>
+      <tags>
+        <tag>arm</tag>
       </tags>
   </entry>
   <entry>

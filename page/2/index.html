@@ -152,7 +152,7 @@
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">32</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">33</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,108 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/07/25/%E5%85%B3%E4%BA%8EDMA%20API%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/25/%E5%85%B3%E4%BA%8EDMA%20API%E7%9A%84%E4%BD%BF%E7%94%A8/" class="post-title-link" itemprop="url">关于如何使用DMA API</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-25 13:01:20" itemprop="dateCreated datePublished" datetime="2020-07-25T13:01:20+00:00">2020-07-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/" itemprop="url" rel="index">
+                    <span itemprop="name">kernel</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="关于dma-api的使用"><a href="#关于dma-api的使用" class="headerlink" title="关于dma api的使用"></a>关于dma api的使用</h1><p>在<a href="https://www.kernel.org/doc/Documentation/DMA-API-HOWTO.txt" target="_blank" rel="noopener">关于DMA API的内核文档</a>中提到</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Note that the DMA API works with any bus independent of the underlying</span><br><span class="line">microprocessor architecture. You should use the DMA API rather than the</span><br><span class="line">bus-specific DMA API, i.e., use the dma_map_*() interfaces rather than the</span><br><span class="line">pci_map_*() interfaces.</span><br></pre></td></tr></table></figure>
+
+<p>推荐使用dma_map_*() 而不是 pci_map_*()。<br>dma api是独立于总线的接口，使用pci_map_*()是不合适的。</p>
+<p>使用该接口时包含相关的头文件，地址使用dma_addr_t。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;linux&#x2F;dma-mapping.h&gt;</span><br><span class="line">dma_addr_t addr;</span><br></pre></td></tr></table></figure>
+
+<h1 id="哪些内存可以用于DMA"><a href="#哪些内存可以用于DMA" class="headerlink" title="哪些内存可以用于DMA"></a>哪些内存可以用于DMA</h1><p>能够用于DMA的内存在大部分平台上是要求物理连续的，因此下面的内存可以用于DMA。</p>
+<p>1 page allocator or kmalloc or kmem_cache_alloc</p>
+<p>可以直接把这些地址用于dma_map_*()等api</p>
+<p>2 vmalloc/vmap地址不可用于DMA，物理上不连续</p>
+<h1 id="dma-set-mask-and-coherent"><a href="#dma-set-mask-and-coherent" class="headerlink" title="dma_set_mask_and_coherent"></a>dma_set_mask_and_coherent</h1><p>告诉内核外设对dma的支持情况，不管流式还是一致性dma都要这个步骤</p>
+<p>如果有特别的需求，可以使用以下的只设置对应方式的dma</p>
+<p>1 dma_set_mask 流式<br>2 dms_set_coherent_mask 一致性</p>
+<p>如果以上设置失败，有两种方式<br>1 使用非dma方式<br>2 忽略外设</p>
+<h1 id="一致性dma"><a href="#一致性dma" class="headerlink" title="一致性dma"></a>一致性dma</h1><p>在驱动初始化时映射好，驱动卸载时接触映射，在外设工作中保证访问的一致性<br>常用于网卡的环形buffer，scsi的mailbox命令结构，设备固件等。</p>
+<p>用于DMA的内存存在于驱动的整个生命周期中。</p>
+<p>一致性dma不可避免的使用内存屏障。cpu可能执行指令重排，导致外设首先看到的不是想要的数据。</p>
+<p>采用如下的内存屏蔽保证驱动正常工作。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">desc-&gt;word0&#x3D;address;</span><br><span class="line">wmb();</span><br><span class="line">desc-&gt;word1&#x3D;DESC_VALID;</span><br></pre></td></tr></table></figure>
+
+<p>在某些平台上，驱动刷新写缓存，如写某个寄存器后再都寄存器，需要刷缓存。</p>
+<h1 id="流式dma"><a href="#流式dma" class="headerlink" title="流式dma"></a>流式dma</h1><p>流式dma是指在dma传输时才映射，一旦传输完就解除映射。除非使用dma_sync_*调用。</p>
+<p>流式dma可以认为是异步dma</p>
+<p>常用例子是外设的发送接收buffer，scsi外设读写的buffer。</p>
+<p>注意dma地址是共享资源，流式dma会比较节省。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p>1 <a href="https://www.kernel.org/doc/Documentation/DMA-API-HOWTO.txt" target="_blank" rel="noopener">DMA API</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/07/22/%E5%85%B3%E4%BA%8Ekodi%E5%A3%B0%E9%9F%B3%E5%8F%98%E5%B0%8F%E7%9A%84%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +341,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -320,7 +422,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -466,7 +568,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -604,7 +706,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -694,7 +796,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -802,7 +904,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -936,7 +1038,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1031,7 +1133,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
 
           
@@ -1108,7 +1210,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
+                <time title="修改时间：2020-12-03 09:16:09" itemprop="dateModified" datetime="2020-12-03T09:16:09+00:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1154,130 +1256,6 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
 <li><p>注意私钥文件可以推导出公钥和私钥信息。证书文件中包含公钥信息，通过得到公钥信息就可以和客户安全通信。</p>
 </li>
 </ol>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/01/13/%E5%85%B3%E4%BA%8Echacl%E7%9A%84%E5%88%86%E6%9E%90/" class="post-title-link" itemprop="url">关于chacl的分析</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-01-13 22:10:10" itemprop="dateCreated datePublished" datetime="2020-01-13T22:10:10+00:00">2020-01-13</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-01 10:16:53" itemprop="dateModified" datetime="2020-12-01T10:16:53+00:00">2020-12-01</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kernel/" itemprop="url" rel="index">
-                    <span itemprop="name">kernel</span>
-                  </a>
-                </span>
-                  ，
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/kernel/nfs/" itemprop="url" rel="index">
-                    <span itemprop="name">nfs</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="关于chacl的分析"><a href="#关于chacl的分析" class="headerlink" title="关于chacl的分析"></a>关于chacl的分析</h2><p>最近在nfs上面遇到chacl问题，这里记录下分析过程。</p>
-<h2 id="ls命令"><a href="#ls命令" class="headerlink" title="ls命令"></a>ls命令</h2><p>ls命令根据系统调用getxattr的返回值判断是否要打印”+”</p>
-<p><a href="https://github.com/coreutils/coreutils/blob/master/src/ls.c" target="_blank" rel="noopener">https://github.com/coreutils/coreutils/blob/master/src/ls.c</a></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">			  </span><br><span class="line">  if (! any_has_acl)</span><br><span class="line">    modebuf[10] &#x3D; &#39;\0&#39;;</span><br><span class="line">  else if (f-&gt;acl_type &#x3D;&#x3D; ACL_T_LSM_CONTEXT_ONLY)</span><br><span class="line">    modebuf[10] &#x3D; &#39;.&#39;;</span><br><span class="line">  else if (f-&gt;acl_type &#x3D;&#x3D; ACL_T_YES)</span><br><span class="line">    modebuf[10] &#x3D; &#39;+&#39;; &#x2F;&#x2F; 有acl数据则打印&quot;+&quot;</span><br><span class="line">&#96;&#96;&#96;	</span><br><span class="line"></span><br><span class="line">https:&#x2F;&#x2F;github.com&#x2F;coreutils&#x2F;gnulib&#x2F;blob&#x2F;master&#x2F;lib&#x2F;file-has-acl.c</span><br></pre></td></tr></table></figure>
-<p>int file_has_acl (char const *name, struct stat const *sb)<br>{<br>#if USE_ACL<br>  if (! S_ISLNK (sb-&gt;st_mode))<br>    {</p>
-<h1 id="if-GETXATTR-WITH-POSIX-ACLS"><a href="#if-GETXATTR-WITH-POSIX-ACLS" class="headerlink" title="if GETXATTR_WITH_POSIX_ACLS"></a>if GETXATTR_WITH_POSIX_ACLS</h1><pre><code>  ssize_t ret;
-
-  ret = getxattr (name, XATTR_NAME_POSIX_ACL_ACCESS, NULL, 0); //是否有acl数据
-  if (ret &lt; 0 &amp;&amp; errno == ENODATA)
-    ret = 0;
-  else if (ret &gt; 0)
-    return 1;
-
-  if (ret == 0 &amp;&amp; S_ISDIR (sb-&gt;st_mode))
-    {
-      ret = getxattr (name, XATTR_NAME_POSIX_ACL_DEFAULT, NULL, 0);
-      if (ret &lt; 0 &amp;&amp; errno == ENODATA)
-        ret = 0;
-      else if (ret &gt; 0)
-        return 1;
-    }
-
-  if (ret &lt; 0)
-    return - acl_errno_valid (errno);
-  return ret;
-...</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 3.10内核中getxattr</span><br><span class="line"></span><br><span class="line">chacl会调用getxattr。</span><br></pre></td></tr></table></figure>
-<p>getxattr<br>  - vfs_getxattr<br>         - nfs3_getxattr</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">nfs3_getxattr@fs&#x2F;nfs&#x2F;nfs3acl.c</span><br></pre></td></tr></table></figure>
-<p>acl = nfs3_proc_getacl(inode, type);<br>if (IS_ERR(acl))<br>    return PTR_ERR(acl);<br>else if (acl) {<br>    if (type == ACL_TYPE_ACCESS &amp;&amp; acl-&gt;a_count == 0)<br>        error = -ENODATA;<br>    else<br>        error = posix_acl_to_xattr(&amp;init_user_ns, acl, buffer, size);<br>    posix_acl_release(acl);<br>} else<br>    error = -ENODATA;//如果nfs3_proc_getacl返回null则返回ENODATA</p>
-<p>nfs3_proc_getacl@fs/nfs/nfs3acl.c</p>
-<p>if (res.acl_access != NULL) {<br>        if (posix_acl_equiv_mode(res.acl_access, NULL) == 0) {//对于标准权限则置空acl<br>                posix_acl_release(res.acl_access);<br>                res.acl_access = NULL;<br>        }<br>}</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">nfs3_getxattr对于标准权限总是返回ENODATA，所以ls时不会出现&quot;+&quot;。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">## 4.18内核getxattr</span><br></pre></td></tr></table></figure>
-<p>getxattr<br> - vfs_getxattr<br>       - posix_acl_xattr_get</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">posix_acl_xattr_get@fs&#x2F;posix_acl.c</span><br></pre></td></tr></table></figure>
-<p>acl = get_acl(inode, handler-&gt;flags);<br>if (IS_ERR(acl))<br>        return PTR_ERR(acl);<br>if (acl == NULL)<br>        return -ENODATA;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">get_acl@fs&#x2F;posix_acl.c</span><br></pre></td></tr></table></figure>
-<p>acl = get_cached_acl(inode, type);<br>if (!is_uncached_acl(acl))<br>        return acl;</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">				</span><br><span class="line">如果inode-&gt;i_acl inode-&gt;i_default_acl有效则使用它,</span><br><span class="line">否则执行nfs3_get_acl，nfs3_get_acl对于标准权限总是返回NULL，从而getxattr返回ENODATA.</span><br><span class="line"></span><br><span class="line">nfs3_get_acl@fs&#x2F;nfs&#x2F;nfs3acl.c</span><br></pre></td></tr></table></figure>
-<p>if (res.acl_access != NULL) {<br>        if ((posix_acl_equiv_mode(res.acl_access, NULL) == 0) ||<br>            res.acl_access-&gt;a_count == 0) {<br>                posix_acl_release(res.acl_access);<br>                res.acl_access = NULL;<br>        }<br>}</p>
-<p>```</p>
-<p>在chacl之后如果inode-&gt;i_acl有效,getxattr返回acl数据。</p>
-<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>出现问题的根本原因是4.18内核使用generic acl功能框架，缓存了错误的acl，导致出问题。</p>
-<p>最新的内核有<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/fs/nfs/nfs3acl.c?h=v5.4&id=ded52fbe7020a5696b0b0a0fdbf234e37bf16f94" target="_blank" rel="noopener">patch</a>修正该问题。<br>即在setacl的时候总是置inode-&gt;i_acl无效。</p>
 
       
     </div>
@@ -1363,7 +1341,7 @@ virtual mappings with real shadow memory, and KASAN_VMALLOC must
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">32</span>
+          <span class="site-state-item-count">33</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
