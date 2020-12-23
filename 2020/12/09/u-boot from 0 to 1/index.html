@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 4.2.1">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    hostname: new URL('https://supersojo.github.io').hostname,
+    root: '/',
+    scheme: 'Gemini',
+    version: '7.7.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    comments: {"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: 'search.xml',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}
+  };
+</script>
+
+  <meta name="description" content="u-boot from 0 to 1这篇文章简单分析了u-boot从汇编代码到执行加载内核的整个过程，细节参考代码。 u-boot.lds123456789101112131415su@ubuntu2004:&#x2F;sdb1&#x2F;u-boot-2020.10$ cat u-boot.ldsOUTPUT_FORMAT(&quot;elf32-littlearm&quot;, &quot;elf32-littlearm&quot;, &quot;elf32-l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="u-boot from 0 to 1">
+<meta property="og:url" content="https://supersojo.github.io/2020/12/09/u-boot%20from%200%20to%201/index.html">
+<meta property="og:site_name" content="Linux&#39;s Notes">
+<meta property="og:description" content="u-boot from 0 to 1这篇文章简单分析了u-boot从汇编代码到执行加载内核的整个过程，细节参考代码。 u-boot.lds123456789101112131415su@ubuntu2004:&#x2F;sdb1&#x2F;u-boot-2020.10$ cat u-boot.ldsOUTPUT_FORMAT(&quot;elf32-littlearm&quot;, &quot;elf32-littlearm&quot;, &quot;elf32-l">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-09T21:12:32.000Z">
+<meta property="article:modified_time" content="2020-12-23T07:09:02.385Z">
+<meta property="article:tag" content="arm">
+<meta property="article:tag" content="uboot">
+<meta property="article:tag" content="bootloader">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://supersojo.github.io/2020/12/09/u-boot%20from%200%20to%201/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true
+  };
+</script>
+
+  <title>u-boot from 0 to 1 | Linux's Notes</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="Linux's Notes" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Linux's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Say what you do and do what you say</p>
+  </div>
+
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-fw fa-home"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-fw fa-user"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">60</span></a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">18</span></a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">37</span></a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="搜索..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+  <a href="https://github.com/supersojo" class="github-corner" title="Follow me on GitHub" aria-label="Follow me on GitHub" rel="noopener" target="_blank"><svg width="80" height="80" viewBox="0 0 250 250" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content">
+            
+
+  <div class="posts-expand">
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block " lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/12/09/u-boot%20from%200%20to%201/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          u-boot from 0 to 1
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-09 21:12:32" itemprop="dateCreated datePublished" datetime="2020-12-09T21:12:32+00:00">2020-12-09</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-23 07:09:02" itemprop="dateModified" datetime="2020-12-23T07:09:02+00:00">2020-12-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/uboot/" itemprop="url" rel="index">
+                    <span itemprop="name">uboot</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="u-boot-from-0-to-1"><a href="#u-boot-from-0-to-1" class="headerlink" title="u-boot from 0 to 1"></a>u-boot from 0 to 1</h2><p>这篇文章简单分析了u-boot从汇编代码到执行加载内核的整个过程，细节参考代码。</p>
+<h3 id="u-boot-lds"><a href="#u-boot-lds" class="headerlink" title="u-boot.lds"></a>u-boot.lds</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">su@ubuntu2004:/sdb1/u-boot-2020.10$ cat u-boot.lds</span><br><span class="line">OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")</span><br><span class="line">OUTPUT_ARCH(arm)</span><br><span class="line">ENTRY(_start)</span><br><span class="line">SECTIONS</span><br><span class="line">&#123;</span><br><span class="line"> . = 0x00000000;</span><br><span class="line"> . = ALIGN(4);</span><br><span class="line"> .text :</span><br><span class="line"> &#123;</span><br><span class="line">  *(.__image_copy_start)</span><br><span class="line">  *(.vectors)</span><br><span class="line">  arch/arm/cpu/armv7/start.o (.text*)</span><br><span class="line"> &#125;</span><br><span class="line"> ...</span><br></pre></td></tr></table></figure>
+
+<p>u-boot链接脚本，u-boot入口为_start。</p>
+<h3 id="arch-arm-lib-vectors-S"><a href="#arch-arm-lib-vectors-S" class="headerlink" title="arch/arm/lib/vectors.S"></a>arch/arm/lib/vectors.S</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line"> * A macro to allow insertion of an ARM exception vector either</span><br><span class="line"> * for the non-boot0 case or by a boot0-header.</span><br><span class="line"> *&#x2F;</span><br><span class="line">        .macro ARM_VECTORS</span><br><span class="line">#ifdef CONFIG_ARCH_K3</span><br><span class="line">        ldr     pc, _reset</span><br><span class="line">#else</span><br><span class="line">        b       reset</span><br><span class="line">#endif</span><br><span class="line">        ldr     pc, _undefined_instruction</span><br><span class="line">        ldr     pc, _software_interrupt</span><br><span class="line">        ldr     pc, _prefetch_abort</span><br><span class="line">        ldr     pc, _data_abort</span><br><span class="line">        ldr     pc, _not_used</span><br><span class="line">        ldr     pc, _irq</span><br><span class="line">        ldr     pc, _fiq</span><br><span class="line">        .endm</span><br><span class="line"></span><br><span class="line">.globl _start</span><br><span class="line"></span><br><span class="line">&#x2F;*</span><br><span class="line"> *************************************************************************</span><br><span class="line"> *</span><br><span class="line"> * Vectors have their own section so linker script can map them easily</span><br><span class="line"> *</span><br><span class="line"> *************************************************************************</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">        .section &quot;.vectors&quot;, &quot;ax&quot;</span><br><span class="line">_start:</span><br><span class="line">        ARM_VECTORS</span><br><span class="line">		...</span><br><span class="line">_reset:                 .word reset</span><br><span class="line">		...</span><br></pre></td></tr></table></figure>
+
+<p>中断向量表，如复位中断、为定义指令、数据中断、快中断、正常中断等等。</p>
+<p>上电复位后执行复位中断。</p>
+<h3 id="arch-arm-cpu-armv7-start-S"><a href="#arch-arm-cpu-armv7-start-S" class="headerlink" title="arch/arm/cpu/armv7/start.S"></a>arch/arm/cpu/armv7/start.S</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*************************************************************************</span><br><span class="line"> *</span><br><span class="line"> * Startup Code (reset vector)</span><br><span class="line"> *</span><br><span class="line"> * Do important init only if we don&#39;t start from memory!</span><br><span class="line"> * Setup memory and board specific bits prior to relocation.</span><br><span class="line"> * Relocate armboot to ram. Setup stack.</span><br><span class="line"> *</span><br><span class="line"> *************************************************************************&#x2F;</span><br><span class="line"></span><br><span class="line">        .globl  reset</span><br><span class="line">        .globl  save_boot_params_ret</span><br><span class="line">        .type   save_boot_params_ret,%function</span><br><span class="line">#ifdef CONFIG_ARMV7_LPAE</span><br><span class="line">        .global switch_to_hypervisor_ret</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">reset:</span><br><span class="line">        &#x2F;* Allow the board to save important registers *&#x2F;</span><br><span class="line">        b       save_boot_params</span><br><span class="line">save_boot_params_ret:</span><br><span class="line">#ifdef CONFIG_ARMV7_LPAE</span><br><span class="line">&#x2F;*</span><br><span class="line"> * check for Hypervisor support</span><br><span class="line"> *&#x2F;</span><br><span class="line">        mrc     p15, 0, r0, c0, c1, 1           @ read ID_PFR1</span><br><span class="line">        and     r0, r0, #CPUID_ARM_VIRT_MASK    @ mask virtualization bits</span><br><span class="line">        cmp     r0, #(1 &lt;&lt; CPUID_ARM_VIRT_SHIFT)</span><br><span class="line">        beq     switch_to_hypervisor</span><br><span class="line">switch_to_hypervisor_ret:</span><br><span class="line">#endif</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * disable interrupts (FIQ and IRQ), also set the cpu to SVC32 mode,</span><br><span class="line">         * except if in HYP mode already</span><br><span class="line">         *&#x2F;</span><br><span class="line">        mrs     r0, cpsr</span><br><span class="line">        and     r1, r0, #0x1f           @ mask mode bits</span><br><span class="line">        teq     r1, #0x1a               @ test for HYP mode</span><br><span class="line">        bicne   r0, r0, #0x1f           @ clear all mode bits</span><br><span class="line">        orrne   r0, r0, #0x13           @ set SVC mode</span><br><span class="line">        orr     r0, r0, #0xc0           @ disable FIQ and IRQ</span><br><span class="line">        msr     cpsr,r0</span><br><span class="line"></span><br><span class="line">&#x2F;*</span><br><span class="line"> * Setup vector:</span><br><span class="line"> * (OMAP4 spl TEXT_BASE is not 32 byte aligned.</span><br><span class="line"> * Continue to use ROM code vector only in OMAP4 spl)</span><br><span class="line"> *&#x2F;</span><br><span class="line">#if !(defined(CONFIG_OMAP44XX) &amp;&amp; defined(CONFIG_SPL_BUILD))</span><br><span class="line">        &#x2F;* Set V&#x3D;0 in CP15 SCTLR register - for VBAR to point to vector *&#x2F;</span><br><span class="line">        mrc     p15, 0, r0, c1, c0, 0   @ Read CP15 SCTLR Register</span><br><span class="line">        bic     r0, #CR_V               @ V &#x3D; 0</span><br><span class="line">        mcr     p15, 0, r0, c1, c0, 0   @ Write CP15 SCTLR Register</span><br><span class="line"></span><br><span class="line">#ifdef CONFIG_HAS_VBAR</span><br><span class="line">        &#x2F;* Set vector address in CP15 VBAR register *&#x2F;</span><br><span class="line">        ldr     r0, &#x3D;_start</span><br><span class="line">        mcr     p15, 0, r0, c12, c0, 0  @Set VBAR</span><br><span class="line">#endif</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">        &#x2F;* the mask ROM code should have PLL and others stable *&#x2F;</span><br><span class="line">#ifndef CONFIG_SKIP_LOWLEVEL_INIT</span><br><span class="line">#ifdef CONFIG_CPU_V7A</span><br><span class="line">        bl      cpu_init_cp15</span><br><span class="line">#endif</span><br><span class="line">#ifndef CONFIG_SKIP_LOWLEVEL_INIT_ONLY</span><br><span class="line">        bl      cpu_init_crit</span><br><span class="line">#endif</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">        bl      _main</span><br><span class="line"></span><br><span class="line">&#x2F;*************************************************************************</span><br><span class="line"> *</span><br><span class="line"> * cpu_init_cp15</span><br><span class="line"> *</span><br><span class="line"> * Setup CP15 registers (cache, MMU, TLBs). The I-cache is turned on unless</span><br><span class="line"> * CONFIG_SYS_ICACHE_OFF is defined.</span><br><span class="line"> *</span><br><span class="line"> *************************************************************************&#x2F;</span><br><span class="line">ENTRY(cpu_init_cp15)</span><br><span class="line">        &#x2F;*</span><br><span class="line">         * Invalidate L1 I&#x2F;D</span><br><span class="line">         *&#x2F;</span><br><span class="line">        mov     r0, #0                  @ set up for MCR</span><br><span class="line">        mcr     p15, 0, r0, c8, c7, 0   @ invalidate TLBs</span><br><span class="line">        mcr     p15, 0, r0, c7, c5, 0   @ invalidate icache</span><br><span class="line">        mcr     p15, 0, r0, c7, c5, 6   @ invalidate BP array</span><br><span class="line">        mcr     p15, 0, r0, c7, c10, 4  @ DSB</span><br><span class="line">        mcr     p15, 0, r0, c7, c5, 4   @ ISB</span><br><span class="line"></span><br><span class="line">        &#x2F;*</span><br><span class="line">         * disable MMU stuff and caches</span><br><span class="line">         *&#x2F;</span><br><span class="line">        mrc     p15, 0, r0, c1, c0, 0</span><br><span class="line">        bic     r0, r0, #0x00002000     @ clear bits 13 (--V-)</span><br><span class="line">        bic     r0, r0, #0x00000007     @ clear bits 2:0 (-CAM)</span><br><span class="line">        orr     r0, r0, #0x00000002     @ set bit 1 (--A-) Align</span><br><span class="line">        orr     r0, r0, #0x00000800     @ set bit 11 (Z---) BTB</span><br><span class="line">#if CONFIG_IS_ENABLED(SYS_ICACHE_OFF)</span><br><span class="line">        bic     r0, r0, #0x00001000     @ clear bit 12 (I) I-cache</span><br><span class="line">#else</span><br><span class="line">        orr     r0, r0, #0x00001000     @ set bit 12 (I) I-cache</span><br><span class="line">#endif</span><br><span class="line">        mcr     p15, 0, r0, c1, c0, 0</span><br><span class="line"></span><br><span class="line">#ifdef CONFIG_ARM_ERRATA_716044</span><br><span class="line">        mrc     p15, 0, r0, c1, c0, 0   @ read system control register</span><br><span class="line">        orr     r0, r0, #1 &lt;&lt; 11        @ set bit #11</span><br><span class="line">        mcr     p15, 0, r0, c1, c0, 0   @ write system control register</span><br><span class="line">#endif</span><br><span class="line">		...</span><br><span class="line">&#x2F;* Early stack for ERRATA that needs into call C code *&#x2F;</span><br><span class="line">#if defined(CONFIG_SPL_BUILD) &amp;&amp; defined(CONFIG_SPL_STACK)</span><br><span class="line">        ldr     r0, &#x3D;(CONFIG_SPL_STACK)</span><br><span class="line">#else</span><br><span class="line">        ldr     r0, &#x3D;(CONFIG_SYS_INIT_SP_ADDR)</span><br><span class="line">#endif</span><br><span class="line">        bic     r0, r0, #7      &#x2F;* 8-byte alignment for ABI compliance *&#x2F;</span><br><span class="line">        mov     sp, r0</span><br><span class="line">        ...</span><br><span class="line">       mov     pc, r5                  @ back to my caller</span><br><span class="line">ENDPROC(cpu_init_cp15)</span><br></pre></td></tr></table></figure>
+
+<p>从复位中断处理函数开始执行，首先关中断，禁止mmu，cache，准备c执行环境。</p>
+<h3 id="arch-arm-lib-crt0-S"><a href="#arch-arm-lib-crt0-S" class="headerlink" title="arch/arm/lib/crt0.S"></a>arch/arm/lib/crt0.S</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;*</span><br><span class="line"> * entry point of crt0 sequence</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">ENTRY(_main)</span><br><span class="line"></span><br><span class="line">&#x2F;*</span><br><span class="line"> * Set up initial C runtime environment and call board_init_f(0).</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">#if defined(CONFIG_TPL_BUILD) &amp;&amp; defined(CONFIG_TPL_NEEDS_SEPARATE_STACK)</span><br><span class="line">        ldr     r0, &#x3D;(CONFIG_TPL_STACK)</span><br><span class="line">#elif defined(CONFIG_SPL_BUILD) &amp;&amp; defined(CONFIG_SPL_STACK)</span><br><span class="line">        ldr     r0, &#x3D;(CONFIG_SPL_STACK)</span><br><span class="line">#else</span><br><span class="line">        ldr     r0, &#x3D;(CONFIG_SYS_INIT_SP_ADDR)</span><br><span class="line">#endif</span><br><span class="line">        bic     r0, r0, #7      &#x2F;* 8-byte alignment for ABI compliance *&#x2F;</span><br><span class="line">        mov     sp, r0</span><br><span class="line">        bl      board_init_f_alloc_reserve</span><br><span class="line">        mov     sp, r0</span><br><span class="line">        &#x2F;* set up gd here, outside any C code *&#x2F;</span><br><span class="line">        mov     r9, r0</span><br><span class="line">        bl      board_init_f_init_reserve</span><br><span class="line"></span><br><span class="line">#if defined(CONFIG_SPL_BUILD) &amp;&amp; defined(CONFIG_SPL_EARLY_BSS)</span><br><span class="line">        CLEAR_BSS</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">        mov     r0, #0</span><br><span class="line">        bl      board_init_f</span><br><span class="line">#if ! defined(CONFIG_SPL_BUILD)</span><br><span class="line"></span><br><span class="line">&#x2F;*</span><br><span class="line"> * Set up intermediate environment (new sp and gd) and call</span><br><span class="line"> * relocate_code(addr_moni). Trick here is that we&#39;ll return</span><br><span class="line"> * &#39;here&#39; but relocated.</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">        ldr     r0, [r9, #GD_START_ADDR_SP]     &#x2F;* sp &#x3D; gd-&gt;start_addr_sp *&#x2F;</span><br><span class="line">        bic     r0, r0, #7      &#x2F;* 8-byte alignment for ABI compliance *&#x2F;</span><br><span class="line">        mov     sp, r0</span><br><span class="line">        ldr     r9, [r9, #GD_NEW_GD]            &#x2F;* r9 &lt;- gd-&gt;new_gd *&#x2F;</span><br><span class="line"></span><br><span class="line">        adr     lr, here</span><br><span class="line">        ldr     r0, [r9, #GD_RELOC_OFF]         &#x2F;* r0 &#x3D; gd-&gt;reloc_off *&#x2F;</span><br><span class="line">        add     lr, lr, r0</span><br><span class="line">#if defined(CONFIG_CPU_V7M)</span><br><span class="line">        orr     lr, #1                          &#x2F;* As required by Thumb-only *&#x2F;</span><br><span class="line">#endif</span><br><span class="line">        ldr     r0, [r9, #GD_RELOCADDR]         &#x2F;* r0 &#x3D; gd-&gt;relocaddr *&#x2F;</span><br><span class="line">        b       relocate_code</span><br><span class="line">here:</span><br><span class="line">&#x2F;*</span><br><span class="line"> * now relocate vectors</span><br><span class="line"> *&#x2F;</span><br><span class="line"></span><br><span class="line">        bl      relocate_vectors</span><br><span class="line"></span><br><span class="line">&#x2F;* Set up final (full) environment *&#x2F;</span><br><span class="line"></span><br><span class="line">        bl      c_runtime_cpu_setup     &#x2F;* we still call old routine here *&#x2F;</span><br><span class="line">#endif</span><br><span class="line">#if !defined(CONFIG_SPL_BUILD) || CONFIG_IS_ENABLED(FRAMEWORK)</span><br><span class="line"></span><br><span class="line">#if !defined(CONFIG_SPL_BUILD) || !defined(CONFIG_SPL_EARLY_BSS)</span><br><span class="line">        CLEAR_BSS</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line"># ifdef CONFIG_SPL_BUILD</span><br><span class="line">        &#x2F;* Use a DRAM stack for the rest of SPL, if requested *&#x2F;</span><br><span class="line">        bl      spl_relocate_stack_gd</span><br><span class="line">        cmp     r0, #0</span><br><span class="line">        movne   sp, r0</span><br><span class="line">        movne   r9, r0</span><br><span class="line"># endif</span><br><span class="line"></span><br><span class="line">#if ! defined(CONFIG_SPL_BUILD)</span><br><span class="line">        bl coloured_LED_init</span><br><span class="line">        bl red_led_on</span><br><span class="line">#endif</span><br><span class="line">        &#x2F;* call board_init_r(gd_t *id, ulong dest_addr) *&#x2F;</span><br><span class="line">        mov     r0, r9                  &#x2F;* gd_t *&#x2F;</span><br><span class="line">        ldr     r1, [r9, #GD_RELOCADDR] &#x2F;* dest_addr *&#x2F;</span><br><span class="line">        &#x2F;* call board_init_r *&#x2F;</span><br><span class="line">#if CONFIG_IS_ENABLED(SYS_THUMB_BUILD)</span><br><span class="line">        ldr     lr, &#x3D;board_init_r       &#x2F;* this is auto-relocated! *&#x2F;</span><br><span class="line">        bx      lr</span><br><span class="line">#else</span><br><span class="line">        ldr     pc, &#x3D;board_init_r       &#x2F;.&#x2F;common&#x2F;board_r.c* this is auto-relocated! *&#x2F;</span><br><span class="line">#endif</span><br><span class="line">        &#x2F;* we should not return here. *&#x2F;</span><br></pre></td></tr></table></figure>
+
+<p>主要执行board_init_f函数， 重定位u-boot。</p>
+<h3 id="common-board-r-c"><a href="#common-board-r-c" class="headerlink" title="common/board_r.c"></a>common/board_r.c</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * We hope to remove most of the driver-related init and do it if/when</span></span><br><span class="line"><span class="comment"> * the driver is later used.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">TODO:</span> perhaps reset the watchdog in the initcall function after each call?</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">init_fnc_t</span> init_sequence_r[] = &#123;</span><br><span class="line">        initr_trace,</span><br><span class="line">        initr_reloc,</span><br><span class="line">		...</span><br><span class="line">		run_main_loop,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">run_main_loop</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_SANDBOX</span></span><br><span class="line">        sandbox_main_loop_init();</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        <span class="comment">/* main_loop() can return to retry autoboot, if so just run it again */</span></span><br><span class="line">        <span class="keyword">for</span> (;;)</span><br><span class="line">                main_loop();</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">board_init_r</span><span class="params">(<span class="keyword">gd_t</span> *new_gd, ulong dest_addr)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="comment">/*</span></span><br><span class="line"><span class="comment">         * Set up the new global data pointer. So far only x86 does this</span></span><br><span class="line"><span class="comment">         * here.</span></span><br><span class="line"><span class="comment">         * TODO(sjg@chromium.org): Consider doing this for all archs, or</span></span><br><span class="line"><span class="comment">         * dropping the new_gd parameter.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> CONFIG_IS_ENABLED(X86_64)</span></span><br><span class="line">        arch_setup_gd(new_gd);</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_NEEDS_MANUAL_RELOC</span></span><br><span class="line">        <span class="keyword">int</span> i;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> !defined(CONFIG_X86) &amp;&amp; !defined(CONFIG_ARM) &amp;&amp; !defined(CONFIG_ARM64)</span></span><br><span class="line">        gd = new_gd;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">        gd-&gt;flags &amp;= ~GD_FLG_LOG_READY;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_NEEDS_MANUAL_RELOC</span></span><br><span class="line">        <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; ARRAY_SIZE(init_sequence_r); i++)</span><br><span class="line">                init_sequence_r[i] += gd-&gt;reloc_off;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (initcall_run_list(init_sequence_r))</span><br><span class="line">                hang();</span><br><span class="line"></span><br><span class="line">        <span class="comment">/* NOTREACHED - run_main_loop() does not return */</span></span><br><span class="line">        hang();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>驱动等的初始化。</p>
+<h3 id="common-main-c"><a href="#common-main-c" class="headerlink" title="common/main.c"></a>common/main.c</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* We come here after U-Boot is initialised and ready to process commands */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main_loop</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">char</span> *s;</span><br><span class="line"></span><br><span class="line">        bootstage_mark_name(BOOTSTAGE_ID_MAIN_LOOP, <span class="string">"main_loop"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_VERSION_VARIABLE))</span><br><span class="line">                env_set(<span class="string">"ver"</span>, version_string);  <span class="comment">/* set version variable */</span></span><br><span class="line"></span><br><span class="line">        cli_init();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_USE_PREBOOT))</span><br><span class="line">                run_preboot_environment_command();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_UPDATE_TFTP))</span><br><span class="line">                update_tftp(<span class="number">0U</span>L, <span class="literal">NULL</span>, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">        s = bootdelay_process();</span><br><span class="line">        <span class="keyword">if</span> (cli_process_fdt(&amp;s))</span><br><span class="line">                cli_secure_boot_cmd(s);</span><br><span class="line"></span><br><span class="line">        autoboot_command(s);</span><br><span class="line"></span><br><span class="line">        cli_loop();</span><br><span class="line">        panic(<span class="string">"No CLI available"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>进入main_loop，命令行初始化，准备执行u-boot命令。</p>
+<h3 id="common-autoboot-c"><a href="#common-autoboot-c" class="headerlink" title="common/autoboot.c"></a>common/autoboot.c</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">char</span> *<span class="title">bootdelay_process</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        <span class="keyword">char</span> *s;</span><br><span class="line">        <span class="keyword">int</span> bootdelay;</span><br><span class="line"></span><br><span class="line">        bootcount_inc();</span><br><span class="line"></span><br><span class="line">        s = env_get(<span class="string">"bootdelay"</span>);</span><br><span class="line">        bootdelay = s ? (<span class="keyword">int</span>)simple_strtol(s, <span class="literal">NULL</span>, <span class="number">10</span>) : CONFIG_BOOTDELAY;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_OF_CONTROL))</span><br><span class="line">                bootdelay = fdtdec_get_config_int(gd-&gt;fdt_blob, <span class="string">"bootdelay"</span>,</span><br><span class="line">                                                  bootdelay);</span><br><span class="line"></span><br><span class="line">        debug(<span class="string">"### main_loop entered: bootdelay=%d\n\n"</span>, bootdelay);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_AUTOBOOT_MENU_SHOW))</span><br><span class="line">                bootdelay = menu_show(bootdelay);</span><br><span class="line">        bootretry_init_cmd_timeout();</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> CONFIG_POST</span></span><br><span class="line">        <span class="keyword">if</span> (gd-&gt;flags &amp; GD_FLG_POSTFAIL) &#123;</span><br><span class="line">                s = env_get(<span class="string">"failbootcmd"</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span></span><br><span class="line">#endif <span class="comment">/* CONFIG_POST */</span></span><br><span class="line">        <span class="keyword">if</span> (bootcount_error())</span><br><span class="line">                s = env_get(<span class="string">"altbootcmd"</span>);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">                s = env_get(<span class="string">"bootcmd"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_OF_CONTROL))</span><br><span class="line">                process_fdt_options(gd-&gt;fdt_blob);</span><br><span class="line">        stored_bootdelay = bootdelay;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">return</span> s;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">autoboot_command</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *s)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">        debug(<span class="string">"### main_loop: bootcmd=\"%s\"\n"</span>, s ? s : <span class="string">"&lt;UNDEFINED&gt;"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (stored_bootdelay != <span class="number">-1</span> &amp;&amp; s &amp;&amp; !abortboot(stored_bootdelay)) &#123;</span><br><span class="line">                <span class="keyword">bool</span> lock;</span><br><span class="line">                <span class="keyword">int</span> prev;</span><br><span class="line"></span><br><span class="line">                lock = IS_ENABLED(CONFIG_AUTOBOOT_KEYED) &amp;&amp;</span><br><span class="line">                        !IS_ENABLED(CONFIG_AUTOBOOT_KEYED_CTRLC);</span><br><span class="line">                <span class="keyword">if</span> (lock)</span><br><span class="line">                        prev = disable_ctrlc(<span class="number">1</span>); <span class="comment">/* disable Ctrl-C checking */</span></span><br><span class="line"></span><br><span class="line">                run_command_list(s, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (lock)</span><br><span class="line">                        disable_ctrlc(prev);    <span class="comment">/* restore Ctrl-C checking */</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (IS_ENABLED(CONFIG_USE_AUTOBOOT_MENUKEY) &amp;&amp;</span><br><span class="line">            menukey == AUTOBOOT_MENUKEY) &#123;</span><br><span class="line">                s = env_get(<span class="string">"menucmd"</span>);</span><br><span class="line">                <span class="keyword">if</span> (s)</span><br><span class="line">                        run_command_list(s, <span class="number">-1</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>获取bootcmd的设置，执行bootcmd的命令。</p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><p>1、u-boot源码</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://supersojo.github.io/2020/12/09/u-boot%20from%200%20to%201/" title="u-boot from 0 to 1">https://supersojo.github.io/2020/12/09/u-boot from 0 to 1/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/arm/" rel="tag"># arm</a>
+              <a href="/tags/uboot/" rel="tag"># uboot</a>
+              <a href="/tags/bootloader/" rel="tag"># bootloader</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/09/%E5%85%AB%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98/" rel="prev" title="八皇后问题">
+      <i class="fa fa-chevron-left"></i> 八皇后问题
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/21/%E5%85%AB%E7%9A%87%E5%90%8E%E5%A2%9E%E5%8A%A0%E5%9B%BE%E5%BD%A2%E7%95%8C%E9%9D%A2/" rel="next" title="八皇后问题增加图形界面">
+      八皇后问题增加图形界面 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+  </div>
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let activeClass = CONFIG.comments.activeClass;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#u-boot-from-0-to-1"><span class="nav-number">1.</span> <span class="nav-text">u-boot from 0 to 1</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#u-boot-lds"><span class="nav-number">1.1.</span> <span class="nav-text">u-boot.lds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arch-arm-lib-vectors-S"><span class="nav-number">1.2.</span> <span class="nav-text">arch&#x2F;arm&#x2F;lib&#x2F;vectors.S</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arch-arm-cpu-armv7-start-S"><span class="nav-number">1.3.</span> <span class="nav-text">arch&#x2F;arm&#x2F;cpu&#x2F;armv7&#x2F;start.S</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#arch-arm-lib-crt0-S"><span class="nav-number">1.4.</span> <span class="nav-text">arch&#x2F;arm&#x2F;lib&#x2F;crt0.S</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#common-board-r-c"><span class="nav-number">1.5.</span> <span class="nav-text">common&#x2F;board_r.c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#common-main-c"><span class="nav-number">1.6.</span> <span class="nav-text">common&#x2F;main.c</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#common-autoboot-c"><span class="nav-number">1.7.</span> <span class="nav-text">common&#x2F;autoboot.c</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#References"><span class="nav-number">2.</span> <span class="nav-text">References</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name"></p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/supersojo" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;supersojo" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:suyanjun218@163.com" title="E-Mail → mailto:suyanjun218@163.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="/atom.xml" title="RSS → &#x2F;atom.xml"><i class="fa fa-fw fa-rss"></i>RSS</a>
+      </span>
+  </div>
+  <div class="cc-license motion-element" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="Creative Commons"></a>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+<div class="copyright">
+  
+  &copy; 2017 – 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder"></span>
+</div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
