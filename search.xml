@@ -51,7 +51,7 @@
   </entry>
   <entry>
     <title>Integerate all iptvs from network</title>
-    <url>/2020/12/23/Integerate%20all%20iptvs%20from%20network/</url>
+    <url>/2020/12/24/Integerate%20all%20iptvs%20from%20network/</url>
     <content><![CDATA[<h1 id="Integerate-all-iptvs-from-network"><a href="#Integerate-all-iptvs-from-network" class="headerlink" title="Integerate all iptvs from network"></a>Integerate all iptvs from network</h1><h2 id="iptv-source"><a href="#iptv-source" class="headerlink" title="iptv source"></a>iptv source</h2><p><a href="https://github.com/imDazui/Tvlist-awesome-m3u-m3u8" target="_blank" rel="noopener">https://github.com/imDazui/Tvlist-awesome-m3u-m3u8</a></p>
 <p><a href="https://github.com/EvilCult/iptv-m3u-maker" target="_blank" rel="noopener">https://github.com/EvilCult/iptv-m3u-maker</a></p>
 <h2 id="iptv-software"><a href="#iptv-software" class="headerlink" title="iptv software"></a>iptv software</h2><ul>
@@ -845,6 +845,32 @@
       </tags>
   </entry>
   <entry>
+    <title>vs code在c/c++开发中满足需求吗</title>
+    <url>/2020/12/23/vscode_intro/</url>
+    <content><![CDATA[<p>vs code作为一个编辑器，提供不错的外观和出色的性能，大量的扩展插件使其成为出色的IDE。</p>
+<h2 id="Installing-vs-code"><a href="#Installing-vs-code" class="headerlink" title="Installing vs code"></a>Installing vs code</h2><h2 id="Install-c-c-extension"><a href="#Install-c-c-extension" class="headerlink" title="Install c/c++ extension"></a>Install c/c++ extension</h2><h2 id="Install-cmake-cmake-tool-extensions"><a href="#Install-cmake-cmake-tool-extensions" class="headerlink" title="Install cmake/cmake tool extensions"></a>Install cmake/cmake tool extensions</h2><h2 id="Using-vs-code"><a href="#Using-vs-code" class="headerlink" title="Using vs code"></a>Using vs code</h2><p>首先使用c/c++扩展写个测试代码。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">c_cpp_properties.json</span><br><span class="line">&#123;</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;Win32&quot;,</span><br><span class="line">            &quot;includePath&quot;: [</span><br><span class="line">                &quot;$&#123;workspaceFolder&#125;&#x2F;**&quot;,</span><br><span class="line">                &quot;d:\\boost\\include\\boost-1_75&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;defines&quot;: [</span><br><span class="line">                &quot;_DEBUG&quot;,</span><br><span class="line">                &quot;UNICODE&quot;,</span><br><span class="line">                &quot;_UNICODE&quot;</span><br><span class="line">            ],</span><br><span class="line">            &quot;windowsSdkVersion&quot;: &quot;10.0.18362.0&quot;,</span><br><span class="line">            &quot;compilerPath&quot;: &quot;C:&#x2F;Program Files (x86)&#x2F;Microsoft Visual Studio&#x2F;2019&#x2F;BuildTools&#x2F;VC&#x2F;Tools&#x2F;MSVC&#x2F;14.28.29333&#x2F;bin&#x2F;Hostx64&#x2F;x64&#x2F;cl.exe&quot;,</span><br><span class="line">            &quot;cStandard&quot;: &quot;c17&quot;,</span><br><span class="line">            &quot;cppStandard&quot;: &quot;c++17&quot;,</span><br><span class="line">            &quot;intelliSenseMode&quot;: &quot;msvc-x64&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    &quot;version&quot;: 4</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面把boost配置includepath，这样vs code可以智能的完成代码补全和代码提示，非常高效。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">tasks.json</span><br><span class="line">&#123;</span><br><span class="line">	&quot;version&quot;: &quot;2.0.0&quot;,</span><br><span class="line">	&quot;tasks&quot;: [</span><br><span class="line">		&#123;</span><br><span class="line">			&quot;type&quot;: &quot;cppbuild&quot;,</span><br><span class="line">			&quot;label&quot;: &quot;C&#x2F;C++: cl.exe build active file&quot;,</span><br><span class="line">			&quot;command&quot;: &quot;cl.exe&quot;,</span><br><span class="line">			&quot;args&quot;: [</span><br><span class="line">				&quot;&#x2F;Zi&quot;,</span><br><span class="line">				&quot;&#x2F;EHsc&quot;,</span><br><span class="line">				&quot;&#x2F;ID:\\boost\\include\\boost-1_75&quot;,</span><br><span class="line">				&quot;&#x2F;Fe:&quot;,</span><br><span class="line">				&quot;$&#123;fileDirname&#125;\\$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">				&quot;$&#123;file&#125;&quot;</span><br><span class="line">			],</span><br><span class="line">			&quot;options&quot;: &#123;</span><br><span class="line">				&quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;&quot;</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;problemMatcher&quot;: [</span><br><span class="line">				&quot;$msCompile&quot;</span><br><span class="line">			],</span><br><span class="line">			&quot;group&quot;: &#123;</span><br><span class="line">				&quot;kind&quot;: &quot;build&quot;,</span><br><span class="line">				&quot;isDefault&quot;: true</span><br><span class="line">			&#125;,</span><br><span class="line">			&quot;detail&quot;: &quot;compiler: cl.exe&quot;</span><br><span class="line">		&#125;</span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面我们添加boost头文件，或者lib文件，可以方便的生成可执行文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">launch.json</span><br><span class="line">&#123;</span><br><span class="line">    &#x2F;&#x2F; 使用 IntelliSense 了解相关属性。 </span><br><span class="line">    &#x2F;&#x2F; 悬停以查看现有属性的描述。</span><br><span class="line">    &#x2F;&#x2F; 欲了解更多信息，请访问: https:&#x2F;&#x2F;go.microsoft.com&#x2F;fwlink&#x2F;?linkid&#x3D;830387</span><br><span class="line">    &quot;version&quot;: &quot;0.2.0&quot;,</span><br><span class="line">    &quot;configurations&quot;: [</span><br><span class="line">        &#123;</span><br><span class="line">            &quot;name&quot;: &quot;(Windows) 启动&quot;,</span><br><span class="line">            &quot;type&quot;: &quot;cppvsdbg&quot;,</span><br><span class="line">            &quot;request&quot;: &quot;launch&quot;,</span><br><span class="line">            &quot;program&quot;: &quot;$&#123;workspaceFolder&#125;&#x2F;$&#123;fileBasenameNoExtension&#125;.exe&quot;,</span><br><span class="line">            &quot;args&quot;: [],</span><br><span class="line">            &quot;stopAtEntry&quot;: false,</span><br><span class="line">            &quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;&quot;,</span><br><span class="line">            &quot;environment&quot;: [],</span><br><span class="line">            &quot;externalConsole&quot;: false</span><br><span class="line">        &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面文件我们调试这个可执行文件的配置。</p>
+<p>综上c/c++插件可以满足单个c++源文件的构建，在写测试代码时非常方便，但是多个文件的情况难以胜任。</p>
+<h2 id="Using-cmake扩展"><a href="#Using-cmake扩展" class="headerlink" title="Using cmake扩展"></a>Using cmake扩展</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">CMakeLists.txt</span><br><span class="line"></span><br><span class="line">cmake_minimum_required(VERSION 3.0.0)</span><br><span class="line">project(hello VERSION 0.1.0)</span><br><span class="line"></span><br><span class="line">include(CTest)</span><br><span class="line">enable_testing()</span><br><span class="line"></span><br><span class="line"># 首先定义target</span><br><span class="line">add_executable(hello foo.cpp main.cpp)</span><br><span class="line"></span><br><span class="line"># 针对这个target设置include</span><br><span class="line">target_include_directories(hello PRIVATE &quot;d:\\boost\\include\\boost-1_75&quot;)</span><br><span class="line"></span><br><span class="line">set(CPACK_PROJECT_NAME $&#123;PROJECT_NAME&#125;)</span><br><span class="line">set(CPACK_PROJECT_VERSION $&#123;PROJECT_VERSION&#125;)</span><br><span class="line">include(CPack)</span><br></pre></td></tr></table></figure>
+<p>该扩展可以帮助生成基本的cmake配置文件，在此基础上可配置多个文件的编译生成。</p>
+<h2 id="boost例子"><a href="#boost例子" class="headerlink" title="boost例子"></a>boost例子</h2><figure class="highlight plain"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;boost&#x2F;array.hpp&gt;</span><br><span class="line"></span><br><span class="line">extern void foo();</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    boost::array&lt;int,10&gt; a;</span><br><span class="line"></span><br><span class="line">    a[0] &#x3D; 1;</span><br><span class="line"></span><br><span class="line">    int i &#x3D; std::get&lt;0,int,10&gt;(a);</span><br><span class="line">    </span><br><span class="line">    std::cout&lt;&lt;i&lt;&lt;std::endl;</span><br><span class="line"></span><br><span class="line">    std::cout&lt;&lt;&quot;hello from c++!&quot;&lt;&lt;std::endl;</span><br><span class="line"></span><br><span class="line">    foo();</span><br><span class="line">    </span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2>]]></content>
+      <categories>
+        <category>tools</category>
+      </categories>
+      <tags>
+        <tag>vs code</tag>
+        <tag>cmake</tag>
+        <tag>boost</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>x86_64 calling conventions</title>
     <url>/2019/06/10/x86_64%20calling%20conversion/</url>
     <content><![CDATA[<p>在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。</p>
@@ -962,30 +988,6 @@
       </tags>
   </entry>
   <entry>
-    <title>从内核代码看openwrt的macvlan多拨</title>
-    <url>/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/</url>
-    <content><![CDATA[<p>OpenWrt是一个嵌入式的 Linux 发行版， 拥有强大的网络组件和扩展性，<br>常常被用于工控设备、电话、小型机器人、智能家居、路由器以及VOIP设备中。</p>
-<p>很多采用openwrt的软路由的人更多的是使用openwrt的多拨实现带宽叠加。<br>其实openwrt多拨是基于内核的macvlan模块。</p>
-<h2 id="macvlan是什么？"><a href="#macvlan是什么？" class="headerlink" title="macvlan是什么？"></a>macvlan是什么？</h2><p>在macvlan之前，我们只能为一个物理网络接口添加多个ip地址，却不能添<br>加多个mac地址。macvlan可以在一个物理网络接口上虚拟出多个虚拟网络<br>接口，每个虚拟接口可以独立配置mac和ip地址。这样物理网络接口相当于<br>实现了一个交换机，记录了mac和虚拟接口的对应关系。</p>
-<h3 id="macvlan收包处理流程"><a href="#macvlan收包处理流程" class="headerlink" title="macvlan收包处理流程"></a>macvlan收包处理流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-1.png" alt="macvlan收包"></p>
-<p>上图为内核的收包处理流程。内核为设置了macvlan的物理网络接口设置rx_handler函数，<br>在使用NAPI机制收到报文上送协议栈之前先执行macvlan_handle_frame。</p>
-<p>macvlan_handle_frame函数根据二层头的目的mac地址判断是发给物理网络接口还是先发<br>给虚拟网络接口。设置skb-&gt;dev为macvlan设备，然后报文进入ip协议栈处理流程。</p>
-<h3 id="maclavn发包流程"><a href="#maclavn发包流程" class="headerlink" title="maclavn发包流程"></a>maclavn发包流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-2.png" alt="macvlan发包"></p>
-<p>macvlan_queue_xmit是macvlan设备的发包函数，判断如果是桥模式则根据目的mac查找是否<br>是本机macvlan设备，如果是则直接发给本机macvlan设备执行netif_rx_internal。否则报文<br>通过底层设备发送出去。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有个macvlan，我们就可以基于虚拟网络接口进行pppoe拨号，从而获取多个wan连接，实现多拨。</p>
-<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ol>
-<li><a href="https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/" target="_blank" rel="noopener">macvlan and ipvlan</a></li>
-<li><a href="http://hicu.be/bridge-vs-macvlan" target="_blank" rel="noopener">bridge vs macvlan</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>network</category>
-      </categories>
-      <tags>
-        <tag>macvlan</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</title>
     <url>/2020/03/10/%E4%BB%8E%E4%B8%80%E4%B8%AAtcp%E7%AA%97%E5%8F%A3%E6%8E%A2%E6%B5%8B%E5%B7%AE%E4%B8%80%E9%97%AE%E9%A2%98%E7%9A%84patch%E7%9C%8BTCP%E5%8D%8F%E8%AE%AE%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8%E7%9A%84%E5%AE%9A%E6%97%B6%E5%99%A8/</url>
     <content><![CDATA[<h2 id="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"><a href="#从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器" class="headerlink" title="从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器"></a>从一个tcp窗口探测差一问题的patch看TCP协议中的使用的定时器</h2><p>这个<a href="https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/net/ipv4/tcp_timer.c?id=3976535af0cb9fe34a55f2ffb8d7e6b39a2f8188" target="_blank" rel="noopener">patch</a>的描述如下:</p>
@@ -1063,6 +1065,30 @@
         <tag>timer</tag>
         <tag>keepalive</tag>
         <tag>zero-window-size</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从内核代码看openwrt的macvlan多拨</title>
+    <url>/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/</url>
+    <content><![CDATA[<p>OpenWrt是一个嵌入式的 Linux 发行版， 拥有强大的网络组件和扩展性，<br>常常被用于工控设备、电话、小型机器人、智能家居、路由器以及VOIP设备中。</p>
+<p>很多采用openwrt的软路由的人更多的是使用openwrt的多拨实现带宽叠加。<br>其实openwrt多拨是基于内核的macvlan模块。</p>
+<h2 id="macvlan是什么？"><a href="#macvlan是什么？" class="headerlink" title="macvlan是什么？"></a>macvlan是什么？</h2><p>在macvlan之前，我们只能为一个物理网络接口添加多个ip地址，却不能添<br>加多个mac地址。macvlan可以在一个物理网络接口上虚拟出多个虚拟网络<br>接口，每个虚拟接口可以独立配置mac和ip地址。这样物理网络接口相当于<br>实现了一个交换机，记录了mac和虚拟接口的对应关系。</p>
+<h3 id="macvlan收包处理流程"><a href="#macvlan收包处理流程" class="headerlink" title="macvlan收包处理流程"></a>macvlan收包处理流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-1.png" alt="macvlan收包"></p>
+<p>上图为内核的收包处理流程。内核为设置了macvlan的物理网络接口设置rx_handler函数，<br>在使用NAPI机制收到报文上送协议栈之前先执行macvlan_handle_frame。</p>
+<p>macvlan_handle_frame函数根据二层头的目的mac地址判断是发给物理网络接口还是先发<br>给虚拟网络接口。设置skb-&gt;dev为macvlan设备，然后报文进入ip协议栈处理流程。</p>
+<h3 id="maclavn发包流程"><a href="#maclavn发包流程" class="headerlink" title="maclavn发包流程"></a>maclavn发包流程</h3><p><img src="/2019/05/13/%E4%BB%8E%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81%E7%9C%8Bopenwrt%E7%9A%84macvlan%E5%A4%9A%E6%8B%A8/macvlan-2.png" alt="macvlan发包"></p>
+<p>macvlan_queue_xmit是macvlan设备的发包函数，判断如果是桥模式则根据目的mac查找是否<br>是本机macvlan设备，如果是则直接发给本机macvlan设备执行netif_rx_internal。否则报文<br>通过底层设备发送出去。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>有个macvlan，我们就可以基于虚拟网络接口进行pppoe拨号，从而获取多个wan连接，实现多拨。</p>
+<h2 id="扩展阅读"><a href="#扩展阅读" class="headerlink" title="扩展阅读"></a>扩展阅读</h2><ol>
+<li><a href="https://sreeninet.wordpress.com/2016/05/29/macvlan-and-ipvlan/" target="_blank" rel="noopener">macvlan and ipvlan</a></li>
+<li><a href="http://hicu.be/bridge-vs-macvlan" target="_blank" rel="noopener">bridge vs macvlan</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>network</category>
+      </categories>
+      <tags>
+        <tag>macvlan</tag>
       </tags>
   </entry>
   <entry>

@@ -142,17 +142,17 @@
   </li>
         <li class="menu-item menu-item-tags">
 
-    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">60</span></a>
+    <a href="/tags/" rel="section"><i class="fa fa-fw fa-tags"></i>标签<span class="badge">63</span></a>
 
   </li>
         <li class="menu-item menu-item-categories">
 
-    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">18</span></a>
+    <a href="/categories/" rel="section"><i class="fa fa-fw fa-th"></i>分类<span class="badge">19</span></a>
 
   </li>
         <li class="menu-item menu-item-archives">
 
-    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">37</span></a>
+    <a href="/archives/" rel="section"><i class="fa fa-fw fa-archive"></i>归档<span class="badge">38</span></a>
 
   </li>
       <li class="menu-item menu-item-search">
@@ -208,6 +208,114 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Linux's Notes">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/02/17/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-2/" class="post-title-link" itemprop="url">bpf入门系列-2</a>
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-02-17 21:21:10" itemprop="dateCreated datePublished" datetime="2020-02-17T21:21:10+00:00">2020-02-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/kernel/" itemprop="url" rel="index">
+                    <span itemprop="name">kernel</span>
+                  </a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="头文件设置"><a href="#头文件设置" class="headerlink" title="头文件设置"></a>头文件设置</h2><p>要想能够成功编译bpf程序，需要正确的设置头文件，在linux内核版本3.7之后引入了uapi，下面是uapi的简单介绍。</p>
+<p>首先介绍下<a href="https://stackoverflow.com/questions/18858190/whats-in-include-uapi-of-kernel-source-project" target="_blank" rel="noopener">uapi</a>。<br>uapi主要是以下两个目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">kernel_dir&#x2F;include&#x2F;uapi</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;uapi</span><br></pre></td></tr></table></figure>
+
+<p>uapi的目的是让头文件更加清晰，只有上面的头文件是用户态可以使用的，其它的作为内核私有头文件使用。</p>
+<p>在编译bpf程序时我们要用到内核头文件，而不仅仅上上面的uapi的头文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include</span><br><span class="line">kernel_dir&#x2F;arch&#x2F;$ARCH&#x2F;include&#x2F;generated</span><br><span class="line">kernel_dir&#x2F;include</span><br></pre></td></tr></table></figure>
+<p>关于<a href="https://blog.linote.cn/2020/03/27/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/" target="_blank" rel="noopener">这个例子</a>的编译，如果使用内核头文件会遇到问题，例子中带了include/types.h，这个头文件和内核头文件冲突，可行workaround方案是把自带include放到编译选项的最后。<br><strong>编译器在寻找头文件是总是按照编译选项中列出目录先后的顺序搜索</strong>。</p>
+<p>另外看下uapi/linux/types.h文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#ifndef _UAPI_LINUX_TYPES_H</span><br><span class="line">#define _UAPI_LINUX_TYPES_H</span><br><span class="line"></span><br><span class="line">#include &lt;asm&#x2F;types.h&gt;</span><br><span class="line"></span><br><span class="line">#ifndef __ASSEMBLY__</span><br><span class="line">#ifndef __KERNEL__</span><br><span class="line">#ifndef __EXPORTED_HEADERS__</span><br><span class="line">#warning &quot;Attempt to use kernel headers from user space, see http:&#x2F;&#x2F;kernelnewbies.org&#x2F;KernelHeaders&quot;</span><br><span class="line">#endif &#x2F;* __EXPORTED_HEADERS__ *&#x2F;</span><br><span class="line">#endif</span><br><span class="line"></span><br><span class="line">#include &lt;linux&#x2F;posix_types.h&gt;</span><br></pre></td></tr></table></figure>
+<p>我们在使用时需要定义<strong>KERNEL</strong>宏。</p>
+<p>一个可用的头文件包含选项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">linuxhdrs ?&#x3D; &#x2F;usr&#x2F;src&#x2F;linux-headers-&#96;uname -r&#96;</span><br><span class="line">LINUXINCLUDE &#x3D;  -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;generated \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;arch&#x2F;x86&#x2F;include&#x2F;generated&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include&#x2F;generated&#x2F;uapi \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include \</span><br><span class="line">                -I$(linuxhdrs)&#x2F;include&#x2F;uapi \</span><br><span class="line">                -include $(linuxhdrs)&#x2F;include&#x2F;linux&#x2F;kconfig.h</span><br></pre></td></tr></table></figure>
+
+<p>在头文件设置好后，还需要额外编译选项用于编译bpf程序</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">CLANG ?&#x3D; clang</span><br><span class="line">INC_FLAGS &#x3D; -nostdinc -isystem $(shell $(CLANG) -print-file-name&#x3D;include)</span><br><span class="line">EXTRA_CFLAGS ?&#x3D; -O2 -g -Wall -emit-llvm</span><br><span class="line">LLC ?&#x3D; llc</span><br><span class="line">CLANG ?&#x3D; clang</span><br><span class="line">LLVM_OBJDUMP ?&#x3D; llvm-objdump</span><br><span class="line"></span><br><span class="line">$(KERNELOBJS):  %.o:%.c</span><br><span class="line">        $(CLANG) $(INC_FLAGS) \</span><br><span class="line">                -D__KERNEL__ -D__ASM_SYSREG_H \</span><br><span class="line">                $(DEBUG_FLAGS) \</span><br><span class="line">                -Wno-unused-value -Wno-pointer-sign \</span><br><span class="line">                -Wno-compare-distinct-pointer-types \</span><br><span class="line">                -Wno-gnu-variable-sized-type-not-at-end \</span><br><span class="line">                -Wno-address-of-packed-member -Wno-tautological-compare \</span><br><span class="line">                -Wno-unknown-warning-option \</span><br><span class="line">                $(LINUXINCLUDE) \</span><br><span class="line">                -I..&#x2F;include \</span><br><span class="line">                $(EXTRA_CFLAGS) -c $&lt; -o -| $(LLC) -march&#x3D;bpf -filetype&#x3D;obj -o $@</span><br></pre></td></tr></table></figure>
+
+<h2 id="一个bpf程序框架"><a href="#一个bpf程序框架" class="headerlink" title="一个bpf程序框架"></a>一个bpf程序框架</h2><p>这里是我整理的一个bpf框架，地址是<a href="https://github.com/supersojo/bpf_skeleton" target="_blank" rel="noopener">bpf_skeleton</a></p>
+<p>这里讲下遇到的问题。首先是内核部分，按照上面一节设置头文件后问题不大，</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;bpf_skeleton# ls kern</span><br><span class="line">bitehist.c  bpf_endian.h  bpf_helpers.h  Makefile</span><br></pre></td></tr></table></figure>
+
+<p>可能对为何需要bpf_helpers.h有疑问，bpf程序最终是编译成bpf字节码，由bpf虚拟机执行，这里把bpf函数设置为整数标识，最后由llvm生成对bpf内核函数的调用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">static void *(*bpf_map_lookup_elem)(void *map, void *key) &#x3D;</span><br><span class="line">        (void *) BPF_FUNC_map_lookup_elem;</span><br><span class="line">static int (*bpf_map_update_elem)(void *map, void *key, void *value,</span><br><span class="line">                                  unsigned long long flags) &#x3D;</span><br><span class="line">        (void *) BPF_FUNC_map_update_elem;</span><br></pre></td></tr></table></figure>
+<p>上面只是对bpf函数赋值为bpf内核函数对应的整数标识</p>
+<p>为使用libbpf，这里通过在内核源码目录下编译安装</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd kernel_dir&#x2F;tools&#x2F;lib&#x2F;bpf</span><br><span class="line">make &amp;&amp; make install &amp;&amp; make install_headers</span><br></pre></td></tr></table></figure>
+<p>这样缺省头文件安装到/usr/local/include，库文件安装到/usr/local/lib64下面</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@ubuntu:~&#x2F;bpftest&#x2F;bpf_skeleton# ls user&#x2F;</span><br><span class="line">bitehist.c       bpf_load.c  linux     perf-sys.h</span><br><span class="line">bitehist_kern.o  bpf_load.h  Makefile</span><br></pre></td></tr></table></figure>
+<p>可能注意到为何有linux/types.h，uapi不是有对应头文件吗? 使用uapi下的types.h需要定义<strong>KERNEL</strong>，这里使用tools下自带的，可以不依赖内核头文件就可以编译用户态代码<br>bpf_load.c是从samples/bpf下拷贝过来的，里面是bpd加载的实用函数，非常方便。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>经过上面步骤，我们拥有了一个可以使用的bpf框架，开始编写自己的bpf程序吧</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://github.com/brendangregg/BPF-tools/tree/master/new/2019-05-21" target="_blank" rel="noopener">BPF tools</a></li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+        
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2020/02/13/bpf%E5%85%A5%E9%97%A8%E7%B3%BB%E5%88%97-1/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -239,7 +347,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -373,7 +481,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -468,7 +576,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
 
           
@@ -545,7 +653,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -641,7 +749,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -765,7 +873,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -864,7 +972,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -999,7 +1107,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1084,7 +1192,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
+                <time title="修改时间：2020-12-24 03:00:19" itemprop="dateModified" datetime="2020-12-24T03:00:19+00:00">2020-12-24</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -1118,101 +1226,6 @@
 </blockquote>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>这个具体问题是在函数static inline bool ip_rcv_options(struct sk_buff *skb)中如果源路由未打开则直接drop。</p>
 <p>打开内核中源路由选项，通信正常。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-        
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block home" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://supersojo.github.io/2019/06/10/x86_64%20calling%20conversion/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Linux's Notes">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          
-            <a href="/2019/06/10/x86_64%20calling%20conversion/" class="post-title-link" itemprop="url">x86_64 calling conventions</a>
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2019-06-10 21:10:10" itemprop="dateCreated datePublished" datetime="2019-06-10T21:10:10+00:00">2019-06-10</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-23 07:46:15" itemprop="dateModified" datetime="2020-12-23T07:46:15+00:00">2020-12-23</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E8%B0%83%E7%94%A8%E7%BA%A6%E5%AE%9A/" itemprop="url" rel="index">
-                    <span itemprop="name">调用约定</span>
-                  </a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>在分析异常调用栈需要了解参数传递细节，在这里整理一下x86_64调用约定。</p>
-<h2 id="通过函数的汇编语句分析调用约定"><a href="#通过函数的汇编语句分析调用约定" class="headerlink" title="通过函数的汇编语句分析调用约定"></a>通过函数的汇编语句分析调用约定</h2><h3 id="栈帧布局"><a href="#栈帧布局" class="headerlink" title="栈帧布局"></a>栈帧布局</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line"> foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp]</span><br><span class="line">                  ^</span><br><span class="line">                  |</span><br><span class="line">                rbp&#x2F;rsp</span><br><span class="line"> 8(%rbp): return address</span><br><span class="line"> 0(%rbp): old %rbp</span><br></pre></td></tr></table></figure>
-
-<p>上面是foo函数的汇编语句，在函数入口处，%rsp指向返回地址，重新设置%rbp指向当前栈帧。</p>
-<h3 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     …</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">high addr         ^           ^ low addr</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br></pre></td></tr></table></figure>
-
-<p>如果在栈上分配局部变量，通过%rbp访问。-8(%rbp)访问第一个局部变量，依次类推访问其它局部变量。</p>
-<h3 id="返回地址"><a href="#返回地址" class="headerlink" title="返回地址"></a>返回地址</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">foo:</span><br><span class="line">     push %rbp</span><br><span class="line">     mov %rsp,%rbp</span><br><span class="line">     sub $16,%rsp # local var spaces</span><br><span class="line">     ...</span><br><span class="line">     add $16,%rsp # balance stack</span><br><span class="line">     pop %rbp  # restore stack frame pointer</span><br><span class="line">     ret # return to caller</span><br><span class="line"> [retaddr][old rbp][local vars]</span><br><span class="line">                  ^           ^</span><br><span class="line">                  |           |</span><br><span class="line">                 rbp         rsp</span><br><span class="line"> -8(%rbp):local vars</span><br></pre></td></tr></table></figure>
-
-<p>在使用完局部变量需要把对应栈空间释放，平衡堆栈，最后ret返回caller处。</p>
-<h3 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">call conventions:</span><br><span class="line"> void foo(int a,int b,int c,int d,int e,int f,int g);</span><br><span class="line">   40053c:       6a 07                   pushq  $0x7      # seventh use stack</span><br><span class="line">   40053e:       41 b9 06 00 00 00       mov    $0x6,%r9d # sixth</span><br><span class="line">   400544:       41 b8 05 00 00 00       mov    $0x5,%r8d # fifth</span><br><span class="line">   40054a:       b9 04 00 00 00          mov    $0x4,%ecx # fouth</span><br><span class="line">   40054f:       ba 03 00 00 00          mov    $0x3,%edx # third</span><br><span class="line">   400554:       be 02 00 00 00          mov    $0x2,%esi # second para</span><br><span class="line">   400559:       bf 01 00 00 00          mov    $0x1,%edi # first para</span><br><span class="line"> %rdi -&gt;a</span><br><span class="line"> %rsi -&gt;b</span><br><span class="line"> %rdx -&gt;c</span><br><span class="line"> %rcx -&gt;d</span><br><span class="line"> %r8  -&gt;e</span><br><span class="line"> %r9  -&gt;f</span><br><span class="line"> [parameters][retaddr][old rbp]</span><br><span class="line">                              ^</span><br><span class="line">                              |</span><br><span class="line">                             rbp&#x2F;rsp    </span><br><span class="line"> 8(%rbp): return address</span><br><span class="line"> 16(%rbp): the seventh parameter</span><br><span class="line"> 24(%rbp): the eighth parameter</span><br></pre></td></tr></table></figure>
-
-<p>前6个参数使用寄存器传递，如果还有额外参数则通过堆栈传递。</p>
-<p>以上式x86的调用约定，更正下x64的调用约定。</p>
-<p>x64调用约定进行函数调用时栈必须是16字节对齐的，有人做过实验，只有macOS严格执行，<br>linux和windows似乎不严格执行该规定，即使不16字节对齐也没多大问题。</p>
-<p>在windows上，x64调用约定使用rcx,rdx,r8,r9传参，但是需要在栈上给它们留空间，windows还有还有SEH结构化异常处理。</p>
-<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><ol>
-<li><a href="https://en.wikipedia.org/wiki/X86_calling_conventions" target="_blank" rel="noopener">X86_calling_conventions</a></li>
-<li><a href="https://aaronbloomfield.github.io/pdr/book/x86-64bit-ccc-chapter.pdf" target="_blank" rel="noopener">The 64 bit x86 C Calling Convention</a></li>
-</ol>
 
       
     </div>
@@ -1298,20 +1311,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">37</span>
+          <span class="site-state-item-count">38</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">18</span>
+        <span class="site-state-item-count">19</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">60</span>
+        <span class="site-state-item-count">63</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
